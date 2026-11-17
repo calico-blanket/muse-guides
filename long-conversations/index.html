@@ -1,0 +1,948 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>長い会話とトークン</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #fff7f2;
+        --bg-soft: #fdeee7;
+        --surface: #ffffff;
+        --ink: #46322e;
+        --ink-soft: #6f554e;
+        --muted: #96766c;
+        --line: #f0d9cf;
+        --rose: #c2435f;
+        --rose-deep: #a52f4c;
+        --rose-soft: #fbe3e8;
+        --mint: #1f8a68;
+        --mint-deep: #146950;
+        --mint-soft: #dcf2e8;
+        --amber: #b06f14;
+        --amber-soft: #fbeed3;
+        --shadow: 0 2px 10px rgba(165, 47, 76, 0.07);
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #221719;
+          --bg-soft: #2c1e21;
+          --surface: #2f2125;
+          --ink: #f6e9e4;
+          --ink-soft: #ddc2b9;
+          --muted: #b08f85;
+          --line: #4c363c;
+          --rose: #ef8ba3;
+          --rose-deep: #f6a9bc;
+          --rose-soft: #46262f;
+          --mint: #63cba2;
+          --mint-deep: #8fdcbc;
+          --mint-soft: #1e3a30;
+          --amber: #eda94f;
+          --amber-soft: #453311;
+          --shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+          color-scheme: dark;
+        }
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        * { transition: none !important; animation: none !important; }
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+        font-size: 16.5px;
+        line-height: 1.85;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 780px; margin: 0 auto; padding: 0 20px 72px; }
+      h1, h2, h3, .maru { font-family: "Zen Maru Gothic", "Zen Kaku Gothic New", sans-serif; }
+      p { margin: 0 0 1em; }
+      a { color: var(--rose-deep); text-underline-offset: 3px; }
+      strong { font-weight: 900; }
+      .small { font-size: 0.86em; }
+      .muted { color: var(--muted); }
+
+      /* ---------- Hero ---------- */
+      .hero { padding: 44px 0 8px; }
+      .hero .lead-tag {
+        display: inline-block;
+        background: var(--mint-soft);
+        color: var(--mint-deep);
+        font-weight: 700;
+        font-size: 0.82em;
+        padding: 4px 14px;
+        border-radius: 999px;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: clamp(30px, 6.4vw, 42px);
+        line-height: 1.35;
+        margin: 0 0 14px;
+        font-weight: 900;
+        letter-spacing: 0.01em;
+      }
+      .hero h1 .hl { color: var(--rose); }
+      .hero .sub { font-size: 1.02em; color: var(--ink-soft); margin-bottom: 22px; }
+      .hero-points {
+        display: grid;
+        gap: 10px;
+        margin: 0 0 8px;
+        padding: 0;
+        list-style: none;
+      }
+      .hero-points li {
+        background: var(--surface);
+        border: 1.5px solid var(--line);
+        border-radius: 14px;
+        padding: 12px 16px;
+        box-shadow: var(--shadow);
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+      }
+      .hero-points .n {
+        flex: 0 0 auto;
+        width: 26px; height: 26px;
+        border-radius: 50%;
+        background: var(--rose);
+        color: #fff;
+        font-family: "Zen Maru Gothic", sans-serif;
+        font-weight: 900;
+        font-size: 0.85em;
+        display: flex; align-items: center; justify-content: center;
+        margin-top: 3px;
+      }
+      @media (prefers-color-scheme: dark) { .hero-points .n { color: #2b1219; } }
+
+      /* ---------- TOC ---------- */
+      .toc {
+        background: var(--bg-soft);
+        border-radius: 16px;
+        padding: 18px 20px 10px;
+        margin: 26px 0 8px;
+      }
+      .toc h2 { font-size: 1em; margin: 0 0 8px; font-weight: 900; }
+      .toc ol { margin: 0; padding: 0 0 6px 1.4em; }
+      .toc li { margin-bottom: 6px; }
+      .toc a { display: inline-block; min-height: 32px; padding: 2px 0; font-weight: 700; text-decoration: none; }
+      .toc a:hover { text-decoration: underline; }
+
+      /* ---------- Sections ---------- */
+      section { margin-top: 52px; }
+      .sec-head { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; }
+      .sec-num {
+        flex: 0 0 auto;
+        width: 46px; height: 46px;
+        border-radius: 14px;
+        background: var(--rose);
+        color: #fff;
+        font-family: "Zen Maru Gothic", sans-serif;
+        font-weight: 900;
+        font-size: 1.25em;
+        display: flex; align-items: center; justify-content: center;
+      }
+      @media (prefers-color-scheme: dark) { .sec-num { color: #2b1219; } }
+      .sec-num.mint { background: var(--mint); }
+      @media (prefers-color-scheme: dark) { .sec-num.mint { color: #0e241b; } }
+      .sec-head h2 { font-size: clamp(21px, 4.6vw, 26px); margin: 0; line-height: 1.45; font-weight: 900; }
+      .sec-intro { color: var(--ink-soft); margin-bottom: 18px; }
+      h3.sub {
+        font-size: 1.12em;
+        font-weight: 900;
+        margin: 30px 0 8px;
+        padding-left: 12px;
+        border-left: 5px solid var(--mint);
+        line-height: 1.5;
+      }
+      h3.sub.rose { border-left-color: var(--rose); }
+
+      .card {
+        background: var(--surface);
+        border: 1.5px solid var(--line);
+        border-radius: 16px;
+        padding: 20px 22px;
+        box-shadow: var(--shadow);
+        margin: 16px 0;
+      }
+      .card > *:last-child { margin-bottom: 0; }
+      .card .card-title { font-family: "Zen Maru Gothic", sans-serif; font-weight: 900; font-size: 1.05em; margin: 0 0 8px; }
+
+      .metaphor {
+        background: var(--mint-soft);
+        border-radius: 16px;
+        padding: 18px 22px;
+        margin: 16px 0;
+      }
+      .metaphor .m-label {
+        font-family: "Zen Maru Gothic", sans-serif;
+        font-weight: 900;
+        color: var(--mint-deep);
+        font-size: 0.9em;
+        margin-bottom: 4px;
+      }
+      .metaphor p:last-child { margin-bottom: 0; }
+
+      .warn {
+        background: var(--amber-soft);
+        border-radius: 16px;
+        padding: 16px 20px;
+        margin: 16px 0;
+        font-size: 0.96em;
+      }
+      .warn .w-label { font-weight: 900; color: var(--amber); font-family: "Zen Maru Gothic", sans-serif; font-size: 0.9em; margin-bottom: 2px; }
+      .warn p:last-child { margin-bottom: 0; }
+
+      .src { font-size: 0.8em; color: var(--muted); margin-top: 8px; }
+      .src a { color: var(--muted); }
+
+      /* ---------- Simulator ---------- */
+      .sim { background: var(--surface); border: 1.5px solid var(--line); border-radius: 16px; padding: 20px 22px; box-shadow: var(--shadow); margin: 16px 0; }
+      .sim .sim-title { font-family: "Zen Maru Gothic", sans-serif; font-weight: 900; margin: 0 0 4px; }
+      .sim-controls { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 14px 0 6px; }
+      .sim-controls label { font-weight: 700; }
+      .sim-controls output { font-family: "Zen Maru Gothic", sans-serif; font-weight: 900; color: var(--rose); font-size: 1.15em; min-width: 3.2em; }
+      input[type="range"] { flex: 1 1 200px; min-height: 36px; accent-color: var(--rose); cursor: pointer; }
+      .sim-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+      @media (max-width: 480px) { .sim-stats { grid-template-columns: 1fr; } }
+      .sim-stat { background: var(--bg-soft); border-radius: 12px; padding: 12px 16px; }
+      .sim-stat .k { font-size: 0.82em; color: var(--ink-soft); font-weight: 700; }
+      .sim-stat .v { font-family: "Zen Maru Gothic", sans-serif; font-weight: 900; font-size: 1.35em; color: var(--rose-deep); line-height: 1.4; }
+      .sim-stat .v .unit { font-size: 0.6em; font-weight: 700; }
+      .sim svg { width: 100%; height: auto; display: block; margin-top: 8px; }
+
+      /* ---------- Charts ---------- */
+      figure.chart { margin: 16px 0; background: var(--surface); border: 1.5px solid var(--line); border-radius: 16px; padding: 20px 22px 14px; box-shadow: var(--shadow); }
+      figure.chart svg { width: 100%; height: auto; display: block; }
+      figure.chart figcaption { font-size: 0.85em; color: var(--muted); margin-top: 10px; line-height: 1.7; }
+      .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
+      @media (max-width: 560px) { .stat-row { grid-template-columns: 1fr; } }
+      .stat-box { background: var(--bg-soft); border-radius: 14px; padding: 14px 16px; text-align: center; }
+      .stat-box .big { font-family: "Zen Maru Gothic", sans-serif; font-weight: 900; font-size: 1.7em; color: var(--rose-deep); line-height: 1.3; }
+      .stat-box .cap { font-size: 0.82em; color: var(--ink-soft); line-height: 1.6; }
+
+      /* ---------- Compare (sure vs hype) ---------- */
+      .vs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; align-items: start; }
+      @media (max-width: 640px) { .vs-grid { grid-template-columns: 1fr; } }
+      .vs-col { border-radius: 16px; padding: 18px 20px 8px; }
+      .vs-col.sure { background: var(--mint-soft); }
+      .vs-col.hype { background: var(--rose-soft); }
+      .vs-col h3 { margin: 0 0 10px; font-size: 1.05em; font-weight: 900; }
+      .vs-col.sure h3 { color: var(--mint-deep); }
+      .vs-col.hype h3 { color: var(--rose-deep); }
+      .vs-col ul { margin: 0; padding-left: 1.25em; }
+      .vs-col li { margin-bottom: 12px; font-size: 0.96em; }
+      .vs-col li b { display: block; }
+
+      /* ---------- Quiz ---------- */
+      .quiz-item { background: var(--surface); border: 1.5px solid var(--line); border-radius: 16px; padding: 18px 20px; margin: 12px 0; box-shadow: var(--shadow); }
+      .quiz-q { font-weight: 700; margin-bottom: 12px; }
+      .quiz-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+      .quiz-btns button {
+        flex: 1 1 140px;
+        min-height: 44px;
+        border-radius: 999px;
+        border: 2px solid var(--rose);
+        background: transparent;
+        color: var(--rose-deep);
+        font-family: inherit;
+        font-weight: 900;
+        font-size: 0.98em;
+        cursor: pointer;
+        padding: 8px 12px;
+      }
+      .quiz-btns button:hover { background: var(--rose-soft); }
+      .quiz-btns button.picked-right { background: var(--mint); border-color: var(--mint); color: #fff; }
+      .quiz-btns button.picked-wrong { background: var(--rose); border-color: var(--rose); color: #fff; }
+      @media (prefers-color-scheme: dark) {
+        .quiz-btns button.picked-right, .quiz-btns button.picked-wrong { color: #221719; }
+      }
+      .quiz-btns button:disabled { cursor: default; opacity: 0.9; }
+      .quiz-ans { display: none; margin-top: 12px; font-size: 0.95em; background: var(--bg-soft); border-radius: 12px; padding: 12px 16px; }
+      .quiz-ans.show { display: block; }
+      .quiz-ans .verdict { font-family: "Zen Maru Gothic", sans-serif; font-weight: 900; }
+
+      /* ---------- Steps / actions ---------- */
+      .steps { list-style: none; margin: 16px 0; padding: 0; display: grid; gap: 12px; }
+      .steps li { background: var(--surface); border: 1.5px solid var(--line); border-radius: 16px; padding: 16px 20px; box-shadow: var(--shadow); display: flex; gap: 14px; align-items: flex-start; }
+      .steps .rank {
+        flex: 0 0 auto;
+        width: 34px; height: 34px;
+        border-radius: 50%;
+        background: var(--mint);
+        color: #fff;
+        font-family: "Zen Maru Gothic", sans-serif;
+        font-weight: 900;
+        display: flex; align-items: center; justify-content: center;
+        margin-top: 2px;
+      }
+      @media (prefers-color-scheme: dark) { .steps .rank { color: #0e241b; } }
+      .steps .st { font-weight: 900; font-family: "Zen Maru Gothic", sans-serif; }
+      .steps p { margin: 2px 0 0; font-size: 0.96em; color: var(--ink-soft); }
+
+      .template {
+        background: var(--surface);
+        border: 1.5px dashed var(--rose);
+        border-radius: 16px;
+        padding: 18px 20px;
+        margin: 14px 0;
+      }
+      .template pre {
+        white-space: pre-wrap;
+        word-break: break-word;
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 0.95em;
+        line-height: 1.8;
+        margin: 0 0 12px;
+        color: var(--ink);
+      }
+      .copy-btn {
+        min-height: 44px;
+        border: none;
+        border-radius: 999px;
+        background: var(--rose);
+        color: #fff;
+        font-family: "Zen Maru Gothic", sans-serif;
+        font-weight: 900;
+        font-size: 0.95em;
+        padding: 10px 22px;
+        cursor: pointer;
+      }
+      @media (prefers-color-scheme: dark) { .copy-btn { color: #2b1219; } }
+      .copy-btn.done { background: var(--mint); }
+      @media (prefers-color-scheme: dark) { .copy-btn.done { color: #0e241b; } }
+      .copy-note { font-size: 0.82em; color: var(--muted); margin-left: 10px; }
+
+      /* ---------- Glossary & sources ---------- */
+      .glossary { display: grid; gap: 10px; margin: 16px 0; }
+      .glossary .g-item { background: var(--surface); border: 1.5px solid var(--line); border-radius: 14px; padding: 12px 18px; }
+      .glossary dt { font-family: "Zen Maru Gothic", sans-serif; font-weight: 900; color: var(--rose-deep); }
+      .glossary dd { margin: 2px 0 0; font-size: 0.96em; color: var(--ink-soft); }
+      .sources { font-size: 0.9em; }
+      .sources li { margin-bottom: 10px; }
+      .sources a { word-break: break-all; }
+      footer { margin-top: 56px; border-top: 1.5px solid var(--line); padding-top: 18px; font-size: 0.85em; color: var(--muted); }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- ================= Hero ================= -->
+      <header class="hero">
+        <span class="lead-tag">トークンの仕組み・その2</span>
+        <h1>会話が長くなると、<br />なぜ<span class="hl">トークン</span>が増えて、<br />答えが<span class="hl">ぼんやり</span>するの？</h1>
+        <p class="sub">
+          「長い会話を続けるとAIが賢くなくなる」という話を、ネットで見たことはありませんか。
+          このページでは、その仕組みと、論文や公式ドキュメントで実際に確かめられていることを、
+          初心者向けの言葉で整理します。結論を先に言うと——
+        </p>
+        <ul class="hero-points">
+          <li><span class="n">1</span><span><strong>トークンが増えるのは本当。</strong>AIは毎回、会話の全記録を読み直してから返事をするので、会話が長いほど1回の読み直し量が増えます。</span></li>
+          <li><span class="n">2</span><span><strong>質が落ちる「傾向」も本当。</strong>ただし急に壊れるのではなく、坂道のように少しずつ。しかもモデルや話題によって差があります。</span></li>
+          <li><span class="n">3</span><span><strong>「永久にバカになる」は誤解。</strong>AIの頭の中身が書き換わるのではなく、机の上が散らかるだけ。新しい会話で片付けられます。</span></li>
+        </ul>
+      </header>
+
+      <nav class="toc" aria-label="目次">
+        <h2>もくじ</h2>
+        <ol>
+          <li><a href="#mechanism">仕組み：なぜトークンが増えるのか</a></li>
+          <li><a href="#quality">なぜ質が落ちると言われるのか</a></li>
+          <li><a href="#sure-vs-hype">確かなこと・誇張されがちなこと</a></li>
+          <li><a href="#actions">対応策：今日からできる工夫</a></li>
+          <li><a href="#kappie">カッピーとの付き合い方</a></li>
+          <li><a href="#glossary">やさしい用語集</a></li>
+          <li><a href="#sources">出典</a></li>
+        </ol>
+      </nav>
+
+      <!-- ================= 1. 仕組み ================= -->
+      <section id="mechanism">
+        <div class="sec-head">
+          <span class="sec-num">1</span>
+          <h2>仕組み：なぜトークンが増えるのか</h2>
+        </div>
+        <p class="sec-intro">ポイントはひとつ。AIは「前の話を覚えている人」ではなく、<strong>「毎回、会話の全記録を渡されて、それを読み直してから返事をする人」</strong>だということです。</p>
+
+        <h3 class="sub">AIには「前回の記憶」が残っていない</h3>
+        <p>
+          専門用語で<strong>ステートレス</strong>と言います。「状態（ステート）を保持しない」という意味です。
+          OpenAIの公式ドキュメントは「各リクエストは独立でステートレス」と明言していて、
+          Anthropic（Claudeの開発元）の公式ドキュメントも「各ターンの入力は、すべての過去の会話履歴＋いまの発言」と図で説明しています。
+        </p>
+        <p>
+          つまり、あなたが10回目の発言を送ると、AIの手元には「これまでの9往復ぜんぶ＋新しい発言」が丸ごと届きます。
+          AIはそれを頭から読み直して、やっと返事を書きます。会話が1往復増えるたびに、次に読み直す記録はその分だけ厚くなる——これがトークン消費が増える正体です。
+        </p>
+        <div class="metaphor">
+          <p class="m-label">たとえ話</p>
+          <p>電話の相手が、話すたびに「最初から全部言い直さないと分からない人」だったらどうでしょう。話が長くなるほど、言い直す量が増えて、時間もお金もかかります。AIとの会話は、まさにこの状態で毎回行われています。</p>
+        </div>
+        <p class="src">出典：<a href="https://developers.openai.com/api/docs/guides/conversation-state" target="_blank" rel="noopener">OpenAI「Conversation state」</a>／<a href="https://platform.claude.com/docs/en/build-with-claude/context-windows" target="_blank" rel="noopener">Anthropic「Context windows」</a>（いずれも公式ドキュメント、2026年11月15日閲覧）</p>
+
+        <h3 class="sub">触ってみよう：往復が増えると、読み直し量はこう増える</h3>
+        <p>1往復で平均500トークンずつ記録が増える会話を例に、スライダーで往復数を変えてみてください（説明のための単純計算です）。</p>
+        <div class="sim">
+          <p class="sim-title">トークンの増え方シミュレーター</p>
+          <p class="small muted" style="margin:0;">棒グラフ＝その回にAIが読み直す量（入力トークン）。1往復500トークン増える仮定で計算しています。</p>
+          <div class="sim-controls">
+            <label for="turnRange">会話の往復数</label>
+            <input type="range" id="turnRange" min="1" max="40" step="1" value="20" />
+            <output id="turnOut" for="turnRange">20往復</output>
+          </div>
+          <svg id="simChart" viewBox="0 0 680 240" role="img" aria-label="往復数ごとの入力トークン量を示す棒グラフ"></svg>
+          <div class="sim-stats">
+            <div class="sim-stat">
+              <div class="k" id="statLastK">20回目に読み直す量</div>
+              <div class="v"><span id="statLast">10,000</span><span class="unit"> トークン</span></div>
+            </div>
+            <div class="sim-stat">
+              <div class="k">ここまでの累計消費</div>
+              <div class="v"><span id="statTotal">105,000</span><span class="unit"> トークン</span></div>
+            </div>
+          </div>
+          <p class="small muted" style="margin-top:12px;">
+            1回あたりの量は直線的に増えるだけですが、累計は「三角形の面積」のように膨らみます（だいたい往復数の2乗に近い伸び方）。
+            だから「最初のうちは気にならないのに、後半で急に重く感じる」のです。実際の増え方は、添付ファイルや長い資料を貼ったときに大きくなります。
+          </p>
+        </div>
+
+        <h3 class="sub">「机の広さ」＝コンテキストウィンドウ</h3>
+        <p>
+          AIが一度に目で追える範囲には上限があり、これを<strong>コンテキストウィンドウ（文脈ウィンドウ）</strong>と呼びます。
+          Anthropicはこれを「ワーキングメモリ（作業記憶）」、つまり<strong>机の広さ</strong>と説明しています。
+          机の上には、あなたの発言だけでなく、AI自身の答え、貼った資料、システム側の指示まで、全部が載ります。
+        </p>
+        <p>
+          机の広さはモデルによって違います。Anthropicの現行ドキュメントでは、多くの現行Claudeモデルが最大100万トークン、一部のモデル（例：Sonnet 4.5）は20万トークンとされています（使う時点の公式情報で確認が必要な数字です）。
+          ただし大事なのは、<strong>「机が広い＝載せた物を全部ちゃんと読める」ではない</strong>こと。これが次の章のテーマです。
+        </p>
+
+        <h3 class="sub">机がいっぱいになったら、どうなる？</h3>
+        <p>上限を超えたときの扱いは、製品や使い方によって違います。公式ドキュメントで確認できるのは、次の3パターンのいずれか（または組み合わせ）です。</p>
+        <div class="card">
+          <p class="card-title">あふれたときの3パターン</p>
+          <p><strong>（a）エラーで止まる</strong> — ClaudeのAPIでは、入力だけで上限を超えると「prompt is too long」というエラーが返ります。</p>
+          <p><strong>（b）切り捨てられる</strong> — OpenAIの公式ページは、上限を超えた分が応答で切り捨てられることがあると述べています。</p>
+          <p style="margin-bottom:0;"><strong>（c）要約に置き換わる</strong> — 会話の初めの方を自動で要約して短くし、続きを続けられる仕組み（<strong>compaction</strong>）を、AnthropicもOpenAIも公式に用意しています。</p>
+        </div>
+        <div class="warn">
+          <p class="w-label">ここは断定できません</p>
+          <p>ChatGPTやClaudeの<strong>チャット画面（製品版）の内部</strong>で、上限に近づいたときに具体的に何が起きるかは、公開された一次情報では完全には分かりません。「製品版は必ず全履歴をそのまま再送している」とも断定できない、というのが正直なところです。</p>
+        </div>
+
+        <h3 class="sub">読み直した分も「料金・利用枠」の対象になる</h3>
+        <p>
+          API（プログラムからAIを使う仕組み）では、入力トークンも出力トークンも課金の対象です。
+          OpenAIは公式に「サーバー側で履歴をつないでもらう方式でも、過去の入力トークンはすべて入力トークンとして課金される」と明記しています。
+          「過去分がタダになる」ことはありません。
+        </p>
+        <p>
+          なお、月額プランの「利用枠」がトークン量でどう計算されているかは、公式の計算式が公開されていないため、このページでは断定しません。
+          ただ、1回あたりの処理量が増えれば負担が増える、という仕組み自体はAPIの説明とつじつまが合います。
+        </p>
+      </section>
+
+      <!-- ================= 2. 質 ================= -->
+      <section id="quality">
+        <div class="sec-head">
+          <span class="sec-num mint">2</span>
+          <h2>なぜ質が落ちると言われるのか</h2>
+        </div>
+        <p class="sec-intro">「なんとなくそう感じる」だけの話ではありません。査読（専門家による審査）を経た論文や、方法を公開した調査で、いくつかの傾向が繰り返し確かめられています。ただし、どれも「条件つき」の結果です。条件ごとに見ていきましょう。</p>
+
+        <h3 class="sub rose">真ん中の情報が埋もれる ― Lost in the Middle</h3>
+        <p>
+          2023年の論文「Lost in the Middle（真ん中で迷子）」は、こんな実験をしました。
+          質問と、答えが書かれた文書1つ＋関係ない文書いくつかをAIに渡し、<strong>答えの文書の「置き場所」だけ</strong>を変えて、正解率を比べたのです。
+        </p>
+        <p>結果はきれいな<strong>U字型</strong>でした。答えが<strong>最初か最後</strong>にあるときはよく使われ、<strong>真ん中</strong>にあると大きく使われにくくなったのです。</p>
+        <figure class="chart">
+          <svg viewBox="0 0 680 250" role="img" aria-label="情報の置き場所と使われやすさのU字型グラフ（傾向のイメージ）">
+            <line x1="70" y1="30" x2="70" y2="205" stroke="var(--line)" stroke-width="2" />
+            <line x1="70" y1="205" x2="655" y2="205" stroke="var(--line)" stroke-width="2" />
+            <text x="30" y="45" font-size="13" fill="var(--muted)">高</text>
+            <text x="30" y="200" font-size="13" fill="var(--muted)">低</text>
+            <text x="18" y="120" font-size="13" fill="var(--muted)" transform="rotate(-90 18 120)" text-anchor="middle">使われやすさ</text>
+            <path d="M 95 62 C 210 70, 265 178, 368 186 C 470 178, 545 82, 632 66" fill="none" stroke="var(--rose)" stroke-width="4" stroke-linecap="round" />
+            <circle cx="95" cy="62" r="7" fill="var(--rose)" />
+            <circle cx="368" cy="186" r="7" fill="var(--rose)" />
+            <circle cx="632" cy="66" r="7" fill="var(--rose)" />
+            <text x="95" y="232" font-size="14" fill="var(--ink)" text-anchor="middle" font-weight="700">最初の方</text>
+            <text x="368" y="232" font-size="14" fill="var(--ink)" text-anchor="middle" font-weight="700">真ん中</text>
+            <text x="632" y="232" font-size="14" fill="var(--ink)" text-anchor="middle" font-weight="700">最後の方</text>
+            <text x="368" y="150" font-size="13.5" fill="var(--rose-deep)" text-anchor="middle" font-weight="700">ここが埋もれる</text>
+          </svg>
+          <figcaption>置き場所による使われやすさの傾向（論文が示したU字型のイメージ図。縦軸は正解率の目盛りではなく傾向を表します）。</figcaption>
+        </figure>
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="big">88.3%</div>
+            <div class="cap">答えの文書<strong>だけ</strong>を渡したときの正解率（GPT-3.5-Turboの実験）</div>
+          </div>
+          <div class="stat-box">
+            <div class="big">56.1%</div>
+            <div class="cap">文書を<strong>何も渡さなかった</strong>ときの正解率（同上）</div>
+          </div>
+          <div class="stat-box">
+            <div class="big">20pt超</div>
+            <div class="cap">答えを真ん中に置いたときの低下幅の例。最悪の条件では「何も渡さない」より悪くなりました</div>
+          </div>
+        </div>
+        <p>
+          つまり「資料を渡したのに、置き場所のせいで、渡さないより悪くなる」ことすら起きたわけです。
+          長い会話では、<strong>最初の頃の指示や途中で決めたことが、自然と「真ん中」に来てしまいます</strong>。だからこの研究が、長い会話の話に応用されるのです。
+        </p>
+        <div class="warn">
+          <p class="w-label">ただし、条件に注意</p>
+          <p>これは2023年当時のモデル（GPT-3.5-TurboやClaude-1.3など）での実験で、課題も「文書から答えを探す」ものに限られます。低下の<strong>大きさ</strong>を今のモデルにそのまま当てはめることはできません。また、モデルと課題の組み合わせによっては、U字がほとんど見られなかった例も論文の中にあります（例：キーと値の検索ではClaude-1.3はほぼ完璧でした）。</p>
+        </div>
+        <p class="src">出典：Liu et al.「Lost in the Middle: How Language Models Use Long Contexts」TACL掲載（査読誌）／ <a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">arXiv:2307.03172</a>。注意バイアスの裏付け：Hsieh et al.「Found in the Middle」Findings of ACL 2024／<a href="https://aclanthology.org/2024.findings-acl.890/" target="_blank" rel="noopener">ACL Anthology</a></p>
+
+        <h3 class="sub rose">「注意の予算」が薄く広がる</h3>
+        <p>
+          AIが文章を読む仕組み（注意機構＝attention）は、すべての言葉同士の関係をチェックします。言葉が増えると、チェックすべき関係の数は<strong>トークン数の2乗</strong>で増えていきます。
+          Anthropicはこれを<strong>「注意の予算」</strong>と呼んでいます。新しいトークンが1つ増えるごとに、予算は少しずつ目減りしていく——ただし同社は、劣化は<strong>「硬い崖ではなく、なだらかな勾配（坂道）」</strong>だと表現しています。長くても能力は保たれるけれど、探し物の精度や、遠く離れた情報同士をつなぐ力は下がりうる、ということです。
+        </p>
+        <p>
+          もうひとつ分かっているのは、モデルの注意には「大事かどうか」とは別に、<strong>置かれた場所によるクセ</strong>（最初と最後に注意が向きやすい）があることです。「薄まる」と「偏る」の両方が起きている、と理解するのが研究に近い姿です。
+        </p>
+        <p class="src">出典：Anthropic「Effective context engineering for AI agents」2025年9月29日／<a href="https://www.anthropic.com/research/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">anthropic.com</a></p>
+
+        <h3 class="sub rose">紛らわしい情報（distractor）が混ざる</h3>
+        <p>
+          長い会話には、終わった話題、やめて撤回した案、似た名前や似た数字など、<strong>「いまの質問には関係ないけれど、紛らわしい情報」</strong>が自然に溜まっていきます。
+          こうした紛らわしい情報を<strong>distractor（ディストラクター）</strong>と呼びます。
+        </p>
+        <p>
+          2023年の研究（ICML発表）では、小学校の算数の問題に<strong>無関係な文をたった1文</strong>入れただけで、モデルの成績が大きく下がりました。
+          2025年の調査でも、答えに似せた紛らわしい情報を1つ入れるだけで成績が下がり、4つ入れるとさらに下がったことが報告されています。
+        </p>
+        <p class="src">出典：Shi et al.「Large Language Models Can Be Easily Distracted by Irrelevant Context」ICML 2023／<a href="https://arxiv.org/abs/2302.00093v3" target="_blank" rel="noopener">arXiv:2302.00093</a>（※算数の課題での実験であり、会話そのものの実験ではありません）</p>
+
+        <h3 class="sub rose">机がいっぱいになる「前」から ― Context Rot</h3>
+        <p>
+          2025年7月、Chroma Researchが「Context Rot（文脈の腐敗）」という調査を公表しました。
+          工夫点は、<strong>課題の難しさを変えずに、入力の長さだけを変えた</strong>こと。これにより「長いから難しいのか、難しいから解けないのか」を切り分けようとしました。対象はClaude、GPT、Geminiなど18モデルです。
+        </p>
+        <p>結果の総括は「すべての実験を通じて、入力が長くなるにつれて性能は一貫して下がった」。しかも、<strong>上限に達するずっと前から</strong>下がり始めていました。</p>
+        <p>中でも分かりやすいのが、会話履歴から答える課題での比較です。答えはどちらの入力にも含まれていて、違うのは「余計な履歴の量」だけ——それでも全モデルで差がつきました。</p>
+        <figure class="chart">
+          <svg viewBox="0 0 680 158" role="img" aria-label="関連部分だけの入力と履歴全部の入力の長さの比較棒グラフ">
+            <text x="0" y="24" font-size="14.5" fill="var(--ink)" font-weight="700">関連部分だけ抜き出した入力</text>
+            <rect x="0" y="34" width="4" height="22" rx="3" fill="var(--mint)" />
+            <text x="14" y="50" font-size="14" fill="var(--mint-deep)" font-weight="700">平均 約300トークン</text>
+            <text x="0" y="92" font-size="14.5" fill="var(--ink)" font-weight="700">無関係な履歴も含む入力</text>
+            <rect x="0" y="102" width="640" height="22" rx="3" fill="var(--rose)" />
+            <text x="0" y="146" font-size="14" fill="var(--rose-deep)" font-weight="700">平均 約113,000トークン</text>
+          </svg>
+          <figcaption>Chroma「Context Rot」のLongMemEval実験で使われた2種類の入力の長さ（実寸比）。全モデルファミリーで、短い「関連部分だけ」の入力の方が有意に高性能でした。Claude系では、曖昧なときに「分からない」と回答を控える傾向も差の一因と分析されています。</figcaption>
+        </figure>
+        <div class="warn">
+          <p class="w-label">読み方に注意</p>
+          <p>これは査読論文ではなく、企業のテクニカルレポートです。ただし実験の設計・対象モデル・再現コードが公開されていて、検証できる形になっている点が、出所不明のSNS投稿とは違います。一方で、Chromaは「検索で情報を絞る」製品の会社なので、その結論と無縁ではない立場であること、そして著者自身が「劣化の仕組み自体は説明していない」と明記していることも、合わせて知っておく価値があります。</p>
+        </div>
+        <p class="src">出典：Hong, Troynikov, Huber「Context Rot: How Increasing Input Tokens Impacts LLM Performance」Chroma Research、2025年7月14日／<a href="https://www.trychroma.com/research/context-rot" target="_blank" rel="noopener">trychroma.com</a>。なお「context rot」という言葉自体は、Anthropicの公式ドキュメントでも「トークン数が増えると精度と想起が劣化する現象」として使われています。</p>
+
+        <h3 class="sub rose">「公称の広さ」と「実際に使える広さ」は違う</h3>
+        <p>
+          メーカーが「○○万トークン対応」と言うとき、その根拠はたいてい<strong>針探しテスト（Needle in a Haystack）</strong>——長い文章に1文だけ埋めて、取り出せるかを見る単純なテストです。
+          でも、これは「同じ言葉を探す」だけの課題。実際の会話のように、複数の情報をつないだり、集計したり、言葉の言い換えをくみ取ったりする力は測れていません。
+        </p>
+        <p>
+          そこで作られた厳しいテスト（RULER、NoLiMa）では、様子が変わります。
+          RULERでは、32K（3万2千）トークン以上の対応をうたう17モデルのうち、32Kの長さで満足な性能を保てたのは<strong>約半数だけ</strong>でした。
+          NoLiMaでは、比較的強かったGPT-4oでも正解率が<strong>99.3% → 69.7%</strong>に低下しています。
+          「公称ウィンドウ＝実効ウィンドウではない」というのが、研究側の共通した見方です。
+        </p>
+        <p class="src">出典：Hsieh et al.「RULER」COLM 2024／<a href="https://arxiv.org/abs/2404.06654" target="_blank" rel="noopener">arXiv:2404.06654</a>、Modarressi et al.「NoLiMa」ICML 2025／<a href="https://arxiv.org/abs/2502.05167" target="_blank" rel="noopener">arXiv:2502.05167</a></p>
+      </section>
+
+<!-- ================= 3. 確か vs 誇張 ================= -->
+<section id="sure-vs-hype">
+<div class="sec-head">
+<span class="sec-num">3</span>
+<h2>確かなこと・誇張されがちなこと</h2>
+</div>
+<p class="sec-intro">ネットの記事やSNSでは、研究結果が少し姿を変えて広まることがあります。一次情報（論文・公式ドキュメント）で裏付けられることと、言い過ぎになりがちなことを分けました。</p>
+
+<div class="vs-grid">
+<div class="vs-col sure">
+<h3>確かなこと（裏付けあり）</h3>
+<ul>
+<li><b>会話が長いほど、1回の入力トークンは増える</b>履歴が入力に含まれるため。OpenAI・Anthropic両社の公式ドキュメントで確認できます。</li>
+<li><b>読み直した過去分も、課金の対象</b>サーバー側で履歴をつないでもらう方式でも、過去の入力トークンは課金されるとOpenAIが明記しています。</li>
+<li><b>情報の「置き場所」で使われやすさが変わる</b>最初と最後が強く、真ん中が弱い（U字型）。査読論文で確認されています。</li>
+<li><b>難しさが同じでも、入力が長いだけで性能が下がることがある</b>上限に達する前から。複数の調査が同じ方向を示しています。</li>
+<li><b>紛らわしい情報が混ざると性能が下がりうる</b>無関係な文1つでも影響した実験があります。</li>
+<li><b>「公称の広さ＝実際に使える広さ」ではない</b>難しい課題ほど、実効の長さは短くなります。</li>
+</ul>
+</div>
+<div class="vs-col hype">
+<h3>誇張・誤解されがちなこと</h3>
+<ul>
+<li><b>「AIが学習して、永久にバカになる」</b>誤解です。会話の最中にAIの頭の中身（学習済みパラメータ＝重み）は書き換わりません。変わるのは、その回に渡される「机の上の記録」だけです。</li>
+<li><b>「○往復を超えたら急にダメになる」</b>そのような普遍的な境目は、主要な一次研究では示されていません。Anthropic自身の表現は「崖ではなく勾配（坂道）」です。</li>
+<li><b>「窓の25〜30%が安全上限」という数字</b>Chromaの一次レポート本文に、そのような一律の推奨はありませんでした。二次記事が付けた目安の可能性があります。</li>
+<li><b>2023年の数字を、今のモデルの話として語る</b>「真ん中の情報を○%落とす」のような数字は、2023年当時のモデル・特定の実験条件のものです。</li>
+<li><b>「針探しで高得点＝長文脈は解決済み」</b>逆向きの誇張です。針探しは「同じ言葉を探す」単純な課題にすぎません。</li>
+<li><b>体験談だけで原因を決める</b>「長く話したら変な答えが返ってきた」には、指示の矛盾や話題の切り替え、要約による情報落ちなど、長さ以外の原因もありえます。</li>
+</ul>
+</div>
+</div>
+
+<div class="metaphor">
+<p class="m-label">一番大事な言い換え</p>
+<p>AIがバカになったのではなく、<strong>机が散らかっただけ</strong>。新しい机（新しい会話）に、大事なノートだけを持ち込めば元に戻ります。逆に言えば、「このアカウントのAIは使い込んで劣化した」という永続的な劣化の主張には、今回確認した一次情報に根拠がありませんでした。</p>
+</div>
+
+<h3 class="sub">クイズ：これは「確か」？「誇張」？</h3>
+<p>読んだ内容で、ちょっと腕試し。ボタンを押すと答えが出ます。</p>
+
+<div class="quiz-item" data-answer="hype">
+<p class="quiz-q">Q1.「長い会話を続けると、AIは会話から学習して、だんだん永久にバカになっていく」</p>
+<div class="quiz-btns">
+<button type="button" data-pick="sure">確かなこと</button>
+<button type="button" data-pick="hype">誇張・誤解</button>
+</div>
+<div class="quiz-ans">
+<span class="verdict">答え：誇張・誤解。</span>
+会話の最中にAIの中身（重み）は変わりません。変わるのは渡される記録の量と中身だけ。新しい会話では、文脈による影響は持ち越されません。
+</div>
+</div>
+
+<div class="quiz-item" data-answer="sure">
+<p class="quiz-q">Q2.「会話が長くなるほど、1回の返事のためにAIが読み直す量が増える」</p>
+<div class="quiz-btns">
+<button type="button" data-pick="sure">確かなこと</button>
+<button type="button" data-pick="hype">誇張・誤解</button>
+</div>
+<div class="quiz-ans">
+<span class="verdict">答え：確かなこと。</span>
+AIはステートレスで、毎回「履歴＋新しい発言」を入力として受け取ります。公式ドキュメントで確認できる仕組みです。
+</div>
+</div>
+
+<div class="quiz-item" data-answer="hype">
+<p class="quiz-q">Q3.「研究で、窓の30%を超えたら急にダメになると分かっている」</p>
+<div class="quiz-btns">
+<button type="button" data-pick="sure">確かなこと</button>
+<button type="button" data-pick="hype">誇張・誤解</button>
+</div>
+<div class="quiz-ans">
+<span class="verdict">答え：誇張・誤解。</span>
+一律の％の境目は一次情報で確認できませんでした。劣化は「崖」ではなく「坂道」で、下がり方はモデルと課題によって違います。
+</div>
+</div>
+
+<div class="quiz-item" data-answer="sure">
+<p class="quiz-q">Q4.「落とされたくない大事な指示は、長い履歴の真ん中に埋めず、最初か最後で言い直す方がよい」</p>
+<div class="quiz-btns">
+<button type="button" data-pick="sure">確かなこと</button>
+<button type="button" data-pick="hype">誇張・誤解</button>
+</div>
+<div class="quiz-ans">
+<span class="verdict">答え：確かなこと（傾向として）。</span>
+「真ん中が使われにくい」という位置の研究と整合的です。絶対の保証ではありませんが、試す価値のある工夫です。
+</div>
+</div>
+
+<div class="warn">
+<p class="w-label">まだ分からないこと（正直にお伝えします）</p>
+<p>・月額プランの「利用枠」がトークン量でどう計算されるか、公式の計算式は確認できませんでした。<br />
+・ChatGPTなど製品版チャットの内部で、上限に近づいたときに具体的に何を切り捨て・要約しているかは、公開一次情報では分かりません。<br />
+・主な研究は英語の課題が中心で、<strong>日本語の会話で同じ大きさの劣化が起きるか</strong>を示す一次研究は確認できませんでした。<br />
+・2025年後半以降の最新モデルで、昔の実験結果がどの程度そのまま当てはまるかを示す査読済みの追試も、今回は確認できませんでした。</p>
+</div>
+</section>
+
+<!-- ================= 4. 対応策 ================= -->
+<section id="actions">
+<div class="sec-head">
+<span class="sec-num mint">4</span>
+<h2>対応策：今日からできる工夫</h2>
+</div>
+<p class="sec-intro">公式ドキュメントや研究の後押しがある順に、優先順位をつけて並べました。難しいことは何もありません。「机を小さく、きれいに保つ」が合言葉です。</p>
+
+<ol class="steps">
+<li>
+<span class="rank">1</span>
+<div>
+<span class="st">話題が変わったら、新しい会話を始める</span>
+<p>コストにも質にも一番効く基本技です。終わった話題は「紛らわしい情報」の元にもなります。昨日の相談と今日の相談は、別の会話にするだけでOKです。</p>
+</div>
+</li>
+<li>
+<span class="rank">2</span>
+<div>
+<span class="st">続ける場合は「要約＋大事な原文」だけを引き継ぐ</span>
+<p>Anthropicが公式に推奨する compaction（要約して新しい文脈で始める）を、手動でやる方法です。下の文例とテンプレートが使えます。要約は必ず少し情報が落ちるので、数字・固有名詞・「○○はしない」のような約束ごとは、要約任せにせず原文のまま添えるのが安全です。</p>
+</div>
+</li>
+<li>
+<span class="rank">3</span>
+<div>
+<span class="st">大事な指示は、最後にもう一度言い直す／資料は前、問いは後ろ</span>
+<p>「真ん中が埋もれる」研究への対策です。長い会話で最初の指示が効かなくなったと感じたら、指示そのものを直近の発言で再掲しましょう。長い資料を渡すときは、資料を先に置いて質問を後に置く形が、Anthropicの公式ガイドでも推奨されています。</p>
+</div>
+</li>
+<li>
+<span class="rank">4</span>
+<div>
+<span class="st">終わった話題・関係ない資料は、文脈に残さない</span>
+<p>撤回した案や関係ない資料を貼ったままにしない、長いログは全文でなく必要な抜粋だけにする、といった小さな片付けです。「この資料は無関係なので無視して」と明示する指示にも、実験上の一定の裏付けがあります。</p>
+</div>
+</li>
+<li>
+<span class="rank">5</span>
+<div>
+<span class="st">長期の情報は、手元のファイル（メモ）に逃がす</span>
+<p>Anthropicが「構造化ノート」と呼ぶ公式の手法です。決定事項・用語集・前提条件を自分のメモ文書に一元化しておき、会話ごとに最新版を渡す。会話履歴そのものを「唯一の記録」にしないことで、会話を新しくしても情報が失われません。</p>
+</div>
+</li>
+</ol>
+
+<h3 class="sub">そのまま使える文例①：引き継ぎ要約をお願いする</h3>
+<p>会話を切り替えたいとき、いまの会話の最後にこう頼むと、次の会話へ渡すメモが作れます。</p>
+<div class="template">
+<pre id="tplSummary">この会話を、新しい会話に引き継ぐためのメモにまとめてください。
+・決まったこと
+・前提や約束ごと（変えてはいけないこと）
+・まだ決まっていないこと、残っている宿題
+・大事な数字や名前（元の表記のまま、変えずに）
+を分けて書いてください。</pre>
+<button type="button" class="copy-btn" data-copy="tplSummary">この文例をコピー</button><span class="copy-note" aria-live="polite"></span>
+</div>
+
+<h3 class="sub">そのまま使える文例②：引き継ぎメモの型</h3>
+<p>自分でメモを書くときの型です。この形で埋めて、新しい会話の最初に貼るだけで、AIは前の文脈をかなり正確につかめます。</p>
+<div class="template">
+<pre id="tplMemo">
+■ 目的・ゴール：
+■ 決まったこと：
+■ 前提・約束ごと（変えてはいけないこと）：
+■ まだ決まっていないこと・宿題：
+■ 大事な数字・名前（原文のまま）：
+■ 次にやってほしいこと：</pre>
+<button type="button" class="copy-btn" data-copy="tplMemo">この型をコピー</button><span class="copy-note" aria-live="polite"></span>
+</div>
+<p class="src">対応策の根拠：Anthropic「Effective context engineering for AI agents」（compaction／構造化ノート／文脈を小さく保つ原則）、Anthropic「Prompting best practices — Long context prompting」（資料は上部に、など）、Liu et al. 2023（位置効果）、Shi et al. 2023（無関係な情報の影響）</p>
+</section>
+
+<!-- ================= 5. カッピー ================= -->
+<section id="kappie">
+<div class="sec-head">
+<span class="sec-num">5</span>
+<h2>カッピーとの付き合い方</h2>
+</div>
+<p class="sec-intro">この研究を、Muse（カッピー）との日常に置き換えると、こうなります。すでにおかざきさんが実践していることも含まれています。</p>
+
+<div class="card">
+<p class="card-title">テーマごとに会話（セッション）を分ける ― 実践中です</p>
+<p style="margin-bottom:0;">Pythonの学習、AIセキュリティ、「ひと目トーク」の相談、「みらい議会」の制作……テーマごとに専用の会話を分ける運用は、まさに「対応策その1」です。話題が混ざらないので、紛らわしい情報も溜まりにくく、1回あたりの読み直し量も小さく保てます。この調子で大丈夫です。</p>
+</div>
+<div class="card">
+<p class="card-title">ひとつの会話が長くなってきたら</p>
+<p style="margin-bottom:0;">「そろそろ新しい会話に引き継いで」と頼んでください。上の文例①で引き継ぎメモを作り、新しい会話の冒頭に貼れば、決まったことや約束ごとを引き継げます。カッピー側で続きのセッションを用意することもできます。大事な数字や名前は、要約に混ぜず原文のまま渡すのがコツです。</p>
+</div>
+<div class="card">
+<p class="card-title">「メモリ機能」は、机とは別の仕組み</p>
+<p style="margin-bottom:0;">Museには、会話をまたいで覚えておくメモリの仕組みがあります。これは「机の上の記録」とは別物で、大事な約束ごとや好みを長期的にしまっておく引き出しのようなものです。だから、会話を新しくしても、メモリにしまったことは引き継がれます。逆に「その場限りの細かい文脈」は新しい会話には残りません——そこは引き継ぎメモの出番です。</p>
+</div>
+<div class="card">
+<p class="card-title">大事な指示は、遠慮なく言い直してOK</p>
+<p style="margin-bottom:0;">「さっきも言ったけど」と気にする必要はありません。研究が示す通り、直近の発言にある情報ほど使われやすいので、重要な約束ごとは節目ごとに言い直すのが、むしろ上手な付き合い方です。答えがぼんやりしてきたと感じたら、それも合図。「要約して新しい会話に移ろう」と声をかけてください。</p>
+</div>
+</section>
+
+<!-- ================= 用語集 ================= -->
+<section id="glossary">
+<div class="sec-head">
+<span class="sec-num mint">6</span>
+<h2>やさしい用語集</h2>
+</div>
+<dl class="glossary">
+<div class="g-item"><dt>トークン</dt><dd>AIが文章を読むときの最小の刻み。単語そのものではなく、単語の欠片のような単位です。</dd></div>
+<div class="g-item"><dt>ステートレス</dt><dd>AIには前回の記憶が残っていない、という性質。毎回、会話の全記録を渡されて、それを読んで返事をしています。</dd></div>
+<div class="g-item"><dt>コンテキストウィンドウ</dt><dd>AIの「机の広さ」。一度に目で追える範囲のことで、履歴も資料も自分の答えも、全部この机に載ります。</dd></div>
+<div class="g-item"><dt>Lost in the Middle</dt><dd>「真ん中で迷子」。長い入力の真ん中に書かれた大事なことは、最初や最後に書かれたことより見つけてもらいにくい、という研究結果です。</dd></div>
+<div class="g-item"><dt>Context Rot</dt><dd>「文脈の腐敗」。机がいっぱいになる前から、載せる物が増えるほど探し物が下手になっていく現象を指す言葉です。</dd></div>
+<div class="g-item"><dt>distractor（ディストラクター）</dt><dd>答えに似ている紛らわしい情報。終わった話題や撤回した案が残っていると、これになりやすいものです。</dd></div>
+<div class="g-item"><dt>compaction（コンパクション）</dt><dd>記録を要約ノートに書き換えて、机を片付けてから続きをやること。公式にも用意されている仕組みです。</dd></div>
+<div class="g-item"><dt>注意の予算（attention budget）</dt><dd>AIが「どれに注目するか」の配分。入力が増えるほど、1つあたりに回せる注意は目減りしていきます。</dd></div>
+</dl>
+</section>
+
+<!-- ================= 出典 ================= -->
+<section id="sources">
+<div class="sec-head">
+<span class="sec-num">7</span>
+<h2>出典</h2>
+</div>
+<p class="sec-intro">このページの内容は、2026年11月15日に調べた以下の一次情報をもとにしています。</p>
+<h3 class="sub">論文（査読済み中心）</h3>
+<ol class="sources">
+<li>Liu, N. F. et al.「Lost in the Middle: How Language Models Use Long Contexts」TACL掲載（arXiv:2307.03172）<br /><a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">https://arxiv.org/abs/2307.03172</a></li>
+<li>Hsieh, C.-Y. et al.「Found in the Middle: Calibrating Positional Attention Bias Improves Long Context Utilization」Findings of ACL 2024<br /><a href="https://aclanthology.org/2024.findings-acl.890/" target="_blank" rel="noopener">https://aclanthology.org/2024.findings-acl.890/</a></li>
+<li>Shi, F. et al.「Large Language Models Can Be Easily Distracted by Irrelevant Context」ICML 2023（arXiv:2302.00093）<br /><a href="https://arxiv.org/abs/2302.00093v3" target="_blank" rel="noopener">https://arxiv.org/abs/2302.00093v3</a></li>
+<li>Hsieh, C.-P. et al.「RULER: What's the Real Context Size of Your Long-Context Language Models?」COLM 2024（arXiv:2404.06654）<br /><a href="https://arxiv.org/abs/2404.06654" target="_blank" rel="noopener">https://arxiv.org/abs/2404.06654</a></li>
+<li>Modarressi, A. et al.「NoLiMa: Long-Context Evaluation Beyond Literal Matching」ICML 2025（arXiv:2502.05167）<br /><a href="https://arxiv.org/abs/2502.05167" target="_blank" rel="noopener">https://arxiv.org/abs/2502.05167</a></li>
+</ol>
+<h3 class="sub">研究機関のテクニカルレポート（査読なし）</h3>
+<ol class="sources" start="6">
+<li>Hong, K., Troynikov, A., Huber, J.「Context Rot: How Increasing Input Tokens Impacts LLM Performance」Chroma Research、2025年7月14日<br /><a href="https://www.trychroma.com/research/context-rot" target="_blank" rel="noopener">https://www.trychroma.com/research/context-rot</a></li>
+</ol>
+<h3 class="sub">公式ドキュメント・公式技術解説</h3>
+<ol class="sources" start="7">
+<li>OpenAI「Conversation state」OpenAI Developers公式ドキュメント（2026年11月15日閲覧）<br /><a href="https://developers.openai.com/api/docs/guides/conversation-state" target="_blank" rel="noopener">https://developers.openai.com/api/docs/guides/conversation-state</a></li>
+<li>Anthropic「Context windows」Claude Platform Docs（2026年11月15日閲覧）<br /><a href="https://platform.claude.com/docs/en/build-with-claude/context-windows" target="_blank" rel="noopener">https://platform.claude.com/docs/en/build-with-claude/context-windows</a></li>
+<li>Anthropic「Effective context engineering for AI agents」Anthropic Research、2025年9月29日<br /><a href="https://www.anthropic.com/research/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">https://www.anthropic.com/research/effective-context-engineering-for-ai-agents</a></li>
+<li>Anthropic「Prompting best practices — Long context prompting」Claude Platform Docs（2026年11月15日閲覧）<br /><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank" rel="noopener">https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices</a></li>
+</ol>
+</section>
+
+<footer>
+<p>調査日：2026年11月15日。モデルや製品の仕様は変わっていくため、大きさの目安として挙げた数字（ウィンドウの上限など）は、使う時点の公式情報でご確認ください。このページは「Museのトークン入門」の続編として作りました。</p>
+</footer>
+</div>
+
+<script>
+(function () {
+"use strict";
+
+/* ---------- Token growth simulator ---------- */
+var PER_TURN = 500; /* 1往復で増える記録の量（説明用の仮定） */
+var range = document.getElementById("turnRange");
+var out = document.getElementById("turnOut");
+var svg = document.getElementById("simChart");
+var statLast = document.getElementById("statLast");
+var statLastK = document.getElementById("statLastK");
+var statTotal = document.getElementById("statTotal");
+var NS = "http://www.w3.org/2000/svg";
+
+function fmt(n) { return n.toLocaleString("ja-JP");}
+
+function draw() {
+var turns = parseInt(range.value, 10);
+out.textContent = turns + "往復";
+var data = [];
+for (var t = 1; t <= turns; t++) { data.push(PER_TURN * t);}
+var last = data[data.length - 1];
+var total = 0;
+for (var i = 0; i < data.length; i++) { total += data[i];}
+statLast.textContent = fmt(last);
+statLastK.textContent = turns + "回目に読み直す量";
+statTotal.textContent = fmt(total);
+
+/* chart geometry: plot area x 56..668, y 18..196, baseline 196 */
+var W = 680, baseY = 196, topY = 18, leftX = 56, rightX = 668;
+var maxV = Math.max(PER_TURN * 40, last);
+while (svg.firstChild) { svg.removeChild(svg.firstChild);}
+
+function el(name, attrs) {
+var e = document.createElementNS(NS, name);
+for (var k in attrs) { e.setAttribute(k, attrs[k]);}
+return e;
+}
+/* gridlines + y ticks (0, max/2, max) */
+[0, 0.5, 1].forEach(function (f) {
+var y = baseY - (baseY - topY) * f;
+svg.appendChild(el("line", { x1: leftX, y1: y, x2: rightX, y2: y, stroke: "var(--line)", "stroke-width": f === 0? 2: 1}));
+var tx = el("text", { x: leftX - 8, y: y + 4, "text-anchor": "end", "font-size": 11.5, fill: "var(--muted)"});
+tx.textContent = fmt(Math.round(maxV * f));
+svg.appendChild(tx);
+});
+var slot = (rightX - leftX) / turns;
+var bw = Math.max(3, Math.min(18, slot * 0.68));
+data.forEach(function (v, idx) {
+var h = (baseY - topY) * (v / maxV);
+var x = leftX + slot * idx + (slot - bw) / 2;
+var isLast = idx === data.length - 1;
+svg.appendChild(el("rect", {
+x: x.toFixed(1), y: (baseY - h).toFixed(1), width: bw.toFixed(1), height: h.toFixed(1),
+rx: 2, fill: isLast? "var(--rose)": "var(--mint)", opacity: isLast? 1: 0.75
+}));
+});
+/* x labels: first, middle, last */
+function xLabel(turn, anchor) {
+var cx = leftX + slot * (turn - 0.5);
+var tx = el("text", { x: cx, y: 222, "text-anchor": anchor || "middle", "font-size": 12, fill: "var(--muted)"});
+tx.textContent = turn + "回目";
+svg.appendChild(tx);
+}
+xLabel(1, "start");
+if (turns >= 8) { xLabel(Math.round(turns / 2));}
+if (turns > 1) { xLabel(turns, "end");}
+/* last bar value label */
+var lv = el("text", { x: rightX, y: topY - 4 > 12? 14: 14, "text-anchor": "end", "font-size": 12.5, fill: "var(--rose-deep)", "font-weight": 700});
+lv.textContent = "最後の1回：" + fmt(last) + "トークン";
+svg.appendChild(lv);
+}
+range.addEventListener("input", draw);
+draw();
+
+/* ---------- Quiz ---------- */
+var items = document.querySelectorAll(".quiz-item");
+items.forEach(function (item) {
+var answer = item.getAttribute("data-answer");
+var btns = item.querySelectorAll(".quiz-btns button");
+var ans = item.querySelector(".quiz-ans");
+btns.forEach(function (btn) {
+btn.addEventListener("click", function () {
+var pick = btn.getAttribute("data-pick");
+btns.forEach(function (b) { b.disabled = true;});
+btn.classList.add(pick === answer? "picked-right": "picked-wrong");
+ans.classList.add("show");
+});
+});
+});
+
+/* ---------- Copy buttons ---------- */
+var copyBtns = document.querySelectorAll("[data-copy]");
+copyBtns.forEach(function (btn) {
+btn.addEventListener("click", function () {
+var target = document.getElementById(btn.getAttribute("data-copy"));
+var note = btn.parentElement.querySelector(".copy-note");
+function done() {
+btn.classList.add("done");
+btn.textContent = "コピーしました ✓";
+if (note) { note.textContent = "貼り付けて使えます";}
+setTimeout(function () {
+btn.classList.remove("done");
+btn.textContent = btn.getAttribute("data-copy") === "tplSummary"? "この文例をコピー": "この型をコピー";
+if (note) { note.textContent = "";}
+}, 2600);
+}
+function fallback() {
+var ta = document.createElement("textarea");
+ta.value = target.textContent;
+ta.style.position = "fixed";
+ta.style.opacity = "0";
+document.body.appendChild(ta);
+ta.select();
+try { document.execCommand("copy"); done();} catch (e) {
+if (note) { note.textContent = "コピーできませんでした。長押しで選択してください";}
+}
+document.body.removeChild(ta);
+}
+if (navigator.clipboard && navigator.clipboard.writeText) {
+navigator.clipboard.writeText(target.textContent).then(done, fallback);
+} else {
+fallback();
+}
+});
+});
+})();
+</script>
+</body>
+</html>
