@@ -129,6 +129,23 @@
   .icon-btn{width:2.5rem; height:2.5rem; border-radius:50%; border:1px solid var(--line-strong); background:var(--bg-sub); display:grid; place-items:center; flex:none}
   .icon-btn.key{border:2px solid var(--accent); background:var(--accent-soft)}
   .search{flex:1; border:1px solid var(--line); background:var(--bg-sub); border-radius:999px; padding:.5rem .75rem; font-size:.8125rem; color:var(--muted); display:flex; align-items:center; gap:.4rem; min-width:0}
+  /* step figures */
+  .steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(12.5rem,1fr)); gap:.9rem; align-items:start}
+  .step{display:grid; gap:.45rem}
+  .step-label{font-size:.8125rem; font-weight:700; display:flex; align-items:center; gap:.4rem}
+  .mini{border:1.5px solid var(--line-strong); background:var(--bg); border-radius:14px; overflow:hidden; font-size:.8125rem; line-height:1.45}
+  .mini-head{display:flex; align-items:center; gap:.5rem; padding:.55rem .65rem; font-weight:800; border-bottom:1px solid var(--line)}
+  .mini-head .t{flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .mini-head .circle-btn{width:2rem; height:2rem; font-size:.95rem; flex:none}
+  .mini-body{padding:.55rem; display:grid; gap:.35rem}
+  .row{display:flex; align-items:center; gap:.4rem; border:1px solid var(--line); border-radius:8px; padding:.4rem .55rem; background:var(--bg-sub)}
+  .row .t{flex:1; min-width:0}
+  .row .chev{color:var(--muted)}
+  .row.ph{color:var(--muted)}
+  .hl{border:2px solid var(--accent) !important; background:var(--accent-soft) !important; font-weight:800}
+  .popmenu{border:1px solid var(--line-strong); border-radius:10px; background:var(--bg); padding:.3rem; display:grid; gap:.15rem; margin:.1rem .4rem .2rem; box-shadow:0 2px 6px rgba(0,0,0,.12)}
+  .popmenu span{padding:.35rem .5rem; border-radius:6px; border:2px solid transparent}
+  .bubble-ph{height:.7rem; border-radius:4px; background:var(--line); margin:.15rem 0}
   /* wallets */
   .wallets{display:grid; grid-template-columns:repeat(3,1fr); gap:.75rem}
   .wallet{border:1.5px solid var(--line-strong); background:var(--bg); padding:.9rem}
@@ -570,6 +587,26 @@
         <li>画面右上の「…」（図1の②）をタップする。</li>
         <li>「アーカイブ」を選ぶ。</li>
       </ol>
+      <figure>
+        <p class="fig-title">アーカイブのしかた</p>
+        <div class="steps" role="img" aria-label="アーカイブのしかたの模式図。手順2：サイドチャットを開き、画面右上の「…」をタップする。手順3：開いたメニューの「名前を変更」「固定」「アーカイブ」「削除」のうち、「アーカイブ」を選ぶ。">
+          <div class="step">
+            <div class="step-label"><span class="fbadge">2</span>右上の「…」をタップ</div>
+            <div class="mini" aria-hidden="true">
+              <div class="mini-head"><span class="circle-btn">≡</span><span class="t" style="text-align:center">サイドチャット名</span><span class="circle-btn hl">…</span></div>
+              <div class="mini-body"><div class="bubble-ph" style="width:70%"></div><div class="bubble-ph" style="width:50%;justify-self:end"></div><div class="bubble-ph" style="width:60%"></div></div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-label"><span class="fbadge">3</span>「アーカイブ」を選ぶ</div>
+            <div class="mini" aria-hidden="true">
+              <div class="mini-head"><span class="circle-btn">≡</span><span class="t" style="text-align:center">サイドチャット名</span><span class="circle-btn">…</span></div>
+              <div class="popmenu"><span>名前を変更</span><span>固定</span><span class="hl">アーカイブ</span><span>削除</span></div>
+            </div>
+          </div>
+        </div>
+        <figcaption><b>図3</b> アーカイブのしかた（模式図）。番号は上の手順の番号に対応します。強調した枠が、タップする場所です。</figcaption>
+      </figure>
       <h4>一覧に戻すしかた</h4>
       <ol>
         <li>メニュー画面の左下の歯車アイコン（図2の⑤）をタップして、設定を開く。</li>
@@ -578,6 +615,34 @@
         <li>戻したいチャットの右側の「…」をタップする。</li>
         <li>「アーカイブを解除」を選ぶ。</li>
       </ol>
+      <figure>
+        <p class="fig-title">一覧に戻すしかた</p>
+        <div class="steps" role="img" aria-label="一覧に戻すしかたの模式図。手順2：設定画面で「データコントロール」を開く。手順3：データコントロール画面で「アーカイブ済みのサイドチャット」を開く。手順4と5：アーカイブしたチャットの右側の「…」をタップし、メニューの「名前を変更」「アーカイブを解除」「削除」のうち、「アーカイブを解除」を選ぶ。">
+          <div class="step">
+            <div class="step-label"><span class="fbadge">2</span>「データコントロール」</div>
+            <div class="mini" aria-hidden="true">
+              <div class="mini-head"><span class="circle-btn">‹</span><span class="t">設定</span></div>
+              <div class="mini-body"><div class="row ph"><span class="t">利用状況</span></div><div class="row ph"><span class="t">（ほかの項目）</span></div><div class="row hl"><span class="t">データコントロール</span><span class="chev">›</span></div><div class="row ph"><span class="t">（ほかの項目）</span></div></div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-label"><span class="fbadge">3</span>「アーカイブ済みのサイドチャット」</div>
+            <div class="mini" aria-hidden="true">
+              <div class="mini-head"><span class="circle-btn">‹</span><span class="t">データコントロール</span></div>
+              <div class="mini-body"><div class="row"><span class="t">AIモデルの改善に協力する</span></div><div class="row hl"><span class="t">アーカイブ済みのサイドチャット</span><span class="chev">›</span></div><div class="row"><span class="t">Museにメモリーをインポート</span><span class="chev">›</span></div><div class="row"><span class="t">エージェントデータをダウンロード</span></div></div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-label"><span class="fbadge">4</span><span class="fbadge">5</span>「…」→「アーカイブを解除」</div>
+            <div class="mini" aria-hidden="true">
+              <div class="mini-head"><span class="circle-btn">‹</span><span class="t">アーカイブ済みのサイド…</span></div>
+              <div class="mini-body"><div class="row"><span class="t">チャットの名前</span><span class="hl" style="border-radius:6px;padding:0 .35rem">…</span></div></div>
+              <div class="popmenu"><span>名前を変更</span><span class="hl">アーカイブを解除</span><span>削除</span></div>
+            </div>
+          </div>
+        </div>
+        <figcaption><b>図4</b> 一覧に戻すしかた（模式図）。番号は上の手順の番号に対応します。強調した枠が、タップする場所です。設定画面の項目は一部だけを示しています。</figcaption>
+      </figure>
       <p class="small">※パソコン版（ブラウザ）では、設定の「データコントロール」にこの項目はありません。チャット一覧の上にある「…」→「アーカイブ済みのチャットを表示」で、アーカイブしたチャットの一覧を開きます。戻したいチャットの名前の右側にある「…」をクリックし、「アーカイブから復元」を選ぶと一覧に戻ります。チャットの名前をクリックしただけでは、内容が表示されるだけで、一覧には戻りません。</p>
 
           </section>
@@ -627,7 +692,7 @@
             <p>多く使いたい人向けの大きな枠。</p>
           </div>
         </div>
-        <figcaption><b>図3</b> トークンの3つの利用枠（模式図。バーの長さは量の大小のイメージです）</figcaption>
+        <figcaption><b>図5</b> トークンの3つの利用枠（模式図。バーの長さは量の大小のイメージです）</figcaption>
       </figure>
       <p>日々の相談や文章づくりは、無料プランの範囲でも十分にこなせます。使用量は、設定画面のいちばん上で確認できます（<a href="#ch3-2">3.2</a>）。</p>
       <p>紹介コードは、設定の「紹介コードを利用」から入力します。</p>
