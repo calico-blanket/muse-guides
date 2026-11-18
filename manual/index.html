@@ -1,29 +1,27 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="color-scheme" content="light dark" />
-<link rel="icon" href="data:," />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Museをはじめて使う人のための取扱説明書。チャットの使い分け、トークン、メモリーの手入れまでを説明します。">
+<link rel="icon" href="data:,">
 <title>Muse Manual ― Muse取扱説明書</title>
 <style>
   :root{
     --bg:#ffffff; --bg-sub:#f6f8fa; --ink:#1c2430; --muted:#55606e;
-    --line:#d5dce4; --line-strong:#aeb9c6;
-    --accent:#17548f; --accent-soft:#edf3f9; --accent-ink:#17548f;
-    --warn-bg:#fdf6e0; --warn-line:#d9b93a; --warn-ink:#5c4a08;
-    --code-bg:#eef1f5;
-    --fig-bg:#fbfcfd;
-    --shadow:none;
+    --line:#d5dce4; --line-strong:#8e9bab;
+    --accent:#17548f; --accent-soft:#edf3f9; --on-accent:#ffffff;
+    --warn-bg:#fdf6e0; --warn-line:#b8961a; --warn-ink:#5c4a08;
+    --code-bg:#eef1f5; --fig-bg:#fbfcfd;
   }
   @media (prefers-color-scheme: dark){
     :root{
       --bg:#12161d; --bg-sub:#171d26; --ink:#e5eaf1; --muted:#9aa7b8;
-      --line:#2b3543; --line-strong:#43536a;
-      --accent:#8ab6e6; --accent-soft:#1a2635; --accent-ink:#8ab6e6;
-      --warn-bg:#2b2510; --warn-line:#8a7422; --warn-ink:#ecd28a;
-      --code-bg:#1d2632;
-      --fig-bg:#151b24;
+      --line:#2b3543; --line-strong:#6b7d95;
+      --accent:#8ab6e6; --accent-soft:#1a2635; --on-accent:#0d1420;
+      --warn-bg:#2b2510; --warn-line:#a88d2a; --warn-ink:#ecd28a;
+      --code-bg:#1d2632; --fig-bg:#151b24;
     }
   }
   *{box-sizing:border-box}
@@ -32,1157 +30,892 @@
   body{
     margin:0; background:var(--bg); color:var(--ink);
     font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP","Yu Gothic UI",sans-serif;
-    font-size:16px; line-height:1.75; -webkit-text-size-adjust:100%;
+    font-size:1rem; line-height:1.8; -webkit-text-size-adjust:100%;
   }
-  a{color:var(--accent-ink); text-decoration:underline; text-underline-offset:3px}
+  a{color:var(--accent); text-decoration:underline; text-underline-offset:3px}
   a:hover{text-decoration-thickness:2px}
-  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.88em; background:var(--code-bg); padding:.1em .35em; border-radius:3px; word-break:break-all}
-  strong{font-weight:700}
+  a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.9em; background:var(--code-bg); padding:.1em .35em; border-radius:3px}
+  .skip{position:absolute; left:-9999px; top:0; background:var(--accent); color:var(--on-accent); padding:.6rem 1rem; z-index:50}
+  .skip:focus{left:.5rem; top:.5rem}
+
+  /* ---------- header ---------- */
+  .doc-head{max-width:1180px; margin:0 auto; padding:2.5rem 2.5rem .75rem}
+  .doc-head .kicker{font-size:.8125rem; letter-spacing:.14em; color:var(--muted); margin:0 0 .3rem}
+  .doc-head h1{font-size:1.875rem; line-height:1.3; margin:0 0 .6rem; font-weight:800}
+  .doc-head .lead{margin:0; max-width:42em; padding-bottom:1rem; border-bottom:3px solid var(--ink)}
 
   /* ---------- layout ---------- */
-  .layout{max-width:1180px; margin:0 auto; display:grid; grid-template-columns:272px minmax(0,1fr); gap:0}
-  main{padding:0 40px 64px; min-width:0}
-  .doc-head{padding:40px 0 8px; border-bottom:3px solid var(--ink); margin-bottom:8px}
-  .doc-head .kicker{font-size:13px; letter-spacing:.14em; color:var(--muted); margin:0 0 6px}
-  .doc-head h1{font-size:30px; line-height:1.3; margin:0 0 10px; font-weight:800}
-  .doc-head .lead{color:var(--muted); font-size:15px; margin:0 0 18px; max-width:42em}
-  .doc-meta{display:flex; flex-wrap:wrap; gap:6px 22px; font-size:13px; color:var(--muted); border-top:1px solid var(--line); padding-top:12px; margin-bottom:8px}
-  .doc-meta b{color:var(--ink); font-weight:600}
+  .layout{max-width:1180px; margin:0 auto; display:grid; grid-template-columns:17rem minmax(0,1fr)}
+  main{padding:0 2.5rem 4rem; min-width:0}
 
-  /* ---------- TOC (sidebar) ---------- */
-  .toc-side{position:sticky; top:0; height:100vh; overflow-y:auto; padding:28px 20px 40px 24px; border-right:1px solid var(--line)}
-  .toc-side .toc-title{font-size:13px; font-weight:700; letter-spacing:.12em; color:var(--muted); margin:0 0 12px}
-  .toc-side ol{list-style:none; margin:0; padding:0}
-  .toc-side li{margin:0}
-  .toc-side a{display:block; text-decoration:none; color:var(--ink); padding:7px 10px; border-radius:4px; font-size:14px; line-height:1.45}
-  .toc-side a:hover{background:var(--bg-sub)}
-  .toc-side a.toc-ch{font-weight:700; margin-top:10px}
-  .toc-side a.toc-sec{padding-left:26px; font-size:13px; color:var(--muted); min-height:32px}
-  .toc-side a.active{background:var(--accent-soft); color:var(--accent-ink)}
-  .toc-side a.toc-sec.active{color:var(--accent-ink); font-weight:600}
-  .toc-top{display:none}
-
-  /* ---------- now bar (mobile) ---------- */
+  /* ---------- TOC ---------- */
+  .toc{position:sticky; top:0; height:100vh; overflow-y:auto; padding:1.5rem 1.25rem 2.5rem 1.5rem; border-right:1px solid var(--line)}
+  .toc summary{font-size:.8125rem; font-weight:700; letter-spacing:.12em; color:var(--muted); list-style:none; margin-bottom:.5rem}
+  .toc summary::-webkit-details-marker{display:none}
+  .toc ol{list-style:none; margin:0; padding:0}
+  .toc ol ol{margin:0 0 .25rem}
+  .toc a{display:block; text-decoration:none; color:var(--ink); padding:.35rem .6rem; border-radius:4px; font-size:.875rem; line-height:1.45}
+  .toc a:hover{background:var(--bg-sub)}
+  .toc > details > ol > li > a{font-weight:700; margin-top:.5rem}
+  .toc ol ol a{padding-left:1.6rem; font-size:.8125rem; color:var(--muted)}
+  .toc a.active{background:var(--accent-soft); color:var(--accent)}
+  .toc ol ol a.active{font-weight:700}
   .nowbar{display:none}
 
-  /* ---------- chapters ---------- */
-  section.chapter{padding-top:44px; margin-top:44px; border-top:1px solid var(--line)}
-  section.chapter:first-of-type{border-top:none; margin-top:8px}
-  h2{font-size:24px; line-height:1.4; margin:0 0 14px; font-weight:800; scroll-margin-top:16px}
-  h2 .no{display:block; font-size:13px; letter-spacing:.14em; color:var(--accent-ink); font-weight:700; margin-bottom:4px}
-  h3{font-size:18px; line-height:1.5; margin:34px 0 10px; font-weight:700; padding-bottom:6px; border-bottom:1px solid var(--line); scroll-margin-top:16px}
-  h3 .no{color:var(--accent-ink); margin-right:.5em}
-  p{margin:0 0 12px; max-width:44em}
-  ul,ol{margin:0 0 14px; padding-left:1.5em; max-width:44em}
-  li{margin-bottom:5px}
-  li::marker{color:var(--accent-ink); font-weight:600}
-  .intro1{color:var(--muted); margin-bottom:12px}
+  /* ---------- text ---------- */
+  section.chapter{padding-top:2.75rem; margin-top:2.75rem; border-top:1px solid var(--line)}
+  h2{font-size:1.5rem; line-height:1.4; margin:0 0 1rem; font-weight:800; scroll-margin-top:1rem}
+  h2 .no{display:block; font-size:.8125rem; letter-spacing:.14em; color:var(--accent); font-weight:700; margin-bottom:.25rem}
+  h3{font-size:1.125rem; line-height:1.5; margin:2.25rem 0 .75rem; font-weight:700; padding-bottom:.4rem; border-bottom:1px solid var(--line); scroll-margin-top:1rem}
+  h3 .no{color:var(--accent); margin-right:.5em}
+  h4{font-size:1rem; margin:1.5rem 0 .5rem}
+  p{margin:0 0 .9rem; max-width:44em}
+  ul,ol{margin:0 0 1rem; padding-left:1.5em; max-width:44em}
+  li{margin-bottom:.35rem}
+  li::marker{color:var(--accent); font-weight:700}
+  .small{font-size:.875rem; color:var(--muted)}
 
-  .chap-contents{background:var(--bg-sub); border:1px solid var(--line); padding:14px 18px 8px; margin:0 0 22px; max-width:44em}
-  .chap-contents .t{font-size:13px; font-weight:700; letter-spacing:.1em; color:var(--muted); margin:0 0 6px}
-  .chap-contents ul{margin:0 0 6px; padding-left:1.4em}
-  .chap-contents li{margin-bottom:3px}
+  .warn,.habits{max-width:44em; margin:1.25rem 0; padding:.9rem 1.1rem}
+  .warn{border:1px solid var(--warn-line); border-left-width:6px; background:var(--warn-bg); color:var(--warn-ink)}
+  .warn p{margin:0 0 .4rem}
+  .warn p:last-child{margin-bottom:0}
+  .warn .t{font-weight:700}
 
-  .note{border:1px solid var(--line); background:var(--bg-sub); padding:12px 16px; margin:16px 0; max-width:44em; font-size:15px}
-  .note .t{display:block; font-weight:700; font-size:13px; letter-spacing:.08em; color:var(--muted); margin-bottom:4px}
-  .warn{border:1px solid var(--warn-line); background:var(--warn-bg); color:var(--warn-ink); padding:12px 16px; margin:16px 0; max-width:44em; font-size:15px}
-  .warn .t{display:block; font-weight:700; margin-bottom:4px}
-  .related{font-size:14px; color:var(--muted); border-top:1px dashed var(--line-strong); padding-top:8px; margin-top:18px; max-width:44em}
-  .related .t{font-weight:700; color:var(--ink)}
-  .backtop{display:inline-block; margin-top:26px; font-size:14px; padding:8px 4px; min-height:36px}
-
-  /* ---------- cards (ch1) ---------- */
-  .linkcards{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0; max-width:46em}
-  a.linkcard{display:block; border:1px solid var(--line-strong); padding:16px 18px; text-decoration:none; color:var(--ink); background:var(--bg)}
-  a.linkcard:hover{border-color:var(--accent); background:var(--accent-soft)}
-  .linkcard .lt{display:block; font-weight:700; font-size:16px; margin-bottom:6px}
-  .linkcard .ld{display:block; font-size:14px; color:var(--muted); line-height:1.6}
-  .linkcard .go{display:block; margin-top:10px; font-size:14px; font-weight:700; color:var(--accent-ink)}
+  /* ---------- 3 habits ---------- */
+  .habits{border:2px solid var(--accent); background:var(--accent-soft); margin-top:1.75rem; padding:1.25rem 1.4rem}
+  .habits h2{font-size:1.25rem; margin-bottom:.6rem}
+  .habits ol{margin:0; padding-left:1.6em}
+  .habits li{margin-bottom:.8rem}
+  .habits li:last-child{margin-bottom:0}
+  .habits li b{display:block}
 
   /* ---------- figures ---------- */
-  figure{margin:20px 0; border:1px solid var(--line); background:var(--fig-bg); padding:18px; max-width:46em}
-  .fig-screen-label{max-width:350px; margin:0 auto 14px; text-align:center; font-size:20px; font-weight:800; letter-spacing:.04em; color:var(--ink); background:var(--accent-soft); border:1.5px solid var(--accent); padding:8px 12px; line-height:1.4}
-  figcaption{font-size:13.5px; color:var(--muted); margin-top:14px; border-top:1px solid var(--line); padding-top:10px}
+  figure{margin:1.25rem 0; border:1px solid var(--line); background:var(--fig-bg); padding:1.1rem; max-width:46em}
+  figcaption{font-size:.875rem; color:var(--muted); margin-top:.9rem; border-top:1px solid var(--line); padding-top:.6rem}
   figcaption b{color:var(--ink)}
-  /* mock screen */
-  .mock{border:1.5px solid var(--line-strong); background:var(--bg); max-width:520px; margin:0 auto}
-  .mock-bar{border-bottom:1px solid var(--line); padding:8px 12px; font-size:13px; font-weight:700; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap}
-  .mock-new{background:var(--accent); color:#fff; font-size:12.5px; font-weight:700; padding:5px 10px; border-radius:4px; white-space:nowrap}
-  @media (prefers-color-scheme: dark){ .mock-new{color:#0d1420} }
-  .mock-body{display:grid; grid-template-columns:38% 62%}
-  .mock-list{border-right:1px solid var(--line); padding:10px}
-  .mock-list .cap,.mock-main .cap{font-size:11.5px; color:var(--muted); letter-spacing:.08em; margin-bottom:8px; font-weight:700}
-  .mock-item{border:1px solid var(--line); font-size:12.5px; padding:6px 8px; margin-bottom:6px; line-height:1.4}
-  .mock-item.sel{border-color:var(--accent); background:var(--accent-soft)}
-  .mock-main{padding:10px 12px}
-  .mock-msg{font-size:12.5px; border:1px solid var(--line); padding:6px 8px; margin-bottom:6px; line-height:1.5}
-  .mock-msg.me{margin-left:18%; background:var(--bg-sub)}
-  .mock-input{border:1px solid var(--line-strong); font-size:12.5px; color:var(--muted); padding:7px 9px; margin-top:10px}
-  .callouts{max-width:520px; margin:12px auto 0; font-size:13.5px}
-  .callouts li{margin-bottom:3px}
-  /* structure / flow diagrams */
-  .flow{display:flex; align-items:stretch; gap:0; flex-wrap:wrap; margin:4px 0}
-  .flow .step{flex:1 1 150px; border:1.5px solid var(--line-strong); background:var(--bg); padding:12px 14px; font-size:14px}
-  .flow .step .st-t{display:block; font-weight:700; margin-bottom:4px}
-  .flow .step .st-n{font-size:12px; color:var(--accent-ink); font-weight:700; letter-spacing:.08em}
-  .flow .arrow{align-self:center; padding:0 8px; color:var(--accent-ink); font-weight:700; font-size:18px}
-  .struct{max-width:560px; margin:0 auto}
-  .struct .center{border:1.5px solid var(--accent); background:var(--accent-soft); padding:12px 14px; text-align:center; font-size:14px}
-  .struct .center b{display:block; font-size:15px}
-  .struct .join{text-align:center; color:var(--accent-ink); font-size:18px; line-height:1.2; padding:2px 0}
-  .struct .joins{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-  .struct .join-cell{text-align:center; padding:6px 6px 2px; font-size:12.5px; line-height:1.55; color:var(--muted)}
-  .struct .join-cell .ref{display:block; color:var(--accent-ink); font-weight:700; font-size:14px}
-  .struct .join-cell .write{display:block; margin-top:5px; padding-top:5px; border-top:2px dotted var(--line-strong); font-size:12px}
-  .struct .cols{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-  .struct .col{border:1.5px solid var(--line-strong); background:var(--bg); padding:12px 14px; font-size:14px}
-  .struct .col b{display:block; margin-bottom:4px}
-  .struct .record{margin-top:8px; border:1px dashed var(--line-strong); background:var(--bg-sub); padding:8px 10px; font-size:13px; line-height:1.55}
-  .struct .record b{display:inline; margin:0}
-  .struct .sep-note{text-align:center; font-size:12.5px; color:var(--muted); margin-top:10px}
-  figcaption .fig-note{display:block; margin-top:6px; color:var(--ink)}
-  .wallets{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
-  .wallet{border:1.5px solid var(--line-strong); background:var(--bg); padding:14px}
-  .wallet .wt{font-weight:700; font-size:15px; margin-bottom:6px}
-  .wallet .bar{height:10px; border:1px solid var(--line-strong); margin:10px 0}
-  .wallet .bar i{display:block; height:100%; background:var(--accent)}
-  .wallet p{font-size:13.5px; color:var(--muted); margin:0}
-
-  /* ---------- phone schematics (ch3) ---------- */
-  .fbadge{display:inline-grid; place-items:center; width:19px; height:19px; border-radius:50%; background:var(--accent); color:#fff; font-size:11px; font-weight:800; line-height:1; vertical-align:middle; flex:none}
-  @media (prefers-color-scheme: dark){ .fbadge{color:#0d1420} }
-  .phone{border:1.5px solid var(--line-strong); border-radius:20px; background:var(--bg); max-width:350px; margin:0 auto; overflow:hidden}
-  .phone-top{display:flex; align-items:flex-start; justify-content:space-between; padding:12px 12px 8px; gap:8px}
-  .circle-btn{width:40px; height:40px; border-radius:50%; border:1px solid var(--line-strong); background:var(--bg); display:grid; place-items:center; font-size:17px; font-weight:700; flex:none}
-  .phone-peer{text-align:center; flex:1; min-width:0; padding-top:2px}
-  .phone-peer .avatar{width:46px; height:46px; border-radius:50%; border:1.5px solid var(--line-strong); background:var(--bg-sub); display:grid; place-items:center; margin:0 auto 3px; font-size:11px; color:var(--muted); font-weight:700}
-  .phone-peer .pname{font-size:13.5px; font-weight:700; line-height:1.3}
-  .phone-msgs{padding:10px 12px 14px; display:grid; gap:8px; min-height:118px; align-content:start}
-  .phone-msgs .cap{font-size:11.5px; color:var(--muted); letter-spacing:.06em; font-weight:700; display:flex; align-items:center; gap:6px}
-  .bubble{font-size:12.5px; line-height:1.5; border:1px solid var(--line); padding:7px 10px; border-radius:10px; max-width:86%}
+  .fig-title{max-width:22rem; margin:0 auto .9rem; text-align:center; font-size:1.125rem; font-weight:800; background:var(--accent-soft); border:1.5px solid var(--accent); padding:.4rem .75rem}
+  .fbadge{display:inline-grid; place-items:center; width:1.25rem; height:1.25rem; border-radius:50%; background:var(--accent); color:var(--on-accent); font-size:.75rem; font-weight:800; line-height:1; vertical-align:middle; flex:none}
+  /* phone */
+  .phone,.drawer{border:1.5px solid var(--line-strong); background:var(--bg); max-width:22rem; margin:0 auto; overflow:hidden}
+  .phone{border-radius:20px}
+  .drawer{border-radius:14px}
+  .phone-top{display:flex; align-items:flex-start; justify-content:space-between; padding:.75rem .75rem .5rem; gap:.5rem}
+  .btn-col{display:grid; justify-items:center; gap:.25rem}
+  .circle-btn{width:2.5rem; height:2.5rem; border-radius:50%; border:1px solid var(--line-strong); display:grid; place-items:center; font-size:1.05rem; font-weight:700}
+  .peer{text-align:center; flex:1; min-width:0}
+  .peer .avatar{width:3.6rem; height:3.6rem; white-space:nowrap; border-radius:50%; border:1.5px solid var(--line-strong); background:var(--bg-sub); display:grid; place-items:center; margin:0 auto .2rem; font-size:.75rem; color:var(--muted); font-weight:700}
+  .peer .pname{font-size:.875rem; font-weight:700}
+  .msgs{padding:.6rem .75rem .9rem; display:grid; gap:.5rem}
+  .cap{font-size:.8125rem; color:var(--muted); font-weight:700; display:flex; align-items:center; gap:.4rem}
+  .bubble{font-size:.8125rem; line-height:1.5; border:1px solid var(--line); padding:.45rem .65rem; border-radius:10px; max-width:86%}
   .bubble.me{justify-self:end; background:var(--bg-sub)}
   .bubble.them{justify-self:start}
-  .phone-input{margin:0 10px 10px; border:1px solid var(--line-strong); border-radius:999px; display:flex; align-items:center; gap:8px; padding:7px 10px; background:var(--bg-sub)}
-  .phone-input .plus{font-size:19px; font-weight:700; line-height:1; width:22px; text-align:center; flex:none}
-  .phone-input .ph{flex:1; font-size:12.5px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-  .phone-input svg{flex:none; color:var(--ink)}
-  .tabbar{display:grid; grid-template-columns:repeat(5,1fr); border-top:1px solid var(--line); padding:8px 4px 10px; gap:2px}
-  .tabbar .tab{text-align:center; font-size:10.5px; line-height:1.25; color:var(--muted); display:grid; justify-items:center; gap:3px}
-  .tabbar .tab.on{color:var(--ink); font-weight:700}
-  .tabbar .tab svg{display:block}
-  .tabbar-wrap{padding:0 10px 2px}
-  .tabbar-wrap .cap{font-size:11.5px; color:var(--muted); font-weight:700; letter-spacing:.06em; display:flex; align-items:center; gap:6px; margin-bottom:4px}
-  /* drawer schematic */
-  .drawer{border:1.5px solid var(--line-strong); border-radius:14px; background:var(--bg); max-width:350px; margin:0 auto; overflow:hidden}
-  .drawer-head{padding:14px 14px 6px; font-size:17px; font-weight:800; display:flex; align-items:center; gap:8px}
-  .drawer-sec{padding:8px 14px 4px}
-  .drawer-sec .sec-label{font-size:11.5px; color:var(--muted); font-weight:700; letter-spacing:.08em; display:flex; align-items:center; gap:6px}
-  .drawer-sec .sec-note{font-size:11.5px; color:var(--muted); margin:2px 0 4px}
-  .drawer-item{display:flex; align-items:center; gap:9px; font-size:13.5px; padding:6px 8px; border-radius:6px; line-height:1.4}
+  .phone-input{margin:0 .6rem .6rem; border:1px solid var(--line-strong); border-radius:999px; display:flex; align-items:center; gap:.5rem; padding:.45rem .65rem; background:var(--bg-sub)}
+  .phone-input .plus{font-size:1.2rem; font-weight:700; line-height:1}
+  .phone-input .ph{flex:1; font-size:.8125rem; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .tabbar-cap{padding:0 .6rem .2rem}
+  .tabbar{display:grid; grid-template-columns:repeat(5,1fr); border-top:1px solid var(--line); padding:.5rem .25rem .6rem; gap:2px}
+  .tab{text-align:center; font-size:.75rem; line-height:1.25; color:var(--muted); display:grid; justify-items:center; gap:.2rem}
+  .tab.on{color:var(--ink); font-weight:700}
+  .drawer-head{padding:.9rem .9rem .3rem; font-size:1.05rem; font-weight:800; display:flex; align-items:center; gap:.5rem}
+  .drawer-sec{padding:.5rem .9rem .25rem}
+  .drawer-sec .note-line{font-size:.75rem; color:var(--muted); margin:.1rem 0 .25rem}
+  .drawer-item{display:flex; align-items:center; gap:.55rem; font-size:.875rem; padding:.35rem .5rem; border-radius:6px; line-height:1.4}
   .drawer-item.sel{background:var(--bg-sub); font-weight:700}
-  .drawer-item svg{flex:none; color:var(--ink)}
-  .drawer-item .ex{color:var(--muted); font-size:12px}
-  .drawer-div{border-top:1px solid var(--line); margin:8px 14px 0}
-  .drawer-bottom{display:flex; align-items:center; gap:10px; padding:12px 14px 14px; border-top:1px solid var(--line); margin-top:10px}
-  .drawer-bottom .icon-btn{width:40px; height:40px; border-radius:50%; border:1px solid var(--line-strong); background:var(--bg-sub); display:grid; place-items:center; flex:none}
-  .drawer-bottom .icon-btn.key{border:2px solid var(--accent); background:var(--accent-soft)}
-  .drawer-bottom .search{flex:1; border:1px solid var(--line); background:var(--bg-sub); border-radius:999px; padding:8px 12px; font-size:12.5px; color:var(--muted); display:flex; align-items:center; gap:7px; min-width:0}
-  .parts-tbl td.no-cell{width:44px; text-align:center}
-  figure .fig-sub{max-width:350px; margin:10px auto 0; font-size:12.5px; color:var(--muted); text-align:center}
+  .drawer-item .ex{color:var(--muted); font-size:.75rem}
+  .drawer-div{border-top:1px solid var(--line); margin:.5rem .9rem 0}
+  .drawer-bottom{display:flex; align-items:center; gap:.6rem; padding:.75rem .9rem .9rem; border-top:1px solid var(--line); margin-top:.6rem}
+  .icon-btn{width:2.5rem; height:2.5rem; border-radius:50%; border:1px solid var(--line-strong); background:var(--bg-sub); display:grid; place-items:center; flex:none}
+  .icon-btn.key{border:2px solid var(--accent); background:var(--accent-soft)}
+  .search{flex:1; border:1px solid var(--line); background:var(--bg-sub); border-radius:999px; padding:.5rem .75rem; font-size:.8125rem; color:var(--muted); display:flex; align-items:center; gap:.4rem; min-width:0}
+  /* wallets */
+  .wallets{display:grid; grid-template-columns:repeat(3,1fr); gap:.75rem}
+  .wallet{border:1.5px solid var(--line-strong); background:var(--bg); padding:.9rem}
+  .wallet .wt{font-weight:700; margin-bottom:.4rem}
+  .wallet .bar{height:10px; border:1px solid var(--line-strong); margin:.6rem 0}
+  .wallet .bar i{display:block; height:100%; background:var(--accent)}
+  .wallet p{font-size:.875rem; color:var(--muted); margin:0}
 
   /* ---------- tables ---------- */
-  .tblwrap{margin:16px 0; max-width:46em}
-  .tbl-note{font-size:13.5px; color:var(--muted); margin:8px 0 0}
-  table{border-collapse:collapse; width:100%; font-size:14.5px; line-height:1.6}
-  th,td{border:1px solid var(--line-strong); padding:9px 12px; text-align:left; vertical-align:top}
-  th{background:var(--bg-sub); font-weight:700}
-  td.fn{white-space:nowrap; font-weight:600}
-  .stat{border:1px solid var(--line-strong); padding:16px 18px; margin:16px 0; max-width:44em; font-size:16px}
-  .stat .num{font-size:22px; font-weight:800}
-  .stat .arrow{color:var(--accent-ink); font-weight:700; padding:0 6px}
-  .stat .cap{display:block; font-size:13.5px; color:var(--muted); margin-top:6px}
+  .tblwrap{margin:1.1rem 0; max-width:46em; overflow-x:auto}
+  table{border-collapse:collapse; width:100%; font-size:.9375rem; line-height:1.65}
+  caption{text-align:left; font-weight:700; font-size:.875rem; color:var(--muted); padding-bottom:.4rem}
+  th,td{border:1px solid var(--line-strong); padding:.55rem .75rem; text-align:left; vertical-align:top}
+  thead th{background:var(--bg-sub)}
+  tbody th{font-weight:700}
+  td.no{width:3rem; text-align:center}
+  td.fn,th.fn{white-space:nowrap; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.875rem}
+  .stat{border:1px solid var(--line-strong); padding:.9rem 1.1rem; margin:1rem 0; max-width:44em}
+  .stat .num{font-size:1.375rem; font-weight:800}
 
   /* ---------- copy boxes ---------- */
-  .copybox{border:1px solid var(--line-strong); margin:16px 0; max-width:44em; background:var(--bg)}
-  .copybox .cb-label{background:var(--bg-sub); border-bottom:1px solid var(--line); padding:9px 14px; font-size:13.5px; font-weight:700}
-  .copybox pre{margin:0; padding:14px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13.5px; line-height:1.7; white-space:pre-wrap; word-break:break-word}
-  .copyrow{display:flex; align-items:center; gap:12px; border-top:1px solid var(--line); padding:8px 14px}
-  .copy-btn{min-height:40px; padding:6px 18px; font-size:14px; font-weight:700; color:#fff; background:var(--accent); border:1px solid var(--accent); border-radius:4px; cursor:pointer}
-  @media (prefers-color-scheme: dark){ .copy-btn{color:#0d1420} }
+  .copybox{border:1px solid var(--line-strong); margin:1rem 0; max-width:44em; background:var(--bg); scroll-margin-top:1rem}
+  .copybox .cb-label{margin:0; max-width:none; background:var(--bg-sub); border-bottom:1px solid var(--line); padding:.55rem .9rem; font-size:.875rem; font-weight:700}
+  .copybox pre{margin:0; padding:.9rem; font-family:inherit; font-size:.9375rem; line-height:1.75; white-space:pre-wrap; word-break:break-word}
+  .copybox pre.long{max-height:22rem; overflow-y:auto; font-size:.875rem}
+  .copyrow{display:flex; align-items:center; gap:.75rem; border-top:1px solid var(--line); padding:.5rem .9rem}
+  .copy-btn{min-height:2.75rem; padding:.4rem 1.1rem; font-size:.875rem; font-weight:700; color:var(--on-accent); background:var(--accent); border:1px solid var(--accent); border-radius:4px; cursor:pointer; font-family:inherit}
   .copy-btn:active{opacity:.85}
-  .copy-msg{font-size:13.5px; color:var(--accent-ink)}
+  .copy-msg{font-size:.875rem; color:var(--accent)}
 
-  /* ---------- glossary ---------- */
+  /* ---------- glossary / footer ---------- */
   dl.gloss{margin:0; max-width:44em}
-  dl.gloss dt{font-weight:700; margin-top:16px}
-  dl.gloss dd{margin:2px 0 0; padding-left:1em; color:var(--ink)}
-
-  footer{border-top:1px solid var(--line); margin-top:56px; padding-top:18px; font-size:13.5px; color:var(--muted)}
-  footer p{margin:0 0 4px}
+  dl.gloss dt{font-weight:700; margin-top:1rem}
+  dl.gloss dd{margin:.15rem 0 0; padding-left:1em}
+  footer{border-top:1px solid var(--line); margin-top:3.5rem; padding-top:1.1rem; font-size:.875rem; color:var(--muted)}
+  footer p{margin:0 0 .35rem}
 
   /* ---------- mobile ---------- */
   @media (max-width:900px){
+    .doc-head{padding:1.6rem 1.1rem .5rem}
+    .doc-head h1{font-size:1.5rem}
     .layout{display:block}
-    .toc-side{display:none}
-    main{padding:0 18px 56px}
-    .doc-head{padding-top:26px}
-    .doc-head h1{font-size:25px}
-    .nowbar{display:flex; position:sticky; top:0; z-index:20; background:var(--bg); border-bottom:1px solid var(--line-strong); margin:0 -18px; padding:9px 18px; font-size:13px; gap:8px; align-items:baseline}
-    .nowbar .lb{color:var(--muted); letter-spacing:.08em; font-size:11.5px; font-weight:700; white-space:nowrap}
+    main{padding:0 1.1rem 3.5rem}
+    .toc{position:static; height:auto; overflow:visible; border:1px solid var(--line); margin:1rem 1.1rem 0; padding:0}
+    .toc summary{padding:.8rem 1rem; margin:0; min-height:2.75rem; font-size:.9375rem; letter-spacing:.04em; color:var(--ink); cursor:pointer}
+    .toc summary::after{content:"（タップで開く）"; font-weight:400; color:var(--muted); font-size:.8125rem}
+    .toc details[open] summary::after{content:"（タップで閉じる）"}
+    .toc details > ol{padding:0 .75rem .9rem}
+    .toc a{padding:.5rem .4rem; font-size:.9375rem}
+    .toc ol ol a{font-size:.875rem}
+    .nowbar{display:flex; position:sticky; top:0; z-index:20; background:var(--bg); border-bottom:1px solid var(--line-strong); margin:0 -1.1rem; padding:.55rem 1.1rem; font-size:.8125rem; gap:.5rem; align-items:baseline}
+    .nowbar .lb{color:var(--muted); font-size:.75rem; font-weight:700; white-space:nowrap}
     .nowbar .vl{font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-    .toc-top{display:block; border:1px solid var(--line); margin:18px 0 4px}
-    .toc-top:not([open]) .toc-inner{display:none}
-    .toc-top summary{padding:12px 16px; font-weight:700; cursor:pointer; min-height:44px}
-    .toc-top .toc-inner{padding:4px 16px 14px}
-    .toc-top ol{list-style:none; margin:0; padding:0}
-    .toc-top a{display:block; padding:8px 6px; min-height:36px; text-decoration:none; color:var(--ink); font-size:14.5px}
-    .toc-top a.toc-ch{font-weight:700; margin-top:8px; border-top:1px solid var(--line)}
-    .toc-top a.toc-sec{padding-left:24px; font-size:13.5px; color:var(--muted)}
-    .linkcards{grid-template-columns:1fr}
+    h2,h3,.copybox{scroll-margin-top:3.25rem}
     .wallets{grid-template-columns:1fr}
-    .struct .cols{grid-template-columns:1fr}
-    .struct .joins{grid-template-columns:1fr}
-    .flow .arrow{transform:rotate(90deg); padding:4px 0; margin:0 auto}
-    .flow{flex-direction:column}
-    .flow .step{flex:none; width:100%}
-    h3{scroll-margin-top:52px}
-    h2{scroll-margin-top:52px}
-    td.fn{white-space:normal; word-break:break-all}
-    table{font-size:13.5px}
-    th,td{padding:8px 9px}
+    table{font-size:.875rem}
+    th,td{padding:.5rem .55rem}
+    td.fn,th.fn{white-space:normal; word-break:break-all}
+  }
+  @media (min-width:901px){
+    .toc summary{pointer-events:none}
+  }
+
+  /* ---------- print ---------- */
+  @media print{
+    .skip,.toc,.nowbar,.copyrow{display:none !important}
+    .layout{display:block}
+    main{padding:0}
+    body{font-size:10.5pt}
+    .copybox pre.long{max-height:none; overflow:visible}
+    section.chapter{break-before:page; border-top:none; margin-top:0}
+    figure,table,.copybox,.warn{break-inside:avoid}
+    a{color:inherit}
   }
 </style>
 </head>
 <body>
+<a class="skip" href="#main">本文へ移動</a>
+
+<header class="doc-head">
+  <p class="kicker">MUSE 取扱説明書</p>
+  <h1>Muse Manual</h1>
+  <p class="lead">Museをはじめて使う人のための取扱説明書です。まず下の「3つの習慣」を読んでから、必要な章を開いてください。</p>
+</header>
+
 <div class="layout">
 
-  <!-- ===== Sidebar TOC (desktop) ===== -->
-  <nav class="toc-side" aria-label="目次">
-    <p class="toc-title">目次</p>
-    <ol>
-      <li><a class="toc-ch" href="#ch1">第1章 はじめに</a></li>
-      <li><a class="toc-sec" href="#ch1-1">1.1 Museとは</a></li>
-      <li><a class="toc-sec" href="#ch1-2">1.2 できること</a></li>
-      <li><a class="toc-sec" href="#ch1-3">1.3 入門資料</a></li>
-      <li><a class="toc-ch" href="#ch2">第2章 使い方の基本</a></li>
-      <li><a class="toc-sec" href="#ch2-1">2.1 頼み方の基本</a></li>
-      <li><a class="toc-sec" href="#ch2-2">2.2 承認が不要な操作</a></li>
-      <li><a class="toc-sec" href="#ch2-3">2.3 承認が必要な操作</a></li>
-      <li><a class="toc-sec" href="#ch2-4">2.4 購入の承認</a></li>
-      <li><a class="toc-ch" href="#ch3">第3章 会話と画面の基本操作</a></li>
-      <li><a class="toc-sec" href="#ch3-1">3.1 画面の各部の名称とはたらき</a></li>
-      <li><a class="toc-sec" href="#ch3-2">3.2 メインチャットとサイドチャットの違い</a></li>
-      <li><a class="toc-sec" href="#ch3-3">3.3 メインチャットとサイドチャットの使い分け</a></li>
-      <li><a class="toc-sec" href="#ch3-4">3.4 サイドチャットの作り方</a></li>
-      <li><a class="toc-sec" href="#ch3-5">3.5 会話の名前変更と探し方</a></li>
-      <li><a class="toc-sec" href="#ch3-6">3.6 アーカイブと戻し方</a></li>
-      <li><a class="toc-sec" href="#ch3-7">3.7 設定とデータコントロール</a></li>
-      <li><a class="toc-ch" href="#ch4">第4章 トークンの基礎</a></li>
-      <li><a class="toc-sec" href="#ch4-1">4.1 トークンとは</a></li>
-      <li><a class="toc-sec" href="#ch4-2">4.2 3つのお財布</a></li>
-      <li><a class="toc-sec" href="#ch4-3">4.3 消費の目安</a></li>
-      <li><a class="toc-sec" href="#ch4-4">4.4 節約の要点</a></li>
-      <li><a class="toc-ch" href="#ch5">第5章 会話の質を落とさないために</a></li>
-      <li><a class="toc-sec" href="#ch5-1">5.1 長い会話で起きること</a></li>
-      <li><a class="toc-sec" href="#ch5-2">5.2 質の低下の性質</a></li>
-      <li><a class="toc-sec" href="#ch5-3">5.3 対応策5つ</a></li>
-      <li><a class="toc-sec" href="#ch5-4">5.4 引き継ぎ文の型</a></li>
-      <li><a class="toc-ch" href="#ch6">第6章 頭の中のファイルたち</a></li>
-      <li><a class="toc-sec" href="#ch6-1">6.1 常駐ファイルとは</a></li>
-      <li><a class="toc-sec" href="#ch6-2">6.2 6点の役割</a></li>
-      <li><a class="toc-sec" href="#ch6-3">6.3 中身の確認と変更</a></li>
-      <li><a class="toc-ch" href="#ch7">第7章 メモリーの手入れ</a></li>
-      <li><a class="toc-sec" href="#ch7-1">7.1 圧縮の考え方</a></li>
-      <li><a class="toc-sec" href="#ch7-2">7.2 圧縮の実例</a></li>
-      <li><a class="toc-sec" href="#ch7-3">7.3 健康診断とは</a></li>
-      <li><a class="toc-sec" href="#ch7-4">7.4 点検観点</a></li>
-      <li><a class="toc-sec" href="#ch7-5">7.5 3段階の手順</a></li>
-      <li><a class="toc-sec" href="#ch7-6">7.6 前提と依頼文</a></li>
-      <li><a class="toc-ch" href="#ch8">第8章 作ったものを残す・人に見せる</a></li>
-      <li><a class="toc-sec" href="#ch8-1">8.1 公開リンクの仕組み</a></li>
-      <li><a class="toc-sec" href="#ch8-2">8.2 公開リンクの注意</a></li>
-      <li><a class="toc-sec" href="#ch8-3">8.3 スラッグの決まり方と注意</a></li>
-      <li><a class="toc-sec" href="#ch8-4">8.4 リンクのコピー方法</a></li>
-      <li><a class="toc-ch" href="#app">付録</a></li>
-      <li><a class="toc-sec" href="#app-1">A.1 コピペ文例集</a></li>
-      <li><a class="toc-sec" href="#app-2">A.2 用語集</a></li>
-    </ol>
+  <nav class="toc" aria-label="目次">
+    <details id="tocDetails" open>
+      <summary>目次</summary>
+      <ol>
+        <li><a href="#habits">Museと長く付き合うための3つの習慣</a></li>
+        <li><a href="#ch1">第1章 はじめに</a>
+          <ol>
+            <li><a href="#ch1-1">1.1 Museとは</a></li>
+            <li><a href="#ch1-2">1.2 できること</a></li>
+            <li><a href="#ch1-3">1.3 関連資料</a></li>
+          </ol>
+        </li>
+        <li><a href="#ch2">第2章 頼み方と確認</a>
+          <ol>
+            <li><a href="#ch2-1">2.1 頼み方</a></li>
+            <li><a href="#ch2-2">2.2 確認が入る操作</a></li>
+            <li><a href="#ch2-3">2.3 購入のときの確認</a></li>
+          </ol>
+        </li>
+        <li><a href="#ch3">第3章 画面とチャットの使い分け</a>
+          <ol>
+            <li><a href="#ch3-1">3.1 メインチャットとサイドチャット</a></li>
+            <li><a href="#ch3-2">3.2 画面の各部の名称</a></li>
+            <li><a href="#ch3-3">3.3 サイドチャットの作り方</a></li>
+            <li><a href="#ch3-4">3.4 アーカイブと戻し方</a></li>
+            <li><a href="#ch3-5">3.5 設定とデータコントロール</a></li>
+          </ol>
+        </li>
+        <li><a href="#ch4">第4章 なぜチャットを分けるのか</a>
+          <ol>
+            <li><a href="#ch4-1">4.1 トークンとは</a></li>
+            <li><a href="#ch4-2">4.2 トークンの利用枠</a></li>
+            <li><a href="#ch4-3">4.3 長いチャットで起きること</a></li>
+            <li><a href="#ch4-4">4.4 対策</a></li>
+            <li><a href="#ch4-5">4.5 引き継ぎ文の作り方</a></li>
+          </ol>
+        </li>
+        <li><a href="#ch5">第5章 メモリーの仕組みと手入れ</a>
+          <ol>
+            <li><a href="#ch5-1">5.1 メモリーファイル</a></li>
+            <li><a href="#ch5-2">5.2 中身を見る・直してもらう</a></li>
+            <li><a href="#ch5-3">5.3 メモリーの定期点検</a></li>
+            <li><a href="#ch5-4">5.4 点検の依頼文</a></li>
+            <li><a href="#ch5-5">5.5 整理の例</a></li>
+          </ol>
+        </li>
+        <li><a href="#ch6">第6章 作ったものを人に見せる</a>
+          <ol>
+            <li><a href="#ch6-1">6.1 スペースと共有リンク</a></li>
+            <li><a href="#ch6-2">6.2 リンクが開けなくなる場合</a></li>
+            <li><a href="#ch6-3">6.3 スペースの名前は英語で付けてもらう</a></li>
+            <li><a href="#ch6-4">6.4 リンクのコピーのしかた</a></li>
+          </ol>
+        </li>
+        <li><a href="#app">付録</a>
+          <ol>
+            <li><a href="#app-1">A.1 困ったとき</a></li>
+            <li><a href="#app-2">A.2 依頼文の一覧</a></li>
+            <li><a href="#app-3">A.3 用語集</a></li>
+          </ol>
+        </li>
+      </ol>
+    </details>
   </nav>
 
-  <main>
-    <div class="nowbar" aria-hidden="true"><span class="lb">現在地</span><span class="vl" id="nowPos">目次</span></div>
+  <main id="main">
+    <div class="nowbar" aria-hidden="true"><span class="lb">現在地</span><span class="vl" id="nowPos">3つの習慣</span></div>
 
-    <header class="doc-head">
-      <p class="kicker">MUSE 取扱説明書</p>
-      <h1>Muse Manual</h1>
-      <p class="lead">Museの仕組みと基本操作を、技術文書の形式で簡潔にまとめた説明書です。章・節番号で参照できます。</p>
-      <div class="doc-meta">
-        <span>構成：<b>全8章＋付録</b></span>
-        <span>読み方：<b>目次から章・節へ移動可能</b></span>
-        <span>参照形式：<b>第○章「節名」</b></span>
-      </div>
-    </header>
-
-    <!-- ===== TOC (mobile) ===== -->
-    <details class="toc-top">
-      <summary>目次を開く</summary>
-      <div class="toc-inner">
-        <ol>
-          <li><a class="toc-ch" href="#ch1">第1章 はじめに</a></li>
-          <li><a class="toc-sec" href="#ch1-1">1.1 Museとは</a></li>
-          <li><a class="toc-sec" href="#ch1-2">1.2 できること</a></li>
-          <li><a class="toc-sec" href="#ch1-3">1.3 入門資料</a></li>
-          <li><a class="toc-ch" href="#ch2">第2章 使い方の基本</a></li>
-          <li><a class="toc-sec" href="#ch2-1">2.1 頼み方の基本</a></li>
-          <li><a class="toc-sec" href="#ch2-2">2.2 承認が不要な操作</a></li>
-          <li><a class="toc-sec" href="#ch2-3">2.3 承認が必要な操作</a></li>
-          <li><a class="toc-sec" href="#ch2-4">2.4 購入の承認</a></li>
-          <li><a class="toc-ch" href="#ch3">第3章 会話と画面の基本操作</a></li>
-          <li><a class="toc-sec" href="#ch3-1">3.1 画面の各部の名称とはたらき</a></li>
-          <li><a class="toc-sec" href="#ch3-2">3.2 メインチャットとサイドチャットの違い</a></li>
-          <li><a class="toc-sec" href="#ch3-3">3.3 メインチャットとサイドチャットの使い分け</a></li>
-          <li><a class="toc-sec" href="#ch3-4">3.4 サイドチャットの作り方</a></li>
-          <li><a class="toc-sec" href="#ch3-5">3.5 会話の名前変更と探し方</a></li>
-          <li><a class="toc-sec" href="#ch3-6">3.6 アーカイブと戻し方</a></li>
-          <li><a class="toc-sec" href="#ch3-7">3.7 設定とデータコントロール</a></li>
-          <li><a class="toc-ch" href="#ch4">第4章 トークンの基礎</a></li>
-          <li><a class="toc-sec" href="#ch4-1">4.1 トークンとは</a></li>
-          <li><a class="toc-sec" href="#ch4-2">4.2 3つのお財布</a></li>
-          <li><a class="toc-sec" href="#ch4-3">4.3 消費の目安</a></li>
-          <li><a class="toc-sec" href="#ch4-4">4.4 節約の要点</a></li>
-          <li><a class="toc-ch" href="#ch5">第5章 会話の質を落とさないために</a></li>
-          <li><a class="toc-sec" href="#ch5-1">5.1 長い会話で起きること</a></li>
-          <li><a class="toc-sec" href="#ch5-2">5.2 質の低下の性質</a></li>
-          <li><a class="toc-sec" href="#ch5-3">5.3 対応策5つ</a></li>
-          <li><a class="toc-sec" href="#ch5-4">5.4 引き継ぎ文の型</a></li>
-          <li><a class="toc-ch" href="#ch6">第6章 頭の中のファイルたち</a></li>
-          <li><a class="toc-sec" href="#ch6-1">6.1 常駐ファイルとは</a></li>
-          <li><a class="toc-sec" href="#ch6-2">6.2 6点の役割</a></li>
-          <li><a class="toc-sec" href="#ch6-3">6.3 中身の確認と変更</a></li>
-          <li><a class="toc-ch" href="#ch7">第7章 メモリーの手入れ</a></li>
-          <li><a class="toc-sec" href="#ch7-1">7.1 圧縮の考え方</a></li>
-          <li><a class="toc-sec" href="#ch7-2">7.2 圧縮の実例</a></li>
-          <li><a class="toc-sec" href="#ch7-3">7.3 健康診断とは</a></li>
-          <li><a class="toc-sec" href="#ch7-4">7.4 点検観点</a></li>
-          <li><a class="toc-sec" href="#ch7-5">7.5 3段階の手順</a></li>
-          <li><a class="toc-sec" href="#ch7-6">7.6 前提と依頼文</a></li>
-          <li><a class="toc-ch" href="#ch8">第8章 作ったものを残す・人に見せる</a></li>
-          <li><a class="toc-sec" href="#ch8-1">8.1 公開リンクの仕組み</a></li>
-          <li><a class="toc-sec" href="#ch8-2">8.2 公開リンクの注意</a></li>
-          <li><a class="toc-sec" href="#ch8-3">8.3 スラッグの決まり方と注意</a></li>
-          <li><a class="toc-sec" href="#ch8-4">8.4 リンクのコピー方法</a></li>
-          <li><a class="toc-ch" href="#app">付録</a></li>
-          <li><a class="toc-sec" href="#app-1">A.1 コピペ文例集</a></li>
-          <li><a class="toc-sec" href="#app-2">A.2 用語集</a></li>
-        </ol>
-      </div>
-    </details>
+    <!-- ================= 3つの習慣 ================= -->
+    <section class="habits" aria-labelledby="habits">
+      <h2 id="habits">Museと長く付き合うための3つの習慣</h2>
+      <p>Museは使うほどあなたのことを覚えます。ただし、1つのチャットで何でも話し続けると、応答の質が下がり、トークンの消費も増えます。次の3つを最初から習慣にしてください。</p>
+      <ol>
+        <li><b>長くなりそうな話題は、サイドチャットで話す</b>メインチャットは、短い質問や雑談に使います。→ <a href="#ch3-1">3.1</a></li>
+        <li><b>チャットが長くなったら、新しいチャットに引き継ぐ</b>前のチャットで引き継ぎ文を作ってもらい、新しいチャットの最初に貼ります。→ <a href="#ch4-5">4.5</a></li>
+        <li><b>月に1回、メモリーを点検する</b>覚えたことが増えると、古い内容や食い違いがたまります。新しいチャットにしても返信がずれるときも、点検します。→ <a href="#ch5-3">5.3</a></li>
+      </ol>
+    </section>
 
     <!-- ================= 第1章 ================= -->
-    <section class="chapter" id="ch1">
-      <h2><span class="no">第1章</span>はじめに</h2>
-      <div class="chap-contents">
-        <p class="t">この章の内容</p>
-        <ul>
-          <li><a href="#ch1-1">1.1 Museとは</a> ― 概要と特徴</li>
-          <li><a href="#ch1-2">1.2 できること</a> ― 依頼できる作業の範囲</li>
-          <li><a href="#ch1-3">1.3 入門資料</a> ― 先に作られた資料へのリンク</li>
-        </ul>
-      </div>
+    <section class="chapter" aria-labelledby="ch1">
+      <h2 id="ch1"><span class="no">第1章</span>はじめに</h2>
 
       <h3 id="ch1-1"><span class="no">1.1</span>Museとは</h3>
-      <ul>
-        <li>Museは、会話で作業を依頼できるAIアシスタントです。</li>
-        <li>Museはチャットの返信に絵文字を使うことがあります。</li>
-        <li>利用者のメッセージに、Museが絵文字のリアクションを付けることがあります。利用者からも、メッセージを長押ししてリアクションを付けられます。言葉にしなくても気持ちを伝え合えるのが、従来のAIチャットと違う点です。</li>
-        <li>特徴は「記憶」です。好み、決定事項、進行中の作業を覚え、次の会話でも使います。</li>
-        <li>記憶は「常駐ファイル」に記録されます。仕組みは<a href="#ch6-1">第6章「常駐ファイルとは」</a>を参照してください。</li>
-        <li>記憶は手入れできます。方法は<a href="#ch7-3">第7章「健康診断とは」</a>を参照してください。</li>
-      </ul>
+      <p>Museは、ふだんの言葉で頼むだけで、調べもの、文章づくり、ページ作りなどを進めてくれるAIアシスタントです。</p>
+      <p>いちばんの特徴は、あなたの好みや決めたこと、進めている作業を覚えて、次のチャットでも使うことです。この覚えた内容を「メモリー」と呼びます。メモリーはたまるほど手入れが必要になります（<a href="#ch5">第5章</a>）。</p>
 
       <h3 id="ch1-2"><span class="no">1.2</span>できること</h3>
-      <p class="intro1">言葉で依頼するだけで、次のような作業が進みます。</p>
+      <p>言葉で頼むだけで、次のような作業が進みます。</p>
       <ul>
         <li>調べもの、要約、情報の整理</li>
         <li>文章の作成と編集</li>
-        <li>予定、買い物などの相談と手続きの支援</li>
-        <li>Webページや小さなアプリの作成</li>
+        <li>予定や買い物の相談と、手続きの手伝い</li>
+        <li>動画、Webページ、小さなアプリの作成</li>
         <li>ファイルの作成と管理</li>
       </ul>
-      <p>操作によっては、実行前に承認が必要です。区別は<a href="#ch2-3">第2章「承認が必要な操作」</a>を参照してください。</p>
+      <p>送信、購入、削除など、取り消しにくい操作の前には確認が入ります（<a href="#ch2">第2章</a>）。</p>
 
-      <h3 id="ch1-3"><span class="no">1.3</span>入門資料</h3>
-      <p class="intro1">テーマ別の詳しい資料が別にあります。本書と併用できます。</p>
-      <div class="linkcards">
-        <a class="linkcard" href="https://muse.ai/s/welcome-to-muse-xexq6xm9xlgxi466/FSLu6blZ8A1OXaf8tMdvZNA-_AoT0x8tMk2oHW3KjSk" target="_blank" rel="noopener">
-          <span class="lt">「Museの使い方」スペース</span>
-          <span class="ld">基本の使い方を、部屋ごとに例文カードで紹介する入門スペース。</span>
-          <span class="go">開く →</span>
-        </a>
-        <a class="linkcard" href="https://muse.ai/s/kappie-muse-tutorial-lxe6xm0xqx0xhxfmj/cDh2EE-30rxy7IDYBAewAcfo2sEBK34QoiYfy--lCQk" target="_blank" rel="noopener">
-          <span class="lt">動画風チュートリアル</span>
-          <span class="ld">Museの使い方を動画風に眺めて把握できる入門チュートリアル。</span>
-          <span class="go">開く →</span>
-        </a>
-        <a class="linkcard" href="https://muse.ai/s/muse-token-guide-xcj6xmxg25xkpxfi/vezAYHZygnLL8oSgMkCYGZo5cMJNQZpkkL3Gjr6VF_M" target="_blank" rel="noopener">
-          <span class="lt">トークン入門「Muse Token Guide」</span>
-          <span class="ld">トークンの仕組みと、無料と有料の区別を詳しく説明したページ。本書の第4章の詳しい版。</span>
-          <span class="go">開く →</span>
-        </a>
-      </div>
-      <p>読み進める順序の目安：まず<a href="#ch2">第2章</a>と<a href="#ch3">第3章</a>で日常の操作を把握し、必要な章を個別に参照します。</p>
-      <a class="backtop" href="#ch1">↑ この章の先頭へ</a>
+      <h3 id="ch1-3"><span class="no">1.3</span>関連資料</h3>
+      <p>テーマごとに、もっと詳しいページがあります。</p>
+      <ul>
+        <li><a href="../welcome/">Museの使い方</a>：部屋をめぐりながら、基本の使い方を案内する入門ページ</li>
+        <li><a href="../tutorial/">動画風チュートリアル</a>：9つの場面で使い方を紹介するページ（ファイルが大きいため、開くまで時間がかかることがあります）</li>
+        <li><a href="../token-guide/">Museのトークン入門</a>：トークンの仕組みと、無料と有料の区別（<a href="#ch4">第4章</a>の詳しい版）</li>
+        <li><a href="../long-conversations/">長い会話とトークン</a>：チャットが長くなったときの影響と対策（<a href="#ch4">第4章</a>の詳しい版）</li>
+      </ul>
     </section>
 
     <!-- ================= 第2章 ================= -->
-    <section class="chapter" id="ch2">
-      <h2><span class="no">第2章</span>使い方の基本</h2>
-      <div class="chap-contents">
-        <p class="t">この章の内容</p>
-        <ul>
-          <li><a href="#ch2-1">2.1 頼み方の基本</a> ― 依頼の手順</li>
-          <li><a href="#ch2-2">2.2 承認が不要な操作</a> ― そのまま進む作業</li>
-          <li><a href="#ch2-3">2.3 承認が必要な操作</a> ― 確認が入る作業</li>
-          <li><a href="#ch2-4">2.4 購入の承認</a> ― 支払いのルール</li>
-        </ul>
-      </div>
+    <section class="chapter" aria-labelledby="ch2">
+      <h2 id="ch2"><span class="no">第2章</span>頼み方と確認</h2>
 
-      <h3 id="ch2-1"><span class="no">2.1</span>頼み方の基本</h3>
-      <ul>
-        <li>特別な命令やプログラミングは不要です。通常の言葉で依頼します。</li>
-        <li>専門用語が分からなければ、そのまま質問できます。</li>
-        <li>結果が意図と違う場合は、その場で言い直せます。</li>
-      </ul>
-      <p>手順：</p>
+      <h3 id="ch2-1"><span class="no">2.1</span>頼み方</h3>
+      <p>特別な命令やプログラミングは要りません。ふだんの言葉で頼み、結果が思ったものと違えば、その場で言い直します。分からない言葉が出てきたら、そのまま質問してかまいません。</p>
       <ol>
-        <li>やりたいことを一文で述べる。</li>
-        <li>条件を添える（対象、量、形式など）。例：「2人分・3日分で」「表で見せて」。</li>
-        <li>結果を確認し、必要な修正を伝える。</li>
+        <li>やりたいことを一文で伝える。</li>
+        <li>条件を添える（対象、量、形式など）。例：「2人分・3日分で」「表で見せて」</li>
+        <li>結果を見て、直してほしいところを伝える。</li>
       </ol>
-      <div class="copybox">
-        <div class="cb-label">依頼文の例</div>
+      <div class="copybox" id="prompt-example">
+        <p class="cb-label">依頼文の例</p>
         <pre>週末の買い物リストを作って。2人分・3日分で、なるべく安く済むようにして。</pre>
-        <div class="copyrow"><button class="copy-btn" type="button">コピーする</button><span class="copy-msg" aria-live="polite"></span></div>
+        <div class="copyrow"><button class="copy-btn" type="button" aria-label="依頼文の例をコピーする">コピーする</button><span class="copy-msg" role="status"></span></div>
       </div>
 
-      <h3 id="ch2-2"><span class="no">2.2</span>承認が不要な操作</h3>
-      <p class="intro1">依頼された範囲内の、次の作業は承認なしで進みます。</p>
-      <ul>
-        <li>調べもの、ページやファイルの読み取り</li>
-        <li>要約、整理、比較</li>
-        <li>下書きやファイルの作成</li>
-      </ul>
+      <h3 id="ch2-2"><span class="no">2.2</span>確認が入る操作</h3>
+      <p>頼まれた範囲の作業は、次のように進みます。</p>
+      <div class="tblwrap">
+        <table>
+          <caption>確認なしで進む操作と、実行前に確認が入る操作</caption>
+          <thead><tr><th scope="col">確認なしで進む</th><th scope="col">実行前に確認が入る</th></tr></thead>
+          <tbody>
+            <tr><td>調べもの、ページやファイルの読み取り</td><td>メールやメッセージの送信</td></tr>
+            <tr><td>要約、整理、比較</td><td>投稿など、外部への公開</td></tr>
+            <tr><td>下書きやファイルの作成</td><td>ログインを伴う操作</td></tr>
+            <tr><td></td><td>削除など、取り消しにくい操作</td></tr>
+            <tr><td></td><td>購入（支払い）</td></tr>
+          </tbody>
+        </table>
+      </div>
 
-      <h3 id="ch2-3"><span class="no">2.3</span>承認が必要な操作</h3>
-      <p class="intro1">次の操作は、実行前に確認が入ります。</p>
+      <h3 id="ch2-3"><span class="no">2.3</span>購入のときの確認</h3>
+      <p>購入は、毎回あらためて確認が入ります。</p>
       <ul>
-        <li>メールやメッセージの送信</li>
-        <li>投稿など、外部への公開</li>
-        <li>ログインを伴う操作</li>
-        <li>削除など、取り消しが難しい操作</li>
-        <li>購入（支払い）</li>
+        <li>ほかの操作をまとめて許可していても、購入には適用されません。</li>
+        <li>カートへの追加や支払い方法の選択だけでは、支払いは確定しません。</li>
+        <li>商品、合計額、配送先が変わると、もう一度確認が入ります。</li>
       </ul>
-      <p>購入の承認には専用のルールがあります。<a href="#ch2-4">第2章「購入の承認」</a>を参照してください。</p>
-
-      <h3 id="ch2-4"><span class="no">2.4</span>購入の承認</h3>
-      <ul>
-        <li>購入は、毎回あらためて支払いの承認が必要です。</li>
-        <li>「常時許可」は購入には効きません。</li>
-        <li>カートへの追加や支払い方法の選択は、支払いの承認ではありません。</li>
-        <li>商品、合計額、配送先が変わると、再度確認が入ります。</li>
-      </ul>
-      <div class="note"><span class="t">例外</span>定期実行のタスクに支払いを許可した場合、そのタスクの同一店舗・同一支払い方法の購入に限り、許可が後の回にも効くことがあります。</div>
-      <p class="related"><span class="t">関連：</span><a href="#ch2-3">第2章「承認が必要な操作」</a>／<a href="#ch2-2">第2章「承認が不要な操作」</a></p>
-      <a class="backtop" href="#ch2">↑ この章の先頭へ</a>
+      <p class="small">※例外：決まった時刻に自動で実行するよう頼んだ作業（定期実行）で支払いを許可した場合は、同じ店・同じ支払い方法の購入に限り、次の回からも許可が有効になることがあります。</p>
     </section>
 
     <!-- ================= 第3章 ================= -->
-    <section class="chapter" id="ch3">
-      <h2><span class="no">第3章</span>会話と画面の基本操作</h2>
-      <div class="chap-contents">
-        <p class="t">この章の内容</p>
-        <ul>
-          <li><a href="#ch3-1">3.1 画面の各部の名称とはたらき</a> ― チャット画面（図1）とメニュー画面（図2）</li>
-          <li><a href="#ch3-2">3.2 メインチャットとサイドチャットの違い</a> ― 構造の比較</li>
-          <li><a href="#ch3-3">3.3 メインチャットとサイドチャットの使い分け</a> ― どちらを使うか</li>
-          <li><a href="#ch3-4">3.4 サイドチャットの作り方</a> ― 手順</li>
-          <li><a href="#ch3-5">3.5 会話の名前変更と探し方</a></li>
-          <li><a href="#ch3-6">3.6 アーカイブと戻し方</a> ― アーカイブの仕方と戻す手順（図3）</li>
-          <li><a href="#ch3-7">3.7 設定とデータコントロール</a> ― 設定の開き方と項目、データコントロールとの関係</li>
-        </ul>
-      </div>
+    <section class="chapter" aria-labelledby="ch3">
+      <h2 id="ch3"><span class="no">第3章</span>画面とチャットの使い分け</h2>
 
-      <h3 id="ch3-1"><span class="no">3.1</span>画面の各部の名称とはたらき</h3>
-      <p class="intro1">図はスマートフォン（Android）の画面です。以下の2つの図があります。</p>
+      <h3 id="ch3-1"><span class="no">3.1</span>メインチャットとサイドチャット</h3>
+      <p>Museのチャットには、メインチャットとサイドチャットの2種類があります。</p>
+      <div class="tblwrap">
+        <table>
+          <caption>メインチャットとサイドチャットの違い</caption>
+          <thead><tr><th scope="col">項目</th><th scope="col">メインチャット</th><th scope="col">サイドチャット</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">位置づけ</th><td>最初からある、中心のチャット</td><td>話題ごとに自分で作るチャット</td></tr>
+            <tr><th scope="row">向いている使い方</th><td>短い質問、雑談</td><td>長くなりそうなテーマ（学習、制作、旅行の計画、続けて調べることなど）</td></tr>
+            <tr><th scope="row">チャットの記録</th><td>そのチャットの中だけに残り、ほかのチャットからは見えない</td><td>そのチャットの中だけに残り、ほかのチャットからは見えない</td></tr>
+            <tr><th scope="row">メモリー（Museが覚えた好みや決めごと）</th><td>すべてのチャットで共通</td><td>すべてのチャットで共通</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="warn">
+        <p class="t">注意：メインチャットだけで何でも話し続けないでください。</p>
+        <p>1つのチャットが長くなると、応答の質が少しずつ下がり、トークンの消費も増えます（<a href="#ch4-3">4.3</a>）。長くなりそうな話題は、最初からサイドチャットで話します。</p>
+      </div>
+      <p>話題ごとにサイドチャットを分けると、次のよい点があります。</p>
       <ul>
-        <li>チャット画面（デフォルト）</li>
-        <li>メニュー画面（上部左の「≡」で開く）</li>
+        <li>話題が混ざらず、あとから探しやすい</li>
+        <li>1つのチャットが長くなりすぎず、応答の質とトークンを保てる</li>
+        <li>終わった話題は、チャットごとアーカイブして片づけられる（<a href="#ch3-4">3.4</a>）</li>
       </ul>
+      <p>Museがすべてのチャットで覚えておくのは、好みや決めごとなど、大事なことだけです。チャットでのやりとりが全部覚えられるわけではないので、細かい内容はほかのチャットには伝わりません。続きを別のチャットで話すときは、引き継ぎ文を使います（<a href="#ch4-5">4.5</a>）。</p>
+
+      <h3 id="ch3-2"><span class="no">3.2</span>画面の各部の名称</h3>
+      <p>図はAndroidスマートフォンの画面です。チャット画面（図1）と、左上の「≡」で開くメニュー画面（図2）があります。</p>
+      <p class="small">※iPhone版やパソコン版では、ボタンの位置や表記が異なる場合があります。</p>
 
       <figure>
-        <div class="fig-screen-label">＜チャット画面＞</div>
-        <div class="phone" role="img" aria-label="チャット画面の模式図。上部左にメニューボタン≡、上部右にチャットメニュー…、中央に相手のアイコンと名前、その下にメッセージ表示エリア、下部に入力欄、最下部に5つのタブが並ぶタブバーがある">
+        <p class="fig-title">チャット画面</p>
+        <div class="phone" role="img" aria-label="チャット画面の模式図。左上に①メニューボタン、右上に②チャットメニュー、上部中央に③相手のアイコンと名前、中央に④メッセージ表示エリア、下部に⑤追加ボタン、⑥入力欄、⑦マイク、最下部に⑧タブバー。">
           <div class="phone-top">
-            <div style="display:grid;justify-items:center;gap:4px"><span class="circle-btn" aria-hidden="true">≡</span><span class="fbadge">1</span></div>
-            <div class="phone-peer"><div class="avatar">アイコン</div><div class="pname">相手の名前 <span class="fbadge">3</span></div></div>
-            <div style="display:grid;justify-items:center;gap:4px"><span class="circle-btn" aria-hidden="true">…</span><span class="fbadge">2</span></div>
+            <div class="btn-col"><span class="circle-btn">≡</span><span class="fbadge">1</span></div>
+            <div class="peer"><div class="avatar">アイコン</div><div class="pname">相手の名前 <span class="fbadge">3</span></div></div>
+            <div class="btn-col"><span class="circle-btn">…</span><span class="fbadge">2</span></div>
           </div>
-          <div class="phone-msgs">
+          <div class="msgs">
             <div class="cap">メッセージ表示エリア <span class="fbadge">4</span></div>
             <div class="bubble them">Museの返信が表示されます。</div>
             <div class="bubble me">送ったメッセージが表示されます。</div>
           </div>
           <div class="phone-input">
-            <span class="plus" aria-hidden="true">＋</span><span class="fbadge">5</span>
+            <span class="plus">＋</span><span class="fbadge">5</span>
             <span class="ph">メッセージを入力… <span class="fbadge">6</span></span>
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg><span class="fbadge">7</span>
           </div>
-          <div class="tabbar-wrap"><div class="cap">タブバー <span class="fbadge">8</span></div></div>
-          <div class="tabbar" aria-hidden="true">
-            <div class="tab on"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>チャット</div>
-            <div class="tab"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0V9"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>フィード</div>
-            <div class="tab"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>アイデア</div>
-            <div class="tab"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="6" r="2.5"/><circle cx="12" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="8.5" cy="17" r="2.5"/><circle cx="15.5" cy="17" r="2.5"/></svg>図書館</div>
-            <div class="tab"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m9 12 2 2 4-4"/></svg>目標</div>
+          <div class="tabbar-cap"><div class="cap">タブバー <span class="fbadge">8</span></div></div>
+          <div class="tabbar">
+            <div class="tab on"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>チャット</div>
+            <div class="tab"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0V9"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>フィード</div>
+            <div class="tab"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>アイデア</div>
+            <div class="tab"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="6" r="2.5"/><circle cx="12" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="8.5" cy="17" r="2.5"/><circle cx="15.5" cy="17" r="2.5"/></svg>図書館</div>
+            <div class="tab"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m9 12 2 2 4-4"/></svg>目標</div>
           </div>
         </div>
         <figcaption><b>図1</b> チャット画面（模式図）。番号は下の表に対応します。</figcaption>
       </figure>
-      <div class="tblwrap parts-tbl">
+      <div class="tblwrap">
         <table>
-          <tr><th style="width:44px">番号</th><th style="width:34%">名称</th><th>はたらき</th></tr>
-          <tr><td class="no-cell">①</td><td>メニューボタン「≡」（上部左）</td><td>メニュー画面を開く。タブ・スペース・サイドチャットの一覧と、新規作成の入り口はここから開く（図2）。</td></tr>
-          <tr><td class="no-cell">②</td><td>チャットメニュー「…」（上部右）</td><td>今開いているチャットに関するメニューを開く。項目は「名前を変更」「固定」「アーカイブ」「削除」。</td></tr>
-          <tr><td class="no-cell">③</td><td>相手のアイコンと名前（上部中央）</td><td>今話している相手を表示する。</td></tr>
-          <tr><td class="no-cell">④</td><td>メッセージ表示エリア（中央）</td><td>送ったメッセージとMuseの返信が、時系列で表示される。</td></tr>
-          <tr><td class="no-cell">⑤</td><td>入力欄の「＋」（入力欄の左端）</td><td>ファイルや写真を追加するボタン。</td></tr>
-          <tr><td class="no-cell">⑥</td><td>入力欄（下部）</td><td>メッセージを入力して送る場所。表示文字は会話ごとに変わる。</td></tr>
-          <tr><td class="no-cell">⑦</td><td>マイクアイコン（入力欄の右端）</td><td>音声で入力する。</td></tr>
-          <tr><td class="no-cell">⑧</td><td>タブバー（最下部）</td><td>画面を切り替える。左から「チャット（吹き出し）」「フィード」「アイデア」「図書館」「目標」の5つ。会話は「チャット」を使う。</td></tr>
+          <caption>図1 チャット画面の各部</caption>
+          <thead><tr><th scope="col">番号</th><th scope="col">名称</th><th scope="col">はたらき</th></tr></thead>
+          <tbody>
+            <tr><td class="no">①</td><th scope="row">メニューボタン「≡」（左上）</th><td>メニュー画面（図2）を開く。チャットの一覧、新しいサイドチャットの作成、設定はここから。</td></tr>
+            <tr><td class="no">②</td><th scope="row">チャットメニュー「…」（右上）</th><td>いま開いているチャットのメニューを開く。項目は「名前を変更」「固定」「アーカイブ」「削除」。</td></tr>
+            <tr><td class="no">③</td><th scope="row">相手のアイコンと名前（上部中央）</th><td>いま話している相手を表示する。</td></tr>
+            <tr><td class="no">④</td><th scope="row">メッセージ表示エリア（中央）</th><td>送ったメッセージとMuseの返信が、時間の順に表示される。メッセージを長押しすると、絵文字でリアクションを付けられる。Museも、返信に絵文字を使ったり、リアクションを付けたりする。</td></tr>
+            <tr><td class="no">⑤</td><th scope="row">「＋」（入力欄の左端）</th><td>ファイルや写真を追加する。</td></tr>
+            <tr><td class="no">⑥</td><th scope="row">入力欄（下部）</th><td>メッセージを入力して送る。表示される文字はチャットごとに変わる。</td></tr>
+            <tr><td class="no">⑦</td><th scope="row">マイク（入力欄の右端）</th><td>音声で入力する。</td></tr>
+            <tr><td class="no">⑧</td><th scope="row">タブバー（最下部）</th><td>画面を切り替える。左から「チャット」「フィード」「アイデア」「図書館」「目標」。チャットは「チャット」を使う。</td></tr>
+          </tbody>
         </table>
       </div>
 
       <figure>
-        <div class="fig-screen-label">＜メニュー画面＞</div>
-        <div class="drawer" role="img" aria-label="メニュー画面の模式図。上部にアシスタント名、タブ欄、スペース欄、サイドチャット欄が並び、最下部左に設定の歯車、中央に検索欄、右に新規作成の鉛筆アイコンがある">
+        <p class="fig-title">メニュー画面</p>
+        <div class="drawer" role="img" aria-label="メニュー画面の模式図。上から①アシスタント名、②タブ欄、③スペース欄、④サイドチャット欄。最下部の左に⑤設定の歯車、中央に⑥検索欄、右に⑦新規作成の鉛筆アイコン。">
           <div class="drawer-head">アシスタント名 <span class="fbadge">1</span></div>
           <div class="drawer-sec">
-            <div class="sec-label">タブ <span class="fbadge">2</span></div>
-            <div class="sec-note">長押しで並べ替えられます</div>
-            <div class="drawer-item sel"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>メインチャット</div>
-            <div class="drawer-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0V9"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>フィード</div>
-            <div class="drawer-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>アイデア</div>
-            <div class="drawer-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="6" r="2.5"/><circle cx="12" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="8.5" cy="17" r="2.5"/><circle cx="15.5" cy="17" r="2.5"/></svg>図書館</div>
-            <div class="drawer-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m9 12 2 2 4-4"/></svg>目標</div>
+            <div class="cap">タブ <span class="fbadge">2</span></div>
+            <div class="note-line">長押しで並べ替えられます</div>
+            <div class="drawer-item sel">メインチャット</div>
+            <div class="drawer-item">フィード</div>
+            <div class="drawer-item">アイデア</div>
+            <div class="drawer-item">図書館</div>
+            <div class="drawer-item">目標</div>
           </div>
           <div class="drawer-div"></div>
           <div class="drawer-sec">
-            <div class="sec-label">スペース <span class="fbadge">3</span></div>
-            <div class="drawer-item">スペース名 <span class="ex">（利用者のスペースが並びます）</span></div>
+            <div class="cap">スペース <span class="fbadge">3</span></div>
+            <div class="drawer-item">スペース名 <span class="ex">（作ったものが並びます）</span></div>
             <div class="drawer-item">＋ スペースを作成</div>
           </div>
           <div class="drawer-div"></div>
           <div class="drawer-sec">
-            <div class="sec-label">サイドチャット <span class="fbadge">4</span></div>
-            <div class="drawer-item">サイドチャット名 <span class="ex">（タップでその会話を開く）</span></div>
+            <div class="cap">サイドチャット <span class="fbadge">4</span></div>
+            <div class="drawer-item">サイドチャット名 <span class="ex">（タップで開く）</span></div>
           </div>
           <div class="drawer-bottom">
-            <span class="icon-btn" aria-hidden="true"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.2 4.2l2.8 2.8M17 17l2.8 2.8M1 12h4M19 12h4M4.2 19.8 7 17M17 7l2.8-2.8"/></svg></span><span class="fbadge">5</span>
+            <span class="icon-btn"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.2 4.2l2.8 2.8M17 17l2.8 2.8M1 12h4M19 12h4M4.2 19.8 7 17M17 7l2.8-2.8"/></svg></span><span class="fbadge">5</span>
             <span class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>検索 <span class="fbadge">6</span></span>
-            <span class="icon-btn key" aria-hidden="true"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></span><span class="fbadge">7</span>
+            <span class="icon-btn key"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></span><span class="fbadge">7</span>
           </div>
         </div>
-        <figcaption><b>図2</b> メニュー画面（「≡」で開く画面。模式図）。番号は下の表に対応します。スペース名・サイドチャット名は例示のための仮の表示です。</figcaption>
+        <figcaption><b>図2</b> メニュー画面（模式図）。番号は下の表に対応します。スペース名・サイドチャット名は仮の表示です。</figcaption>
       </figure>
-      <div class="tblwrap parts-tbl">
-        <table>
-          <tr><th style="width:44px">番号</th><th style="width:34%">名称</th><th>はたらき</th></tr>
-          <tr><td class="no-cell">①</td><td>アシスタント名（上部）</td><td>利用者のMuseの名前を表示する。</td></tr>
-          <tr><td class="no-cell">②</td><td>「タブ」欄</td><td>メインチャット／フィード／アイデア／図書館／目標への入り口。長押しで並べ替えられる旨が表示される。</td></tr>
-          <tr><td class="no-cell">③</td><td>「スペース」欄</td><td>スペースの一覧と「スペースを作成」が並ぶ。</td></tr>
-          <tr><td class="no-cell">④</td><td>「サイドチャット」欄</td><td>サイドチャットの一覧。タップでその会話を開く。未読がある場合は印が付くことがある。</td></tr>
-          <tr><td class="no-cell">⑤</td><td>設定（歯車・最下部左）</td><td>設定を開く。データコントロールもここから進む（<a href="#ch3-7">第3章「設定とデータコントロール」</a>）。</td></tr>
-          <tr><td class="no-cell">⑥</td><td>検索欄（最下部中央）</td><td>会話などを検索する。</td></tr>
-          <tr><td class="no-cell">⑦</td><td>新規作成アイコン（鉛筆のマーク・最下部右）</td><td><strong>新しいサイドチャットはここから作る。</strong>手順は<a href="#ch3-4">第3章「サイドチャットの作り方」</a>。</td></tr>
-        </table>
-      </div>
-      <div class="note"><span class="t">用語</span>本書で「チャットタブ」と書く場合は、最下部のタブバーの「チャット」（図1の⑧）を指します。会話の一覧そのものは、チャット画面ではなく、メニュー画面の「タブ」欄と「サイドチャット」欄（図2）にあります。</div>
-
-      <h3 id="ch3-2"><span class="no">3.2</span>メインチャットとサイドチャットの違い</h3>
-      <p class="intro1">Museには以下の2種類の会話の方法があります。</p>
       <div class="tblwrap">
         <table>
-          <tr><th style="width:26%">項目</th><th style="width:37%">メインチャット</th><th>サイドチャット</th></tr>
-          <tr><td>位置づけ</td><td>最初からある中心の会話</td><td>話題ごとに作る会話（新しい会話）</td></tr>
-          <tr><td>会話の記録</td><td colspan="2">その会話でのやり取りの逐語録。メイン・サイドのどちらも、その会話の中だけのもので、それぞれ別々に残る。</td></tr>
-          <tr><td>記憶（常駐ファイル）</td><td colspan="2">決めごとや好みのような大事なことだけを書き留めた共通のファイル。メイン・サイドの区別なく、どの会話からでも参照する。</td></tr>
-        </table>
-        <p class="tbl-note">※常駐ファイル：Museがどの会話でも、始まるたびに読み込んで参照するファイルの呼び名です。実体は<code>MEMORY.md</code>など6つのファイルで、決めごとや好みのような大事なことを書き留めてあります。メイン・サイドの区別なく共通です。詳しくは<a href="#ch6-1">第6章「6.1 常駐ファイルとは」</a>を参照してください。</p>
-      </div>
-      <p>記録が自動で全部、記憶になるわけではありません。記憶ファイルに書き留められていない細かい内容は、その会話限りで、別の会話には伝わりません。確実に引き継ぐ方法は<a href="#ch5-4">第5章「引き継ぎ文の型」</a>です。</p>
-
-      <h3 id="ch3-3"><span class="no">3.3</span>メインチャットとサイドチャットの使い分け</h3>
-      <div class="tblwrap">
-        <table>
-          <tr><th style="width:60%">こんなとき</th><th>使う会話</th></tr>
-          <tr><td>短い質問、雑談</td><td>メインチャット</td></tr>
-          <tr><td>長くなりそうなテーマ（学習、制作、旅行の計画、継続する調べもの）</td><td>サイドチャット</td></tr>
+          <caption>図2 メニュー画面の各部</caption>
+          <thead><tr><th scope="col">番号</th><th scope="col">名称</th><th scope="col">はたらき</th></tr></thead>
+          <tbody>
+            <tr><td class="no">①</td><th scope="row">アシスタント名（上部）</th><td>あなたのMuseの名前を表示する。</td></tr>
+            <tr><td class="no">②</td><th scope="row">「タブ」欄</th><td>メインチャット、フィード、アイデア、図書館、目標への入り口。長押しで並べ替えられる。</td></tr>
+            <tr><td class="no">③</td><th scope="row">「スペース」欄</th><td>Museが作った動画やWebページの置き場所（<a href="#ch6-1">6.1</a>）。</td></tr>
+            <tr><td class="no">④</td><th scope="row">「サイドチャット」欄</th><td>サイドチャットの一覧。タップでそのチャットを開く。</td></tr>
+            <tr><td class="no">⑤</td><th scope="row">歯車アイコン（左下）</th><td>設定を開く（<a href="#ch3-5">3.5</a>）。</td></tr>
+            <tr><td class="no">⑥</td><th scope="row">検索欄（下部中央）</th><td>チャットなどを検索する。</td></tr>
+            <tr><td class="no">⑦</td><th scope="row">鉛筆アイコン（右下）</th><td>新しいサイドチャットを作る（<a href="#ch3-3">3.3</a>）。</td></tr>
+          </tbody>
         </table>
       </div>
-      <p>話題ごとにサイドチャットを作る理由は、次の3点です。</p>
-      <ul>
-        <li>話題が混ざりません。そのテーマの記録だけが1か所に残るので、後から探しやすくなります。</li>
-        <li>1つの会話が長くなりすぎない：トークンの消費量を抑えられ、応答の質も維持しやすくなります（<a href="#ch5-1">第5章「長い会話で起きること」</a>）。</li>
-        <li>終わった話題は、その会話ごとアーカイブして片づけられます（<a href="#ch3-6">第3章「アーカイブと戻し方」</a>）。</li>
-      </ul>
 
-      <h3 id="ch3-4"><span class="no">3.4</span>サイドチャットの作り方</h3>
+      <h3 id="ch3-3"><span class="no">3.3</span>サイドチャットの作り方</h3>
       <ol>
-        <li>チャット画面の左上にある「≡」をタップして、メニュー画面を開く（<a href="#ch3-1">第3章「画面の各部の名称とはたらき」</a>の図2）。</li>
-        <li>メニュー画面の最下部、右端にある新規作成アイコン（鉛筆のマーク、図2の⑦）をタップする。</li>
-        <li>新しいサイドチャットが開く。話題の最初のメッセージを送る。</li>
-        <li>「会話の名前を変更する」（後から会話を探しやすくなります。）</li>
+        <li>チャット画面の左上の「≡」（図1の①）をタップして、メニュー画面を開く。</li>
+        <li>メニュー画面の右下の鉛筆アイコン（図2の⑦）をタップする。</li>
+        <li>新しいサイドチャットが開くので、最初のメッセージを送る。</li>
+        <li>画面右上の「…」（図1の②）から「名前を変更」を選び、中身が分かる名前を付ける。例：「旅行の相談」「英語の勉強」</li>
+      </ol>
+      <p>作ったサイドチャットは、メニュー画面の「サイドチャット」欄（図2の④）に並びます。見つからないときは、メニュー画面の下の検索欄（図2の⑥）で探します。</p>
+
+      <h3 id="ch3-4"><span class="no">3.4</span>アーカイブと戻し方</h3>
+      <p>アーカイブは、チャットを削除せずに、一覧から別の場所へしまっておく操作です。終わった話題をしまうと一覧がすっきりし、探しやすくなります。しまったチャットは、あとで一覧に戻せます。</p>
+      <p class="small">※アーカイブしても、トークンの消費は変わりません。トークンの消費は、いま話しているチャットの長さで決まります。</p>
+      <h4>アーカイブのしかた</h4>
+      <ol>
+        <li>アーカイブしたいサイドチャットを開く。</li>
+        <li>画面右上の「…」（図1の②）をタップする。</li>
+        <li>「アーカイブ」を選ぶ。</li>
+      </ol>
+      <h4>一覧に戻すしかた</h4>
+      <ol>
+        <li>メニュー画面の左下の歯車アイコン（図2の⑤）をタップして、設定を開く。</li>
+        <li>「データコントロール」を開く。</li>
+        <li>「アーカイブ済みのサイドチャット」を開き、戻したいチャットを選んで、一覧に戻す。</li>
       </ol>
 
-      <h3 id="ch3-5"><span class="no">3.5</span>会話の名前変更と探し方</h3>
-      <ul>
-        <li>会話の名前は変更できます。</li>
-        <li>名前は中身が分かるものにします。例：「旅行の相談」「英語の勉強」。</li>
-        <li>探すときは、メニュー画面の「サイドチャット」欄で名前を確認します（<a href="#ch3-1">第3章「画面の各部の名称とはたらき」</a>の図2）。メニュー画面最下部の検索欄も使えます。</li>
-        <li>話題ごとに分け、名前を付ける習慣が、そのまま探しやすさになります。</li>
-      </ul>
-
-      <h3 id="ch3-6"><span class="no">3.6</span>アーカイブと戻し方</h3>
-      <p>アーカイブは、会話を削除するのではなく、一覧から別の場所にしまっておく操作です。終わった話題を片づけられるので、サイドチャットの一覧がすっきりして、探しやすくなります。アーカイブした会話は、後から一覧に戻すこともできます。</p>
-      <p class="tbl-note" style="margin:0 0 14px">※アーカイブしてもトークンの消費量は変わりません。トークンは、今話している会話の長さで決まります。</p>
-      <p>アーカイブの仕方：</p>
-      <figure>
-        <div class="flow" role="img" aria-label="アーカイブの手順の模式図。アーカイブしたいサイドチャットを開き、画面右上のチャットメニュー「…」から「アーカイブ」を選ぶ">
-          <div class="step"><span class="st-n">STEP 1</span><span class="st-t">サイドチャット</span>アーカイブしたいサイドチャットを開く</div>
-          <span class="arrow">→</span>
-          <div class="step"><span class="st-n">STEP 2</span><span class="st-t">チャットメニュー</span>画面右上の「…」を開く</div>
-          <span class="arrow">→</span>
-          <div class="step"><span class="st-n">STEP 3</span><span class="st-t">アーカイブ</span>「アーカイブ」を選ぶ</div>
-        </div>
-      </figure>
-      <p>戻す手順：</p>
-      <figure>
-        <div class="flow" role="img" aria-label="設定からデータコントロール、アーカイブ済みサイドチャットへの遷移の模式図">
-          <div class="step"><span class="st-n">STEP 1</span><span class="st-t">設定</span>設定画面を開く</div>
-          <span class="arrow">→</span>
-          <div class="step"><span class="st-n">STEP 2</span><span class="st-t">データコントロール</span>データ管理の項目を開く</div>
-          <span class="arrow">→</span>
-          <div class="step"><span class="st-n">STEP 3</span><span class="st-t">アーカイブ済みサイドチャット</span>会話を選び、一覧に戻す</div>
-        </div>
-        <figcaption><b>図3</b> アーカイブした会話の格納場所への遷移（模式図）</figcaption>
-      </figure>
-
-      <h3 id="ch3-7"><span class="no">3.7</span>設定とデータコントロール</h3>
-      <p class="intro1">設定は、アプリ全体の調整やアカウントに関する項目を集めた場所です。</p>
-      <ul>
-        <li><strong>開き方：</strong>メニュー画面（チャット画面左上の「≡」で開く）の一番下にある歯車アイコンから開きます（<a href="#ch3-1">第3章「画面の各部の名称とはたらき」</a>の図2の⑤）。</li>
-        <li><strong>主な項目：</strong>サブスクリプション（利用状況とプラン）、コネクタ、ウォレット、保存したログイン情報、権限、連携チャネル、デバイス、通知、見た目（テーマなど）、データコントロール、ヘルプ、ログアウト。</li>
-      </ul>
-      <p>項目の並びや有無は、アプリのバージョンで変わることがあります。</p>
-      <p>このうち「データコントロール」は、設定の中の1項目で、自分のデータに関する操作を集めた場所です。項目は次の表の通りです。</p>
+      <h3 id="ch3-5"><span class="no">3.5</span>設定とデータコントロール</h3>
+      <p>設定は、メニュー画面の左下の歯車アイコン（図2の⑤）から開きます。画面のいちばん上にトークンの利用状況（<a href="#ch4-2">4.2</a>）があり、その下にアプリ全体の設定やアカウントに関する項目が並んでいます。項目の並びや有無は、アプリのバージョンによって変わることがあります。</p>
+      <p>このうち「データコントロール」には、自分のデータに関する操作がまとまっています。</p>
       <div class="tblwrap">
         <table>
-          <tr><th style="width:24%">項目</th><th style="width:44%">説明</th><th>手順・補足</th></tr>
-          <tr><td>アーカイブ済みサイドチャット</td><td>アーカイブしたサイドチャットの一覧です。ここから選んで、一覧に戻せます。</td><td>戻し方の手順は<a href="#ch3-6">第3章「アーカイブと戻し方」</a>を参照してください。</td></tr>
-          <tr><td>データのダウンロード</td><td>自分のデータをまとめてダウンロードできます。会話の記録と、Museの作業ファイル（常駐ファイルなど）が含まれます。バックアップや引っ越しのときに使います。</td><td>実行すると、準備に時間がかかることがあります。</td></tr>
-          <tr><td>メモリの取り込み</td><td>他のAIアシスタントで使っていた情報（好みや前提など）や、チャットの書き出しファイルを取り込んで、Museの記憶に移すための機能です。</td><td>MCP接続やAPI連携は不要です。Museが用意した文を他のAIに貼って、返ってきた要約を貼る方式と、他のAIが作成したチャットの書き出しファイル（ZIP）を取り込む方式があります。</td></tr>
-          <tr><td>AI学習への利用のオプトアウト</td><td>自分の会話データを、AIの学習に使わせないようにする設定です。</td><td>手順：設定を開く → データコントロールを開く → AI学習への利用に関する項目をオフにする。</td></tr>
-          <tr><td>リセット（消去）</td><td>Museのデータ（会話や記憶）を消去して、初期の状態に戻します。</td><td>実行すると元に戻せないので注意してください。アカウント自体の削除とは別の操作です。</td></tr>
+          <caption>データコントロールの項目（画面の並び順）</caption>
+          <thead><tr><th scope="col">項目</th><th scope="col">できること</th><th scope="col">補足</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">AIモデルの改善に協力する</th><td>Museとのやりとりを、MetaがAIの開発・改善に使うことを許可する。</td><td>切り替えをオフにすると、使われない。</td></tr>
+            <tr><th scope="row">アーカイブ済みのサイドチャット</th><td>アーカイブしたチャットを一覧に戻す。</td><td>手順は<a href="#ch3-4">3.4</a>。</td></tr>
+            <tr><th scope="row">Museにメモリーをインポート</th><td>ほかのAIアシスタントで使っていた情報を、Museのメモリーに移す。</td><td>Museが用意した文をほかのAIに貼り、返ってきた要約をMuseに貼る方法と、チャットの書き出しファイル（ZIP）を取り込む方法がある。</td></tr>
+            <tr><th scope="row">エージェントデータをダウンロード</th><td>Museに保存されている自分のデータをまとめてダウンロードする。</td><td>含まれる内容は、ダウンロードしたファイルで確かめられる。</td></tr>
+            <tr><th scope="row">「（Museの名前）をリセット」</th><td>チャット履歴、ファイル、実行中のタスクなど、Museのデータをすべて削除する。</td><td><strong>元に戻せない。</strong></td></tr>
+          </tbody>
         </table>
       </div>
-      <div class="note"><span class="t">本章の対象外</span>作ったページのリンクをコピーする操作は、本章では扱いません。<a href="#ch8-4">第8章「リンクのコピー方法」</a>を参照してください。</div>
-      <a class="backtop" href="#ch3">↑ この章の先頭へ</a>
     </section>
 
     <!-- ================= 第4章 ================= -->
-    <section class="chapter" id="ch4">
-      <h2><span class="no">第4章</span>トークンの基礎</h2>
-      <div class="chap-contents">
-        <p class="t">この章の内容</p>
-        <ul>
-          <li><a href="#ch4-1">4.1 トークンとは</a> ― 文章の数え方</li>
-          <li><a href="#ch4-2">4.2 3つのお財布</a> ― 利用枠の種類（図4）</li>
-          <li><a href="#ch4-3">4.3 消費の目安</a> ― 何に多く使うか</li>
-          <li><a href="#ch4-4">4.4 節約の要点</a></li>
-        </ul>
-      </div>
+    <section class="chapter" aria-labelledby="ch4">
+      <h2 id="ch4"><span class="no">第4章</span>なぜチャットを分けるのか</h2>
 
       <h3 id="ch4-1"><span class="no">4.1</span>トークンとは</h3>
-      <ul>
-        <li>トークンは、AIが文章を数える単位です。</li>
-        <li>送信した文章も、Museの返信も、トークンとして数えられます。</li>
-        <li>使える量には上限があります。</li>
-        <li>要点：長いやりとりほど、消費が増えます。</li>
-      </ul>
+      <p>トークンは、AIが文章の量を数える単位です。あなたが送った文章も、Museの返信も、トークンとして数えられます。使える量には上限があるので、やりとりが長いほど早く減っていきます。</p>
 
-      <h3 id="ch4-2"><span class="no">4.2</span>3つのお財布</h3>
-      <p class="intro1">利用枠は3種類に分けて考えます。</p>
+      <h3 id="ch4-2"><span class="no">4.2</span>トークンの利用枠</h3>
+      <p>トークンの利用枠は、次の3種類に分けて考えます。</p>
       <figure>
-        <div class="wallets" role="img" aria-label="トークンの3つのお財布の模式図。無料の週間枠、追加トークン、有料プラン">
+        <div class="wallets" role="img" aria-label="トークンの3つの利用枠の模式図。無料プラン、追加のトークン、有料プラン。">
           <div class="wallet">
-            <div class="wt">無料の週間枠</div>
+            <div class="wt">無料プラン</div>
             <div class="bar"><i style="width:45%"></i></div>
-            <p>毎週、決まった量が無料で使えます。週が替わると回復します。</p>
+            <p>毎週、決まった量を無料で使える。1週間ごとに上限がリセットされる。</p>
           </div>
           <div class="wallet">
-            <div class="wt">追加トークン</div>
+            <div class="wt">追加のトークン</div>
             <div class="bar"><i style="width:25%"></i></div>
-            <p>紹介コードやキャンペーンでもらえる追加の持ち分です。</p>
+            <p>紹介コードやキャンペーンでもらえる追加分。有効期限なし。</p>
           </div>
           <div class="wallet">
             <div class="wt">有料プラン</div>
             <div class="bar"><i style="width:90%"></i></div>
-            <p>多く使いたい人向けの大きな枠です。</p>
+            <p>多く使いたい人向けの大きな枠。</p>
           </div>
         </div>
-        <figcaption><b>図4</b> トークンの「3つのお財布」（模式図。バーの長さは量の大小のイメージです）</figcaption>
+        <figcaption><b>図3</b> トークンの3つの利用枠（模式図。バーの長さは量の大小のイメージです）</figcaption>
       </figure>
-      <ul>
-        <li>「無料でできること」と「有料で広がること」を分けて考えます。</li>
-        <li>日常の相談や文章づくりは、無料の範囲でも十分にこなせます。</li>
-      </ul>
+      <p>日々の相談や文章づくりは、無料プランの範囲でも十分にこなせます。どれだけ使ったかは、メニュー画面の左下の歯車アイコン（図2の⑤）をタップすると、設定画面のいちばん上に表示されます。プランごとに使用済みの割合と、上限がリセットされる日が表示されます。</p>
+      <p>紹介コードは、設定の「紹介コードを利用」から入力します。</p>
 
-      <h3 id="ch4-3"><span class="no">4.3</span>消費の目安</h3>
+      <h3 id="ch4-3"><span class="no">4.3</span>長いチャットで起きること</h3>
+      <p>Museは返信するたびに、そのチャットの記録を最初から読み直します。メモリーファイルも毎回いっしょに読み込みます（<a href="#ch5-1">5.1</a>）。</p>
+      <p>そのため、チャットが長くなると、次の2つが同時に起きます。</p>
       <ul>
-        <li>短い質問と短い返信：消費は少なめです。</li>
-        <li>長い会話を続ける：1回ごとの消費が増えます。理由は<a href="#ch5-1">第5章「長い会話で起きること」</a>を参照してください。</li>
-        <li>長い資料を渡す、長い返信を求める：消費は多めです。</li>
-        <li>常駐ファイルも毎回読み込まれるため、消費に含まれます（<a href="#ch6-1">第6章「常駐ファイルとは」</a>）。</li>
+        <li><strong>トークンの消費が増える</strong>：読み直す量が増えるので、1回の返信ごとの消費が増えます。</li>
+        <li><strong>応答の質が下がる</strong>：記録の中で大事な指示が埋もれ、返信が少しずつずれていきます。</li>
       </ul>
+      <p>質の低下は、急に起きるのではなく、坂をゆっくり下るように進みます。何回やりとりしたら下がる、という目安はありません。返信を読んで、たとえば次のように感じたら、新しいチャットに移る時期です。</p>
+      <ul>
+        <li>前と同じことを返信してくる</li>
+        <li>間違いが多くなってきた</li>
+        <li>前に伝えた指示や条件が守られない</li>
+      </ul>
+      <p>故障ではなく仕組みどおりの動きで、新しいチャットに移れば元に戻ります。新しいチャットに移っても同じことが起きるときは、メモリーが原因かもしれません（<a href="#ch5-3">5.3</a>）。</p>
+      <p>なお、長い資料を渡したり、長い返信を頼んだりした場合も、消費は多くなります。</p>
 
-      <h3 id="ch4-4"><span class="no">4.4</span>節約の要点</h3>
+      <h3 id="ch4-4"><span class="no">4.4</span>対策</h3>
+      <ol>
+        <li><strong>話題が変わったら、新しいサイドチャットで話す。</strong>最も効果の大きい対策です（<a href="#ch3-3">3.3</a>）。新しいチャットにしても、メモリーはすべてのチャットで共通なので、決めごとや好みは引き継がれます。</li>
+        <li><strong>チャットが長くなったら、引き継ぎ文を使って新しいチャットに移る。</strong>（<a href="#ch4-5">4.5</a>）</li>
+        <li><strong>大事な指示は、最後にもう一度書く。</strong>新しい指示ほど返信に反映されやすくなります。</li>
+        <li><strong>長い資料は、必要な部分だけを渡す。</strong>長い返信がいらないときは、「短めに答えて」と添えます。</li>
+        <li><strong>長く使う決めごとは、メモリーに入れてもらう。</strong>「これを覚えておいて」と頼むと、どのチャットでも使われます。ただし、メモリーが増えすぎないよう、ときどき点検します（<a href="#ch5-3">5.3</a>）。</li>
+      </ol>
+
+      <h3 id="ch4-5"><span class="no">4.5</span>引き継ぎ文の作り方</h3>
+      <p>引き継ぎ文は、前のチャットの要点を新しいチャットに伝えるための文です。自分で書く必要はなく、Museに作ってもらえます。</p>
+      <ol>
+        <li>長くなったチャットで、下の依頼文を送る。</li>
+        <li>新しいサイドチャットを作る（<a href="#ch3-3">3.3</a>）。</li>
+        <li>Museが作った引き継ぎ文を、最初のメッセージとして貼って送る。</li>
+      </ol>
+      <div class="copybox" id="prompt-handoff">
+        <p class="cb-label">引き継ぎ文を作ってもらう依頼文</p>
+        <pre>この会話の要点を、新しい会話に貼れる「引き継ぎ文」にして。これまでの要点／決まっていること（原文）／しないこと／次にやること、の形でお願い。</pre>
+        <div class="copyrow"><button class="copy-btn" type="button" aria-label="引き継ぎ文を作ってもらう依頼文をコピーする">コピーする</button><span class="copy-msg" role="status"></span></div>
+      </div>
+      <p>引き継ぎ文は、次の4項目でまとめられます。「決まっていること」は、言い回しが大事な決めごとを、要約せずに元の文のまま残す欄です。</p>
       <ul>
-        <li>話題が変わったら、新しい会話にする（<a href="#ch3-4">第3章「サイドチャットの作り方」</a>）。</li>
-        <li>長い資料は、必要な部分だけを渡す。</li>
-        <li>「短めに答えて」と一言添える。</li>
+        <li>これまでの要点</li>
+        <li>決まっていること（原文）</li>
+        <li>しないこと</li>
+        <li>次にやること</li>
       </ul>
-      <p class="related"><span class="t">関連：</span><a href="#ch5-3">第5章「対応策5つ」</a>（消費と質は同じ仕組みでつながっています）</p>
-      <a class="backtop" href="#ch4">↑ この章の先頭へ</a>
     </section>
 
-<!-- ================= 第5章 ================= -->
-<section class="chapter" id="ch5">
-<h2><span class="no">第5章</span>会話の質を落とさないために</h2>
-<div class="chap-contents">
-<p class="t">この章の内容</p>
-<ul>
-<li><a href="#ch5-1">5.1 長い会話で起きること</a> ― 仕組み</li>
-<li><a href="#ch5-2">5.2 質の低下の性質</a> ― 崖ではなく坂</li>
-<li><a href="#ch5-3">5.3 対応策5つ</a></li>
-<li><a href="#ch5-4">5.4 引き継ぎ文の型</a> ― コピーして使える形式</li>
-</ul>
-</div>
+    <!-- ================= 第5章 ================= -->
+    <section class="chapter" aria-labelledby="ch5">
+      <h2 id="ch5"><span class="no">第5章</span>メモリーの仕組みと手入れ</h2>
 
-<h3 id="ch5-1"><span class="no">5.1</span>長い会話で起きること</h3>
-<ul>
-<li>Museは返信のたびに、その会話の全記録を最初から読み直します。</li>
-<li>会話が長いほど、毎回読み直す量が増えます。</li>
-<li>結果として、トークンの消費が増えます（<a href="#ch4-3">第4章「消費の目安」</a>）。</li>
-<li>これは故障ではなく、仕組み通りの動作です。</li>
-</ul>
+      <h3 id="ch5-1"><span class="no">5.1</span>メモリーファイル</h3>
+      <p>Museが覚えたことや、振る舞いの決まりは、いくつかのファイルに書かれています。Museは、チャットを始めるたびに主なファイルを読み込みます。だから、チャットが変わっても、決めごとや好みが引き継がれます。</p>
+      <p class="small">※「メモリーファイル」は本書での呼び名です。</p>
+      <p>メモリーファイルは、Museが作業するクラウド上のコンピュータにあり、スマートフォンには保存されません。アプリの画面にも一覧は表示されませんが、Museに頼めば中身を見せてもらえます（<a href="#ch5-2">5.2</a>）。</p>
+      <div class="tblwrap">
+        <table>
+          <caption>主なメモリーファイル</caption>
+          <thead><tr><th scope="col" class="fn">ファイル名</th><th scope="col">役割</th><th scope="col">書かれている内容</th></tr></thead>
+          <tbody>
+            <tr><th scope="row" class="fn">MEMORY.md</th><td>思い出ノート</td><td>出来事、決めたこと、好みなど、長く覚えておくこと</td></tr>
+            <tr><th scope="row" class="fn">AGENTS.md</th><td>仕事のやり方メモ</td><td>作業の進め方、守る手順やルール</td></tr>
+            <tr><th scope="row" class="fn">SOUL.md</th><td>性格</td><td>Museの性格と振る舞い方</td></tr>
+            <tr><th scope="row" class="fn">USER.md</th><td>あなたのプロフィール</td><td>名前、呼び方、基本情報</td></tr>
+            <tr><th scope="row" class="fn">IDENTITY.md</th><td>自己紹介カード</td><td>Muse自身の名前や姿など</td></tr>
+            <tr><th scope="row" class="fn">TOOLS.md</th><td>道具の覚え書き</td><td>道具や機器の呼び名など</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>このほかに、日ごとのメモや話題ごとのメモ、定期的な見回り（<code>HEARTBEAT.md</code>）や先回りの動き（<code>PROACTIVE_PREFERENCES.md</code>）の設定ファイルもあります。</p>
+      <p>メモリーファイルは毎回読み込まれるので、大きくなるほどトークンの消費が増え、応答の質にも影響します（<a href="#ch4-3">4.3</a>）。そのため、ときどき点検が必要です（<a href="#ch5-3">5.3</a>）。</p>
 
-<h3 id="ch5-2"><span class="no">5.2</span>質の低下の性質</h3>
-<ul>
-<li>記録が長くなると、大事な指示が文章の中に埋もれ、質が少しずつ落ちることがあります。</li>
-<li>急にダメになる「崖」ではありません。緩やかな「坂」です。</li>
-<li>永久的な劣化ではありません。新しい会話に移ればリセットされます。</li>
-</ul>
+      <h3 id="ch5-2"><span class="no">5.2</span>中身を見る・直してもらう</h3>
+      <p>メモリーファイルの中身は秘密ではありません。Museに頼めば見せてもらえ、古くなった内容の修正や削除も頼めます。</p>
+      <div class="copybox" id="prompt-show">
+        <p class="cb-label">メモリーを見せてもらう依頼文</p>
+        <pre>MEMORY.mdの中身を見せて。私のことが何て書かれているか知りたいな。</pre>
+        <div class="copyrow"><button class="copy-btn" type="button" aria-label="メモリーを見せてもらう依頼文をコピーする">コピーする</button><span class="copy-msg" role="status"></span></div>
+      </div>
+      <div class="copybox" id="prompt-fix">
+        <p class="cb-label">メモリーを直してもらう依頼文（〇〇と△△を書き換えて使います）</p>
+        <pre>前に覚えてもらった「〇〇」の件、今は△△に変わったから、メモリーを直してね。</pre>
+        <div class="copyrow"><button class="copy-btn" type="button" aria-label="メモリーを直してもらう依頼文をコピーする">コピーする</button><span class="copy-msg" role="status"></span></div>
+      </div>
 
-<h3 id="ch5-3"><span class="no">5.3</span>対応策5つ</h3>
-<ol>
-<li><strong>話題が変わったら、新しい会話にする。</strong>最も効果が大きい対策です。作り方は<a href="#ch3-4">第3章「サイドチャットの作り方」</a>。</li>
-<li><strong>続けるときは「要約＋大事な原文だけ」を引き継ぐ。</strong>形式は<a href="#ch5-4">第5章「引き継ぎ文の型」</a>。</li>
-<li><strong>大事な指示は、最後にもう一度書く。</strong>直近の指示ほど反映されやすくなります。</li>
-<li><strong>終わった話題は、その会話に残さない。</strong>アーカイブして分けます（<a href="#ch3-6">第3章「アーカイブと戻し方」</a>）。</li>
-<li><strong>長期の決めごとは、ファイルに逃がす。</strong>常駐ファイルに書けば、会話を替えても残ります（<a href="#ch6-1">第6章「常駐ファイルとは」</a>）。</li>
-</ol>
+      <h3 id="ch5-3"><span class="no">5.3</span>メモリーの定期点検</h3>
+      <p>メモリーは使うほど増えていきます。すると、古くなった内容や、食い違った内容、同じことの重複がたまり、応答の質が下がる原因になります。これを防ぐために、ときどきMuseにメモリーファイルを点検してもらいます。</p>
+      <p class="small">※「メモリーの定期点検」は、Museの機能の名称ではありません。メモリーファイルを点検して整理する手順を指す、本書での呼び名です。</p>
+      <p>点検は、次の3段階で進めます。勝手に書き換えられないよう、<strong>書き換えはあなたが承認した項目だけ</strong>です。</p>
+      <ol>
+        <li><strong>点検する</strong>：Museがメモリーファイルを読み、問題を探します。この段階では書き換えません。</li>
+        <li><strong>報告を見る</strong>：Museが、ファイルの大きさと、見つけた問題を報告します。</li>
+        <li><strong>承認した項目だけ直してもらう</strong>：あなたが「これは直して」と答えた項目だけが書き換えられます。書き換えの前に、Museがバックアップを取ります。</li>
+      </ol>
+      <p><strong>点検する時期</strong>：月に1回が目安です。また、新しいチャットにしても次のようなことが起きるときは、点検します。</p>
+      <ul>
+        <li>前に決めたことを、また聞いてくる</li>
+        <li>やめたはずの方針を、まだ続けようとする</li>
+        <li>同じ質問への答えが、日によってぶれる</li>
+      </ul>
 
-<h3 id="ch5-4"><span class="no">5.4</span>引き継ぎ文の型</h3>
-<p class="intro1">新しい会話の最初に貼る文書の形式です。</p>
-<div class="copybox">
-<div class="cb-label">引き継ぎ文の型</div>
-<pre>これまでの要点：…
-決まっていること（原文）：…
-しないこと：…
-次にやること：…</pre>
-<div class="copyrow"><button class="copy-btn" type="button">コピーする</button><span class="copy-msg" aria-live="polite"></span></div>
-</div>
-<ul>
-<li>前の会話で「この会話の要点を引き継ぎ文にして」と頼むと、Museがこの型でまとめます。</li>
-<li>完成した文を、新しい会話の最初に貼ります。</li>
-</ul>
-<p class="related"><span class="t">関連：</span><a href="#app-1">付録「コピペ文例集」</a>にも同じ型を収録しています。</p>
-<a class="backtop" href="#ch5">↑ この章の先頭へ</a>
-</section>
+      <h3 id="ch5-4"><span class="no">5.4</span>点検の依頼文</h3>
+      <p>次の文をコピーして、Museに送ります。点検するたびに、毎回この文を使います。</p>
+      <div class="copybox" id="prompt-check">
+        <p class="cb-label">メモリーの定期点検の依頼文</p>
+        <pre class="long" tabindex="0" aria-label="メモリーの定期点検の依頼文（スクロールして全文を読めます）">あなた（Muse）の振る舞いを決めている記憶・指示ファイルの「点検」をしてください。対象は MEMORY.md、AGENTS.md、SOUL.md、USER.md、IDENTITY.md、TOOLS.md のうち、実際に存在するファイルです。
 
-<!-- ================= 第6章 ================= -->
-<section class="chapter" id="ch6">
-<h2><span class="no">第6章</span>頭の中のファイルたち</h2>
-<div class="chap-contents">
-<p class="t">この章の内容</p>
-<ul>
-<li><a href="#ch6-1">6.1 常駐ファイルとは</a> ― 名前・置き場所・「常駐」の意味・見え方</li>
-<li><a href="#ch6-2">6.2 6点の役割</a> ― 一覧（図5）</li>
-<li><a href="#ch6-3">6.3 中身の確認と変更</a> ― 「見せて」と言えば見られる</li>
-</ul>
-</div>
+## 手順1：読み取り専用の点検（この段階では絶対に書き換えない）
+各ファイルを読み、次の観点でチェックしてください。
+- 矛盾：ファイル同士、または同じファイルの中で食い違っている記述
+- 陳腐化：すでに解決・完了したのに「未対応」「保留中」のまま残っている項目、過ぎた日付の予定
+- 肥大化：ファイルサイズと行数、1項目だけ異常に長い記述、重複している内容
+- 人格・記憶への影響：あなたの個性・口調・ユーザーとの思い出を定義している記述が、矛盾や陳腐化に巻き込まれていないか
 
-<h3 id="ch6-1"><span class="no">6.1</span>常駐ファイルとは</h3>
-<ul>
-<li><strong>名前：</strong>「常駐ファイル」はMuseの正式名称ではなく、本書での呼び名です。実体は <code>MEMORY.md</code>、<code>AGENTS.md</code>、<code>SOUL.md</code>、<code>USER.md</code>、<code>IDENTITY.md</code>、<code>TOOLS.md</code> の6つのファイルです。各ファイルの役割は<a href="#ch6-2">第6章「6点の役割」</a>を参照してください。</li>
-<li><strong>置き場所：</strong>Museが作業するクラウド上のコンピュータの中にあります。利用者の端末（スマートフォンなど）には保存されません。</li>
-<li><strong>「常駐」の意味：</strong>どの会話でも、会話が始まるたびにMuseが読み込んで参照するファイルです。そのため、会話が変わっても、決めごとや好みが引き継がれます。</li>
-<li><strong>利用者からの見え方：</strong>アプリの画面に、ファイルの一覧としては表示されません。中身はMuseに「見せて」と頼めば提示され、変更も頼めます（<a href="#ch6-3">第6章「中身の確認と変更」</a>）。設定からのデータ書き出し（エクスポート）にも含まれます。</li>
-</ul>
-<p>ファイルが肥大すると、毎回の消費と質に影響します（<a href="#ch4-3">第4章「消費の目安」</a>）。手入れの方法は<a href="#ch7-1">第7章「圧縮の考え方」</a>と<a href="#ch7-3">第7章「健康診断とは」</a>を参照してください。</p>
+## 手順2：レポート（書き換え前に必ず見せる）
+- まず各ファイルのサイズ（バイト数・行数）を報告してください
+- 問題は重要度順に最大5件まで。各件について「どのファイルの、どの記述が、なぜ問題か」を引用つきで示し、修正案がある場合は変更前／変更後が一目で分かる差分で提示してください
+- 指摘は「事実として確認できたもの」と「確認できていないもの」を分けて報告してください。確認できていない指摘には修正案を出さず、何を確認すれば確定できるかだけを書いてください（読み違いの指摘で正しい記憶を直してしまわないため）
+- 問題がなければ、無理に指摘を作らず「問題なし」と一行で報告してください
+- 過去に同じ点検で報告済みで、ユーザーが「そのままにする」と決めた項目は再報告しないでください
 
-<h3 id="ch6-2"><span class="no">6.2</span>6点の役割</h3>
-<figure>
-<div class="tblwrap" style="margin:0">
-<table>
-<tr><th style="width:24%">ファイル名</th><th style="width:24%">役割</th><th>内容</th></tr>
-<tr><td class="fn">MEMORY.md</td><td>思い出ノート</td><td>出来事、決定事項、好みなど、長く覚える事柄</td></tr>
-<tr><td class="fn">AGENTS.md</td><td>仕事のやり方メモ</td><td>作業の進め方、守るべき手順とルール</td></tr>
-<tr><td class="fn">SOUL.md</td><td>性格</td><td>Museの性格と振る舞い方</td></tr>
-<tr><td class="fn">USER.md</td><td>利用者のプロフィール</td><td>名前、呼び方、基本情報</td></tr>
-<tr><td class="fn">IDENTITY.md</td><td>自己紹介カード</td><td>Muse自身の名前や姿など「何者か」</td></tr>
-<tr><td class="fn">TOOLS.md</td><td>道具の覚え書き</td><td>道具や機器の呼び名など、環境固有の覚え書き</td></tr>
-</table>
-</div>
-<figcaption><b>図5</b> 常駐ファイル6点と役割の一覧</figcaption>
-</figure>
+## 手順3：書き換えは承認制・最小差分のみ
+- ユーザーが項目ごとに明示的に承認するまで、ファイルは一切編集しないでください。曖昧な返事や沈黙を承認とみなさないでください
+- 承認された項目だけ、問題を直すのに必要な最小の範囲だけを変更してください。ついでに他の場所を整えたり、要約し直したりしないでください
+- 記憶を丸ごと削除する提案はしないでください。古い記述は、まず「新しい事実で上書き」か「日付つきの訂正」を検討してください
+- あなたの個性・口調・ユーザーとの思い出に関わる記述を変更する場合は、その旨を明示し「何が失われる可能性があるか」を説明してから、改めて確認してください
+- 編集の前に、対象ファイルのバックアップ（日時つきコピー）を保存してください
+- 編集後はファイルを読み直し、承認された変更だけが入っているか検証して、結果を報告してください
 
-<h3 id="ch6-3"><span class="no">6.3</span>中身の確認と変更</h3>
-<ul>
-<li>中身は秘密ではありません。「見せて」と言えば確認できます。</li>
-<li>古い記述の削除や、内容の修正も依頼できます。</li>
-<li>まとめて点検する場合は<a href="#ch7-3">第7章「健康診断とは」</a>の手順を使います。</li>
-</ul>
-<div class="copybox">
-<div class="cb-label">メモリーを見せてもらう依頼文</div>
-<pre>MEMORY.mdの中身を見せて。私のことが何て書かれているか知りたいな。</pre>
-<div class="copyrow"><button class="copy-btn" type="button">コピーする</button><span class="copy-msg" aria-live="polite"></span></div>
-</div>
-<a class="backtop" href="#ch6">↑ この章の先頭へ</a>
-</section>
+## オプション
+ユーザーが希望した場合のみ、この点検を週1回などの定期実行にしてください。希望がないうちは今回限りの実行にしてください。</pre>
+        <div class="copyrow"><button class="copy-btn" type="button" aria-label="メモリーの定期点検の依頼文をコピーする">コピーする</button><span class="copy-msg" role="status"></span></div>
+      </div>
+      <p>報告が届いたら内容を読み、直してほしい項目だけを「〇番は直して」のように、はっきり伝えます。「うん」「いいよ」のような曖昧な返事では書き換えられません。</p>
+      <ul>
+        <li>最初は報告を読むだけで、何も直さずに終えてもかまいません。</li>
+        <li>お金、家族、健康に関わる項目は、残すかどうかを自分で決めます。</li>
+      </ul>
 
-<!-- ================= 第7章 ================= -->
-<section class="chapter" id="ch7">
-<h2><span class="no">第7章</span>メモリーの手入れ</h2>
-<div class="chap-contents">
-<p class="t">この章の内容</p>
-<ul>
-<li><a href="#ch7-1">7.1 圧縮の考え方</a> ― 要点＋詳細のありか</li>
-<li><a href="#ch7-2">7.2 圧縮の実例</a> ― 数値の例</li>
-<li><a href="#ch7-3">7.3 健康診断とは</a> ― 標準機能ではないこと</li>
-<li><a href="#ch7-4">7.4 点検観点</a> ― 何を調べるか</li>
-<li><a href="#ch7-5">7.5 3段階の手順</a> ― 診断→レポート→承認・変更（図6）</li>
-<li><a href="#ch7-6">7.6 前提と依頼文</a> ― 完全版と短縮版</li>
-</ul>
-</div>
+      <h3 id="ch5-5"><span class="no">5.5</span>整理の例</h3>
+      <p>点検で「ファイルが大きすぎる」と分かったときは、手順3で整理してもらいます。整理は内容を捨てることではありません。細かい内容は別のファイルに移し、MEMORY.mdには「要点」と「細かい内容がどこにあるか」だけを残します。普段は要点だけを読むので軽くなり、必要なときは細かい内容をたどれます。</p>
+      <div class="stat">
+        <p class="small">筆者のMuseで整理した例（個人情報は除いています）</p>
+        <p style="margin:0">MEMORY.md　<span class="num">15,447字</span>・41項目 → <span class="num">3,446字</span>・25項目（約78%減）</p>
+      </div>
+    </section>
 
-<h3 id="ch7-1"><span class="no">7.1</span>圧縮の考え方</h3>
-<ul>
-<li>圧縮は、内容を捨てることではありません。</li>
-<li>詳細は他のファイルや記録に逃がします。</li>
-<li>MEMORY.mdには「要点」と「詳細のありか」だけを残します。</li>
-<li>要点だけなら軽くなります。必要なときは「ありか」をたどって詳細に戻れます。</li>
-</ul>
-<div class="warn"><span class="t">注意：</span>圧縮を適用する前に、必ず全文のバックアップを取ります。</div>
+    <!-- ================= 第6章 ================= -->
+    <section class="chapter" aria-labelledby="ch6">
+      <h2 id="ch6"><span class="no">第6章</span>作ったものを人に見せる</h2>
 
-<h3 id="ch7-2"><span class="no">7.2</span>圧縮の実例</h3>
-<div class="stat">
-<span><span class="num">15,447字</span>・41項目</span>
-<span class="arrow">→</span>
-<span><span class="num">3,446字</span>・25項目</span>
-<span class="cap">圧縮の一例：約78%減。考え方は<a href="#ch7-1">第7章「圧縮の考え方」</a>。</span>
-</div>
+      <h3 id="ch6-1"><span class="no">6.1</span>スペースと共有リンク</h3>
+      <p>Museに動画やWebページを作ってもらうと、Museが返信にリンク（URL）を貼ってくれます。同時に、作ったものはメニュー画面の「スペース」欄（図2の③）にも置かれます。</p>
+      <div class="warn">
+        <p class="t">注意：共有リンクは、リンクを知っている人なら誰でも開けます。</p>
+        <p>Museのアカウントがない人でも開けて、開ける相手を選ぶことはできません。あとで共有を取り消しても、それまでに見られた内容は取り戻せないので、個人情報を含むものはリンクを人に渡さないでください。</p>
+      </div>
+      <p>日記のように記録を保存するアプリには共有リンクがなく、あなただけが使えます。</p>
+      <p>リンクに期限はありません。内容を直しても、前に受け取ったリンク先は自動では更新されないので、直した内容を見せたいときは、Museに共有し直してもらいます。</p>
+      <h4>リンクを止めたいとき</h4>
+      <p>Museに「〇〇の共有を取り消して」と頼みます。</p>
+      <ul>
+        <li>そのURLは、取り消した時点で誰も開けなくなります。</li>
+        <li>スペースは残るので、あなたは今までどおり使えます。あとで共有し直すこともできます。</li>
+        <li>スペースごと削除すると、リンクも一緒に消えます。</li>
+      </ul>
+      <div class="warn">
+        <p class="t">注意：取り消す前に誰かが見たり保存したりした内容は、取り戻せません。</p>
+      </div>
 
-<h3 id="ch7-3"><span class="no">7.3</span>健康診断とは</h3>
-<ul>
-<li>「健康診断」は、Museの標準機能ではありません。</li>
-<li>常駐ファイルの手入れを安全に進めるための「手順の約束ごと」に付けた名前です。</li>
-<li>したがって、「健康診断をして」という言葉だけでは、条件は伝わりません。</li>
-<li>手順を知らないMuseでは、その場の判断任せになります。</li>
-<li>同じ条件で実行するには、先に手順を伝えてルールとして決めておく必要があります（<a href="#ch7-6">第7章「前提と依頼文」</a>）。</li>
-</ul>
+      <h3 id="ch6-2"><span class="no">6.2</span>リンクが開けなくなる場合</h3>
+      <p>スペースはMuseの側に置かれているため、次の場合はリンクが開けなくなります。</p>
+      <ul>
+        <li>Museで大きな障害が起きている間</li>
+        <li>アカウントを削除したとき</li>
+      </ul>
+      <p>大事なものは、Museの外にもコピーを置いておくと安心です。どこに置けばよいかは、Museに相談できます。</p>
 
-<h3 id="ch7-4"><span class="no">7.4</span>点検観点</h3>
-<p class="intro1">対象は常駐ファイル6点（<a href="#ch6-2">第6章「6点の役割」</a>）です。あわせて各ファイルの大きさ（文字数・サイズ）も測ります。</p>
-<ul>
-<li><strong>矛盾</strong> ― ファイル同士、または同じファイル内で、記述が食い違っていないか。</li>
-<li><strong>古くなった記述</strong> ― 変わったこと、終わったことが、現在のこととして残っていないか。</li>
-<li><strong>肥大化</strong> ― 異常に長い項目、重複、要点が埋もれるほどの膨らみがないか。</li>
-<li><strong>人格・思い出への影響</strong> ― 書き換えで性格や大事な思い出の残り方が変わらないか。</li>
-</ul>
+      <h3 id="ch6-3"><span class="no">6.3</span>スペースの名前は英語で付けてもらう</h3>
+      <p>スペースのリンクの一部には、スペースの名前から自動で決まる文字列（スラッグ）が入り、あとから変えることはできません。日本語の名前だと、意図しない読み方になることがあります。例：「入門」が <code>run-men</code> になる。</p>
+      <p>そのため、動画やページを作ってもらうときは、<strong>英語の名前を付けるよう頼みます。</strong>例：「名前は英語で『Muse Manual』にして」</p>
+      <p>すでにずれてしまった場合は、英語の名前で作り直してもらい、古いリンクの共有を取り消してもらいます。</p>
 
-<h3 id="ch7-5"><span class="no">7.5</span>3段階の手順</h3>
-<figure>
-<div class="flow" role="img" aria-label="健康診断の3段階フローの模式図。診断、レポート、承認・変更">
-<div class="step"><span class="st-n">段階 1</span><span class="st-t">診断</span>読み取り専用。書き換えない</div>
-<span class="arrow">→</span>
-<div class="step"><span class="st-n">段階 2</span><span class="st-t">レポート</span>大きさと問題点を、変更前に提示</div>
-<span class="arrow">→</span>
-<div class="step"><span class="st-n">段階 3</span><span class="st-t">承認・変更</span>承認した項目だけを最小限変更</div>
-</div>
-<figcaption><b>図6</b> 健康診断の3段階フロー（模式図）</figcaption>
-</figure>
-<ol>
-<li><strong>読み取り専用で診断する。</strong>この段階では書き換えません。6点を読み、<a href="#ch7-4">第7章「点検観点」</a>で状態を調べます。</li>
-<li><strong>書き換え前にレポートを出す。</strong>各ファイルの大きさを示し、問題は重要度順に最大5件まで。各問題には引用と、変更前／変更後の差分を付けます。確認できた事実と、確認できていないことを分け、未確認のものには修正案を出しません。</li>
-<li><strong>項目ごとの承認で、最小限だけ変更する。</strong>書き換えは、項目ごとに明示的に承認したものだけです。記憶を丸ごと消す提案はしません。編集前に日時つきのバックアップを取り、終了後に読み直して検証します。「そのままにする」と決めた項目は、次回以降ふたたび報告しません。</li>
-</ol>
+      <h3 id="ch6-4"><span class="no">6.4</span>リンクのコピーのしかた</h3>
+      <ol>
+        <li>Museが返信に貼ったリンクをタップして、作ったものを開く。</li>
+        <li>ブラウザのアドレスバーに表示されたURLをコピーする。</li>
+        <li>コピーしたURLを相手に送る。</li>
+      </ol>
+      <div class="warn">
+        <p class="t">注意：メッセージを長押ししても、リンクはコピーできません。</p>
+        <p>長押しは、絵文字でリアクションを付ける操作です（<a href="#ch3-2">3.2</a>）。</p>
+      </div>
+    </section>
 
-<h3 id="ch7-6"><span class="no">7.6</span>前提と依頼文</h3>
-<ul>
-<li>初回は、下の完全版の文をそのまま渡します。</li>
-<li>その際、「この手順を今後のルールとして覚えておいて」と依頼します。これが前提です。</li>
-<li>ルールとして覚えさせた後は、短縮版の短い言い方で同じ条件になります。</li>
-<li>前提なしに短縮版だけを渡すと、条件がそろうとは限りません。</li>
-</ul>
-<div class="copybox">
-<div class="cb-label">健康診断の依頼文初めてのとき用</div>
-<pre>常駐ファイル6点（MEMORY.md／AGENTS.md／SOUL.md／USER.md／IDENTITY.md／TOOLS.md）の健康診断をしてください。手順は次の通りです。①まず読み取り専用で診断し、この段階では書き換えないでください。観点は、矛盾、古くなった記述、肥大化（異常に長い項目や重複）、人格や思い出への影響です。②書き換える前にレポートを出してください。各ファイルの大きさを示し、問題は重要度順に最大5件まで、引用と変更前／変更後の差分つきで。確認できた事実と、確認できていないことを分けて、未確認のものには修正案を出さないでください。③書き換えは、私が項目ごとに承認したものだけ、最小限の変更で。記憶を丸ごと消す提案はせず、編集前に日時つきのバックアップを取り、終わったら読み直して検証してください。私が『そのままにする』と決めた項目は、次回以降ふたたび報告しないでください。この手順を、今後のルールとして覚えておいてください。</pre>
-<div class="copyrow"><button class="copy-btn" type="button">コピーする</button><span class="copy-msg" aria-live="polite"></span></div>
-</div>
-<div class="copybox">
-<div class="cb-label">健康診断の依頼文ルールを覚えさせた後用</div>
-<pre>常駐ファイル6点の健康診断をして。書き換える前にレポートを出して。承認した項目だけ直してね。</pre>
-<div class="copyrow"><button class="copy-btn" type="button">コピーする</button><span class="copy-msg" aria-live="polite"></span></div>
-</div>
-<div class="note"><span class="t">手入れの目安</span>「答えがぼんやりしてきた」「覚えたことが増えてきた」と感じたときが目安です。頻繁に行う必要はありません。</div>
-<p class="related"><span class="t">関連：</span><a href="#app-1">付録「コピペ文例集」</a>にも両文面を収録しています。</p>
-<a class="backtop" href="#ch7">↑ この章の先頭へ</a>
-</section>
+    <!-- ================= 付録 ================= -->
+    <section class="chapter" aria-labelledby="app">
+      <h2 id="app"><span class="no">付録</span>困ったとき・依頼文・用語</h2>
 
-<!-- ================= 第8章 ================= -->
-<section class="chapter" id="ch8">
-<h2><span class="no">第8章</span>作ったものを残す・人に見せる</h2>
-<div class="chap-contents">
-<p class="t">この章の内容</p>
-<ul>
-<li><a href="#ch8-1">8.1 公開リンクの仕組み</a></li>
-<li><a href="#ch8-2">8.2 公開リンクの注意</a> ― 開けなくなる場合</li>
-<li><a href="#ch8-3">8.3 スラッグの決まり方と注意</a> ― リンク名のルール</li>
-<li><a href="#ch8-4">8.4 リンクのコピー方法</a> ― Androidの長押し注意を含む</li>
-</ul>
-</div>
+      <h3 id="app-1"><span class="no">A.1</span>困ったとき</h3>
+      <div class="tblwrap">
+        <table>
+          <caption>困ったときの対処</caption>
+          <thead><tr><th scope="col">こんなとき</th><th scope="col">すること</th><th scope="col">参照</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">同じことを返信してくる、間違いが増えてきた</th><td>引き継ぎ文を作ってもらい、新しいチャットに移る</td><td><a href="#ch4-3">4.3</a>、<a href="#ch4-5">4.5</a></td></tr>
+            <tr><th scope="row">新しいチャットにしても、やめた方針を続けようとする、答えが日によってぶれる</th><td>メモリーを点検する</td><td><a href="#ch5-3">5.3</a>、<a href="#ch5-4">5.4</a></td></tr>
+            <tr><th scope="row">前に決めたことを忘れている</th><td>メモリーに入っているか見せてもらう。入っていなければ「覚えておいて」と頼む</td><td><a href="#ch5-2">5.2</a></td></tr>
+            <tr><th scope="row">トークンの減りが速い</th><td>チャットを分ける。長い資料は必要な部分だけ渡す</td><td><a href="#ch4-4">4.4</a></td></tr>
+            <tr><th scope="row">サイドチャットが見つからない</th><td>メニュー画面の検索欄で探す</td><td><a href="#ch3-3">3.3</a></td></tr>
+            <tr><th scope="row">アーカイブしたチャットを戻したい</th><td>設定 →「データコントロール」→「アーカイブ済みのサイドチャット」</td><td><a href="#ch3-4">3.4</a></td></tr>
+            <tr><th scope="row">購入のたびに確認が出る</th><td>仕様どおりの動き。購入は毎回確認が入る</td><td><a href="#ch2-3">2.3</a></td></tr>
+            <tr><th scope="row">共有したリンクを止めたい</th><td>Museに「〇〇の共有を取り消して」と頼む</td><td><a href="#ch6-1">6.1</a></td></tr>
+            <tr><th scope="row">共有したリンクが開けない</th><td>障害の可能性がある。大事なものはMuseの外にも置く</td><td><a href="#ch6-2">6.2</a></td></tr>
+          </tbody>
+        </table>
+      </div>
 
-<h3 id="ch8-1"><span class="no">8.1</span>公開リンクの仕組み</h3>
-<ul>
-<li>作ったページを公開すると、リンク（URL）が発行されます。</li>
-<li>リンクに期限はありません。共有を取り消さない限り開けます。</li>
-<li>ページの内容を修正しても、リンク先は自動では更新されません。修正した内容で共有し直す必要があります。</li>
-</ul>
+      <h3 id="app-2"><span class="no">A.2</span>依頼文の一覧</h3>
+      <p>本文にある依頼文の一覧です。リンク先でコピーできます。</p>
+      <ul>
+        <li><a href="#prompt-example">依頼文の例（買い物リスト）</a>（2.1）</li>
+        <li><a href="#prompt-handoff">引き継ぎ文を作ってもらう依頼文</a>（4.5）</li>
+        <li><a href="#prompt-show">メモリーを見せてもらう依頼文</a>（5.2）</li>
+        <li><a href="#prompt-fix">メモリーを直してもらう依頼文</a>（5.2）</li>
+        <li><a href="#prompt-check">メモリーの定期点検の依頼文</a>（5.4）</li>
+      </ul>
 
-<h3 id="ch8-2"><span class="no">8.2</span>公開リンクの注意</h3>
-<ul>
-<li>リンク先はMuse側に置かれています。</li>
-<li>そのため、Museの大規模障害の間は開けません。</li>
-<li>アカウントを削除した場合も開けません。</li>
-<li>対策：大事なものは、Museの外（例：GitHub＋Vercel）にもコピーを置きます。準備はMuseに相談できます。</li>
-</ul>
+      <h3 id="app-3"><span class="no">A.3</span>用語集</h3>
+      <dl class="gloss">
+        <dt>アーカイブ</dt>
+        <dd>チャットを削除せずに、一覧から別の場所へしまうこと。あとで戻せる。→ <a href="#ch3-4">3.4</a></dd>
+        <dt>確認</dt>
+        <dd>送信や購入など、取り消しにくい操作の前に、Museがあなたに実行してよいか尋ねること。→ <a href="#ch2-2">2.2</a></dd>
+        <dt>共有リンク</dt>
+        <dd>作ったものを見るためのURL。リンクを知っている人なら誰でも開ける。→ <a href="#ch6-1">6.1</a></dd>
+        <dt>サイドチャット</dt>
+        <dd>話題ごとに自分で作るチャット。→ <a href="#ch3-1">3.1</a></dd>
+        <dt>承認</dt>
+        <dd>メモリーの定期点検で、Museが書き換えてよい項目をあなたが指定すること。→ <a href="#ch5-3">5.3</a></dd>
+        <dt>スペース</dt>
+        <dd>Museが作った動画やWebページが置かれる場所。メニュー画面の「スペース」欄に並ぶ。→ <a href="#ch6-1">6.1</a></dd>
+        <dt>スラッグ</dt>
+        <dd>リンクの一部になる文字列。スペースの名前から自動で決まり、あとから変えられない。→ <a href="#ch6-3">6.3</a></dd>
+        <dt>整理</dt>
+        <dd>MEMORY.mdに要点だけを残し、細かい内容を別のファイルに移すこと。→ <a href="#ch5-5">5.5</a></dd>
+        <dt>トークン</dt>
+        <dd>AIが文章の量を数える単位。→ <a href="#ch4-1">4.1</a></dd>
+        <dt>引き継ぎ文</dt>
+        <dd>前のチャットの要点を、新しいチャットに伝えるための文。→ <a href="#ch4-5">4.5</a></dd>
+        <dt>メインチャット</dt>
+        <dd>最初からある、中心のチャット。短い質問や雑談に使う。→ <a href="#ch3-1">3.1</a></dd>
+        <dt>メモリー</dt>
+        <dd>Museが覚えた、あなたの好みや決めたことなど。すべてのチャットで共通。→ <a href="#ch1-1">1.1</a></dd>
+        <dt>メモリーの定期点検</dt>
+        <dd>メモリーファイルを点検し、承認した項目だけ直してもらう手順。本書での呼び名。→ <a href="#ch5-3">5.3</a></dd>
+        <dt>メモリーファイル</dt>
+        <dd>Museの記憶と振る舞いの指示が書かれたファイル。本書での呼び名。→ <a href="#ch5-1">5.1</a></dd>
+        <dt>利用枠</dt>
+        <dd>トークンを使える量。無料プラン、追加のトークン、有料プランがある。→ <a href="#ch4-2">4.2</a></dd>
+      </dl>
+    </section>
 
-<h3 id="ch8-3"><span class="no">8.3</span>スラッグの決まり方と注意</h3>
-<ul>
-<li>スラッグは、リンク（URL）の一部になる名前です。</li>
-<li>作成時のタイトルから自動で決まります。</li>
-<li>後から変更はできません。</li>
-<li>日本語タイトルでは、機械の読み替えがずれることがあります。例：「入門」が <code>run-men</code> のような形になる。</li>
-</ul>
-<p>対策：</p>
-<ul>
-<li>ページは最初から英語の名前で作る。</li>
-<li>すでにずれた場合は、英語名で作り直して公開し直し、古いリンクを取り消す。</li>
-</ul>
-<p>本書も、英語名「Muse Manual」で作成しています。</p>
-
-<h3 id="ch8-4"><span class="no">8.4</span>リンクのコピー方法</h3>
-<p class="intro1">ページを人に見せるときは、公開リンクをコピーして渡します。</p>
-<ol>
-<li>リンクをタップして、ページを開く。</li>
-<li>ブラウザのアドレスバーに表示されたURLをコピーする。</li>
-<li>コピーしたURLを相手に渡す。</li>
-</ol>
-<div class="warn"><span class="t">注意：Androidの長押しではコピーできません。</span>Androidでは、メッセージの長押しはリアクション（絵文字で反応）用です。文字のコピーには使えません。上の手順で、開いたページのURLをコピーしてください。</div>
-<p class="related"><span class="t">関連：</span>会話画面の操作は<a href="#ch3-1">第3章「画面の各部の名称とはたらき」</a>。本節は<a href="#ch3-7">第3章「設定とデータコントロール」</a>末尾の参照先です。</p>
-<a class="backtop" href="#ch8">↑ この章の先頭へ</a>
-</section>
-
-<!-- ================= 付録 ================= -->
-<section class="chapter" id="app">
-<h2><span class="no">付録</span>コピペ文例集と用語集</h2>
-<div class="chap-contents">
-<p class="t">この章の内容</p>
-<ul>
-<li><a href="#app-1">A.1 コピペ文例集</a> ― 本文の文例を一括収録</li>
-<li><a href="#app-2">A.2 用語集</a> ― 用語と参照先</li>
-</ul>
-</div>
-
-<h3 id="app-1"><span class="no">A.1</span>コピペ文例集</h3>
-<p class="intro1">各文例の出所（章・節）を併記しています。</p>
-
-<div class="copybox">
-<div class="cb-label">引き継ぎ文の型（<a href="#ch5-4">第5章「引き継ぎ文の型」</a>）</div>
-<pre>これまでの要点：…
-決まっていること（原文）：…
-しないこと：…
-次にやること：…</pre>
-<div class="copyrow"><button class="copy-btn" type="button">コピーする</button><span class="copy-msg" aria-live="polite"></span></div>
-</div>
-
-<div class="copybox">
-<div class="cb-label">引き継ぎ文を作ってもらう依頼文</div>
-<pre>この会話の要点を、新しい会話に貼れる「引き継ぎ文」にして。要点／決まっていること（原文）／しないこと／次にやること、の形でお願い。</pre>
-<div class="copyrow"><button class="copy-btn" type="button">コピーする</button><span class="copy-msg" aria-live="polite"></span></div>
-</div>
-
-<div class="copybox">
-<div class="cb-label">健康診断の依頼文（<a href="#ch7-6">第7章「前提と依頼文」</a>）― 初めてのとき用</div>
-<pre>常駐ファイル6点（MEMORY.md／AGENTS.md／SOUL.md／USER.md／IDENTITY.md／TOOLS.md）の健康診断をしてください。手順は次の通りです。①まず読み取り専用で診断し、この段階では書き換えないでください。観点は、矛盾、古くなった記述、肥大化（異常に長い項目や重複）、人格や思い出への影響です。②書き換える前にレポートを出してください。各ファイルの大きさを示し、問題は重要度順に最大5件まで、引用と変更前／変更後の差分つきで。確認できた事実と、確認できていないことを分けて、未確認のものには修正案を出さないでください。③書き換えは、私が項目ごとに承認したものだけ、最小限の変更で。記憶を丸ごと消す提案はせず、編集前に日時つきのバックアップを取り、終わったら読み直して検証してください。私が『そのままにする』と決めた項目は、次回以降ふたたび報告しないでください。この手順を、今後のルールとして覚えておいてください。</pre>
-<div class="copyrow"><button class="copy-btn" type="button">コピーする</button><span class="copy-msg" aria-live="polite"></span></div>
-</div>
-
-<div class="copybox">
-<div class="cb-label">健康診断の依頼文（<a href="#ch7-6">第7章「前提と依頼文」</a>）― ルールを覚えさせた後用</div>
-<pre>常駐ファイル6点の健康診断をして。書き換える前にレポートを出して。承認した項目だけ直してね。</pre>
-<div class="copyrow"><button class="copy-btn" type="button">コピーする</button><span class="copy-msg" aria-live="polite"></span></div>
-</div>
-
-<div class="copybox">
-<div class="cb-label">メモリーを見せてもらう依頼文（<a href="#ch6-3">第6章「中身の確認と変更」</a>）</div>
-<pre>MEMORY.mdの中身を見せて。私のことが何て書かれているか知りたいな。</pre>
-<div class="copyrow"><button class="copy-btn" type="button">コピーする</button><span class="copy-msg" aria-live="polite"></span></div>
-</div>
-
-<div class="copybox">
-<div class="cb-label">覚えたことを直してもらう依頼文</div>
-<pre>前に覚えてもらった「〇〇」の件、今は△△に変わったから、メモリーを直してね。</pre>
-<div class="copyrow"><button class="copy-btn" type="button">コピーする</button><span class="copy-msg" aria-live="polite"></span></div>
-</div>
-
-<h3 id="app-2"><span class="no">A.2</span>用語集</h3>
-<dl class="gloss">
-<dt>トークン</dt>
-<dd>AIが文章を数える単位。やりとりの量を測る目安。定義は<a href="#ch4-1">第4章「トークンとは」</a>。</dd>
-<dt>コンテキスト</dt>
-<dd>AIが返信を考えるときに読み込んでいる範囲。その会話の全記録と常駐ファイルを含む。長くなるほど重くなる。仕組みは<a href="#ch5-1">第5章「長い会話で起きること」</a>。</dd>
-<dt>常駐ファイル</dt>
-<dd>毎回の会話の最初に読み込まれる6つのファイルの総称。一覧は<a href="#ch6-2">第6章「6点の役割」</a>。</dd>
-<dt>サイドチャット</dt>
-<dd>話題ごとに分かれた会話。メインとの違いは<a href="#ch3-2">第3章「メインチャットとサイドチャットの違い」</a>。</dd>
-<dt>アーカイブ</dt>
-<dd>会話を一覧からしまうこと。削除とは違う。戻し方は<a href="#ch3-6">第3章「アーカイブと戻し方」</a>。</dd>
-<dt>承認</dt>
-<dd>取り消しが難しい操作や購入の前に、利用者が許可すること。対象は<a href="#ch2-3">第2章「承認が必要な操作」</a>。</dd>
-<dt>スラッグ</dt>
-<dd>ページのリンク（URL）の一部になる名前。作成時のタイトルから自動決定され、変更できない。注意点は<a href="#ch8-3">第8章「スラッグの決まり方と注意」</a>。</dd>
-<dt>メモリー圧縮</dt>
-<dd>詳細を他のファイルに逃がし、MEMORY.mdに「要点＋詳細のありか」だけを残す整理。方法は<a href="#ch7-1">第7章「圧縮の考え方」</a>。</dd>
-<dt>健康診断</dt>
-<dd>常駐ファイルを「診断→レポート→承認した項目だけ変更」の3段階で手入れする手順の約束ごと。標準機能ではない。前提は<a href="#ch7-6">第7章「前提と依頼文」</a>。</dd>
-</dl>
-<a class="backtop" href="#app">↑ 付録の先頭へ</a>
-</section>
-
-<footer>
-<p>Muse Manual ― Muse取扱説明書（技術書版）</p>
-<p>構成：第1章〜第8章、付録。図1〜図6はすべて模式図です。</p>
-</footer>
-</main>
+    <footer>
+      <p>Muse Manual ― Muse取扱説明書</p>
+      <p>個人が作成した非公式のガイドです。Muse（Meta）の公式資料ではありません。</p>
+      <p>図はすべてAndroid版の画面をもとにした模式図です。</p>
+      <p>参考：メモリーの定期点検の依頼文は、てばさきさん（@tebasaki3D）が公開した「Museの健康診断プロンプト」をもとに、呼び名を一部変えて使っています（<a href="https://x.com/tebasaki3D/status/2121862417382879474">元の投稿</a>）。メモリーの整理は、テツメモさん（@tetumemo）の投稿を参考にしました（<a href="https://x.com/tetumemo/status/2121381349856870787">元の投稿</a>）。</p>
+    </footer>
+  </main>
 </div>
 
 <script>
 (function(){
-// ---- copy buttons ----
-var boxes = document.querySelectorAll('.copybox');
-boxes.forEach(function(box){
-var btn = box.querySelector('.copy-btn');
-var pre = box.querySelector('pre');
-var msg = box.querySelector('.copy-msg');
-if(!btn ||!pre) return;
-btn.addEventListener('click', function(){
-var text = pre.textContent;
-function done(ok){
-if(msg) msg.textContent = ok? 'コピーしました': 'コピーできませんでした。長押しで選択してください';
-setTimeout(function(){ if(msg) msg.textContent='';}, 2600);
-}
-if(navigator.clipboard && navigator.clipboard.writeText){
-navigator.clipboard.writeText(text).then(function(){ done(true);}, function(){ fallback();});
-} else { fallback();}
-function fallback(){
-try{
-var ta = document.createElement('textarea');
-ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
-document.body.appendChild(ta); ta.select();
-var ok = document.execCommand('copy');
-document.body.removeChild(ta);
-done(ok);
-}catch(e){ done(false);}
-}
-});
-});
+  // ---- copy buttons ----
+  document.querySelectorAll('.copybox').forEach(function(box){
+    var btn = box.querySelector('.copy-btn');
+    var pre = box.querySelector('pre');
+    var msg = box.querySelector('.copy-msg');
+    if(!btn || !pre) return;
+    btn.addEventListener('click', function(){
+      var text = pre.textContent;
+      function done(ok){
+        msg.textContent = ok ? 'コピーしました' : 'コピーできませんでした。文を長押しして選択してください';
+        setTimeout(function(){ msg.textContent = ''; }, 3000);
+      }
+      function fallback(){
+        try{
+          var ta = document.createElement('textarea');
+          ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta); ta.select();
+          var ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          done(ok);
+        }catch(e){ done(false); }
+      }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){ done(true); }, fallback);
+      }else{ fallback(); }
+    });
+  });
 
-// ---- scroll spy: sidebar TOC + mobile now bar ----
-var heads = Array.prototype.slice.call(document.querySelectorAll('main h2[id], main h3[id]'));
-var sideLinks = {};
-document.querySelectorAll('.toc-side a').forEach(function(a){
-var href = a.getAttribute('href');
-if(href && href.charAt(0)==='#') sideLinks[href.slice(1)] = a;
-});
-var nowPos = document.getElementById('nowPos');
-var chapName = {};
-document.querySelectorAll('section.chapter').forEach(function(sec){
-var h2 = sec.querySelector('h2');
-if(h2) chapName[sec.id] = h2.textContent.replace(/\s+/g,' ').trim();
-});
-function currentHead(){
-var y = window.scrollY + 120;
-var cur = null;
-for(var i=0;i<heads.length;i++){
-if(heads[i].getBoundingClientRect().top + window.scrollY <= y) cur = heads[i];
-else break;
-}
-return cur;
-}
-var ticking = false;
-function update(){
-ticking = false;
-var cur = currentHead();
-Object.keys(sideLinks).forEach(function(k){ sideLinks[k].classList.remove('active');});
-if(!cur){
-if(nowPos) nowPos.textContent = '目次';
-return;
-}
-var link = sideLinks[cur.id];
-if(link) link.classList.add('active');
-// also highlight parent chapter link when a section is active
-var sec = cur.closest? cur.closest('section.chapter'): null;
-if(sec && sideLinks[sec.id] && cur.tagName === 'H3') sideLinks[sec.id].classList.add('active');
-if(nowPos){
-var label = cur.textContent.replace(/\s+/g,' ').trim();
-if(sec && cur.tagName === 'H3' && chapName[sec.id]) label = chapName[sec.id] + ' ＞ ' + label;
-nowPos.textContent = label;
-}
-}
-window.addEventListener('scroll', function(){
-if(!ticking){ ticking = true; requestAnimationFrame(update);}
-}, {passive:true});
-update();
+  // ---- TOC: open on desktop, closed on mobile ----
+  var details = document.getElementById('tocDetails');
+  var mq = window.matchMedia('(min-width: 901px)');
+  function syncToc(){ details.open = mq.matches; }
+  syncToc();
+  if(mq.addEventListener){ mq.addEventListener('change', syncToc); }
+  details.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ if(!mq.matches) details.open = false; });
+  });
 
-// ---- close mobile TOC after choosing a link ----
-var tocTop = document.querySelector('.toc-top');
-if(tocTop){
-tocTop.querySelectorAll('a').forEach(function(a){
-a.addEventListener('click', function(){ tocTop.removeAttribute('open');});
-});
-}
+  // ---- scroll spy: TOC highlight + mobile "now" bar ----
+  var heads = Array.prototype.slice.call(document.querySelectorAll('main h2[id], main h3[id]'));
+  var links = {};
+  details.querySelectorAll('a[href^="#"]').forEach(function(a){ links[a.getAttribute('href').slice(1)] = a; });
+  var nowPos = document.getElementById('nowPos');
+  function label(h){
+    var no = h.querySelector('.no');
+    var t = h.textContent.replace(/\s+/g, ' ').trim();
+    if(no){ t = no.textContent.trim() + ' ' + t.slice(no.textContent.trim().length).trim(); }
+    return t;
+  }
+  var ticking = false;
+  function update(){
+    ticking = false;
+    var y = window.scrollY + 120, cur = null;
+    for(var i = 0; i < heads.length; i++){
+      if(heads[i].getBoundingClientRect().top + window.scrollY <= y) cur = heads[i]; else break;
+    }
+    Object.keys(links).forEach(function(k){ links[k].classList.remove('active'); });
+    if(!cur){ nowPos.textContent = '3つの習慣'; return; }
+    if(links[cur.id]) links[cur.id].classList.add('active');
+    var text = label(cur);
+    if(cur.tagName === 'H3'){
+      var h2 = cur.closest('section').querySelector('h2');
+      if(h2){
+        if(links[h2.id]) links[h2.id].classList.add('active');
+        text = label(h2) + ' ＞ ' + text;
+      }
+    }
+    nowPos.textContent = text;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ ticking = true; requestAnimationFrame(update); }
+  }, {passive:true});
+  update();
 })();
 </script>
 </body>
