@@ -11,7 +11,7 @@
   :root{
     --bg:#ffffff; --bg-sub:#f6f8fa; --ink:#1c2430; --muted:#55606e;
     --line:#d5dce4; --line-strong:#8e9bab;
-    --accent:#17548f; --accent-soft:#edf3f9; --on-accent:#ffffff;
+    --accent:#146856; --accent-soft:#e7f4ee; --on-accent:#ffffff;
     --warn-bg:#fdf6e0; --warn-line:#b8961a; --warn-ink:#5c4a08;
     --code-bg:#eef1f5; --fig-bg:#fbfcfd;
   }
@@ -19,7 +19,7 @@
     :root{
       --bg:#12161d; --bg-sub:#171d26; --ink:#e5eaf1; --muted:#9aa7b8;
       --line:#2b3543; --line-strong:#6b7d95;
-      --accent:#8ab6e6; --accent-soft:#1a2635; --on-accent:#0d1420;
+      --accent:#93dcc0; --accent-soft:#17352c; --on-accent:#0d1420;
       --warn-bg:#2b2510; --warn-line:#a88d2a; --warn-ink:#ecd28a;
       --code-bg:#1d2632; --fig-bg:#151b24;
     }
@@ -111,6 +111,15 @@
     .cards ul{gap:.45rem}
     .cards a{padding:.55rem .8rem}
   }
+  /* ---------- kappie edition ---------- */
+  .doc-head .edition{display:inline-block; font-size:.8125rem; font-weight:700; color:var(--accent); border:1.5px solid var(--accent); border-radius:999px; padding:.15rem .8rem; margin:0 0 .7rem; background:var(--accent-soft)}
+  .kappie-head{display:flex; align-items:center; gap:1.1rem; flex-wrap:wrap}
+  .kappie-head h1{margin-bottom:.6rem}
+  .mascot{flex:none; line-height:0}
+  .diagram{max-width:34rem; margin:0 auto}
+  .diagram svg{display:block; width:100%; height:auto}
+  @media (max-width:600px){ .mascot svg{width:76px; height:auto} }
+
   /* ---------- figures ---------- */
   figure{margin:1.25rem 0; border:1px solid var(--line); background:var(--fig-bg); padding:1.1rem; max-width:46em}
   figcaption{font-size:.875rem; color:var(--muted); margin-top:.9rem; border-top:1px solid var(--line); padding-top:.6rem}
@@ -248,7 +257,24 @@
 
 <header class="doc-head">
   <p class="kicker">MUSE 取扱説明書</p>
-  <h1>Muse Manual</h1>
+  <p class="edition">Kappie版 ― カッピーが作り直した版です</p>
+  <div class="kappie-head">
+    <div class="mascot" aria-hidden="true">
+      <svg width="104" height="86" viewBox="0 0 120 96" role="img" aria-label="ミントグリーンのセーターを着たカピバラ">
+        <path d="M22 96 V64 Q22 46 44 46 H76 Q98 46 98 64 V96 Z" fill="#57b894" stroke="#146856" stroke-width="2.5"/>
+        <path d="M22 78 H98" stroke="#146856" stroke-width="2.5"/>
+        <rect x="48" y="44" width="24" height="9" rx="4" fill="#dff3ea" stroke="#146856" stroke-width="2"/>
+        <circle cx="33" cy="17" r="8" fill="#8a5a33" stroke="#6f4525" stroke-width="2"/>
+        <ellipse cx="60" cy="33" rx="35" ry="26" fill="#a9743f" stroke="#6f4525" stroke-width="2.5"/>
+        <ellipse cx="74" cy="41" rx="21" ry="13" fill="#c99a63"/>
+        <ellipse cx="89" cy="37" rx="4.5" ry="3.2" fill="#54341a"/>
+        <path d="M78 48 Q85 51 92 48" fill="none" stroke="#54341a" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="51" cy="29" r="3.6" fill="#2b1c0e"/>
+        <circle cx="38" cy="40" r="4" fill="#c98a5e" opacity=".65"/>
+      </svg>
+    </div>
+    <h1>Muse Manual</h1>
+  </div>
   <p class="lead">AIエージェント「Muse」をはじめて使う人のための取扱説明書です。まず下の「3つの習慣」を読み、必要な章を参照してください。</p>
 </header>
 
@@ -558,6 +584,26 @@
         </table>
       </div>
       <p>チャットの記録は、そのチャットの中だけに残ります。どのチャットでも共通なのは、メモリー（Museが記録した好みや決定事項）だけです。Museは過去のチャットを検索して一部を参照できますが、正確に引き継げるとは限りません。続きを別のチャットで話すときは、引き継ぎ文を使います（<a href="#ch5-5">5.5</a>）。</p>
+      <figure>
+        <div class="diagram" role="img" aria-label="メインチャットから、話題ごとのサイドチャットが枝分かれする模式図">
+          <svg viewBox="0 0 520 190">
+            <rect x="10" y="70" width="130" height="52" rx="10" style="fill:var(--accent-soft)" stroke-width="2" stroke="var(--accent)"/>
+            <text x="75" y="93" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--ink)">メインチャット</text>
+            <text x="75" y="113" text-anchor="middle" font-size="12" style="fill:var(--muted)">短い質問・雑談</text>
+            <path d="M140 96 H200 M200 96 V36 M200 96 V96 M200 96 V156" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+            <path d="M200 36 H228 M200 96 H228 M200 156 H228" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+            <g font-size="14" font-weight="700">
+              <rect x="230" y="12" width="270" height="46" rx="10" style="fill:var(--bg)" stroke="var(--line-strong)" stroke-width="1.5"/>
+              <text x="248" y="41" style="fill:var(--ink)">サイドチャット ― 学習</text>
+              <rect x="230" y="72" width="270" height="46" rx="10" style="fill:var(--bg)" stroke="var(--line-strong)" stroke-width="1.5"/>
+              <text x="248" y="101" style="fill:var(--ink)">サイドチャット ― 制作</text>
+              <rect x="230" y="132" width="270" height="46" rx="10" style="fill:var(--bg)" stroke="var(--line-strong)" stroke-width="1.5"/>
+              <text x="248" y="161" style="fill:var(--ink)">サイドチャット ― 旅行の計画</text>
+            </g>
+          </svg>
+        </div>
+        <figcaption><b>図3</b> メインチャットとサイドチャット（模式図）。話題ごとに枝分かれします。</figcaption>
+      </figure>
 
       
       <h3 id="ch4-2"><span class="no">4.2</span>なぜチャットを分けるのか</h3>
@@ -565,12 +611,7 @@
         <p class="t">注意：メインチャットだけで何でも話し続けないでください。</p>
         <p>長くなりそうな話題は、最初からサイドチャットで話します。理由は<a href="#ch5">第5章</a>で説明します。</p>
       </div>
-      <p>サイドチャットに分けると、次のような利点があります。</p>
-      <ul>
-        <li>話題が混ざらず、あとから探しやすい</li>
-        <li>応答の質を保ち、トークンを節約できる</li>
-        <li>終わった話題は、アーカイブで片づけられる（<a href="#ch4-4">4.4</a>）</li>
-      </ul>
+      <p>分けると、話題が混ざらずあとから探しやすく、終わった話題はアーカイブで片づけられます（<a href="#ch4-4">4.4</a>）。</p>
 
       <h3 id="ch4-3"><span class="no">4.3</span>サイドチャットの作り方</h3>
       <figure>
@@ -641,7 +682,7 @@
             </div>
           </div>
         </div>
-        <figcaption><b>図3</b> アーカイブのしかた（模式図）。番号は上の手順の番号に対応します。強調した枠が、タップする場所です。</figcaption>
+        <figcaption><b>図4</b> アーカイブのしかた（模式図）。番号は上の手順の番号に対応します。強調した枠が、タップする場所です。</figcaption>
       </figure>
       <h4>一覧に戻すしかた</h4>
       <ol>
@@ -677,7 +718,7 @@
             </div>
           </div>
         </div>
-        <figcaption><b>図4</b> 一覧に戻すしかた（模式図）。番号は上の手順の番号に対応します。強調した枠が、タップする場所です。設定画面の項目は一部だけを示しています。</figcaption>
+        <figcaption><b>図5</b> 一覧に戻すしかた（模式図）。番号は上の手順の番号に対応します。強調した枠が、タップする場所です。設定画面の項目は一部だけを示しています。</figcaption>
       </figure>
       <p class="small">※パソコン版では、チャット一覧の上の「…」→「アーカイブ済みのチャットを表示」で一覧を開き、チャットの「…」→「アーカイブから復元」を選びます。チャットの名前をクリックしても、一覧には戻りません。</p>
 
@@ -695,13 +736,27 @@
         <li><strong>トークンの消費が増える</strong>：コンテキストが長くなるため、1回の返信ごとの消費が増えます。</li>
         <li><strong>応答の質が下がる</strong>：コンテキストの中で重要な指示が埋もれ、返信の精度が少しずつ落ちていきます。</li>
       </ul>
-      <p>質は少しずつ下がり、何回のやりとりで下がるという目安もありません。次のような状態になったら、新しいチャットに移る時期です。</p>
+      <p>何回のやりとりで下がるという目安はありません。次のような状態になったら、新しいチャットに移る時期です。</p>
       <ul>
         <li>前と同じことを返信してくる</li>
         <li>間違いが多くなってきた</li>
         <li>前に伝えた指示や条件が守られない</li>
       </ul>
       <p>故障ではなく仕組みどおりの動きで、新しいチャットに移れば元に戻ります。新しいチャットに移っても同じことが起きるときは、メモリーが原因かもしれません（<a href="#ch6-3">6.3</a>）。</p>
+      <figure>
+        <div class="diagram" role="img" aria-label="チャットが長くなるにつれてトークンの消費は増え、応答の質は緩やかに下がる模式図">
+          <svg viewBox="0 0 520 220">
+            <path d="M60 20 V185 H500" fill="none" stroke="var(--line-strong)" stroke-width="2"/>
+            <path d="M60 165 C 200 150, 340 105, 490 45" fill="none" stroke="#b07a2e" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M60 55 C 200 70, 340 105, 490 150" fill="none" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round"/>
+            <text x="330" y="42" font-size="14" font-weight="700" fill="#b07a2e">トークンの消費</text>
+            <text x="330" y="172" font-size="14" font-weight="700" style="fill:var(--accent)">応答の質</text>
+            <text x="60" y="210" font-size="12" style="fill:var(--muted)">短いチャット</text>
+            <text x="500" y="210" font-size="12" text-anchor="end" style="fill:var(--muted)">長いチャット</text>
+          </svg>
+        </div>
+        <figcaption><b>図6</b> 長いチャットの変化（模式図）。質は崖ではなく、緩やかに下がります。</figcaption>
+      </figure>
       <p>なお、長い資料を渡したり、長い返信を求めたりした場合も、消費は多くなります。</p>
 
             <h3 id="ch5-2"><span class="no">5.2</span>トークンとは</h3>
@@ -734,7 +789,7 @@
             <p>多く使いたい人向けの大きな枠。</p>
           </div>
         </div>
-        <figcaption><b>図5</b> トークンの3つの利用枠（模式図。バーの長さは量の大小のイメージです）</figcaption>
+        <figcaption><b>図7</b> トークンの3つの利用枠（模式図。バーの長さは量の大小のイメージです）</figcaption>
       </figure>
       <p>日々の相談や文章づくりは、無料プランの範囲でも十分にこなせます。使用量は、設定画面のいちばん上で確認できます（<a href="#ch3-2">3.2</a>）。</p>
       <p>紹介コードを入力すると、「追加のトークン」がもらえます（本書作成時点では10億トークン）。入力は、設定の「紹介コードを利用」から行います。紹介コードを利用できるのは1回だけです。</p>
@@ -795,7 +850,18 @@
         <li><strong>必要なときに検索されるもの</strong>：日ごとのメモ、話題ごとのメモ、過去のチャットなど。Museが必要と判断したときだけ検索して参照するため、毎回の返信ではトークンを消費しません。</li>
       </ul>
       <p>MEMORY.mdは、その両方にあたります。</p>
-      <p>常に読み込まれるファイルは、使い続けるほど大きくなり、1回ごとのトークンの消費が増え、応答の質にも影響します（<a href="#ch5-1">5.1</a>）。チャットを新しくしても小さくならないため、定期的な点検が必要です（<a href="#ch6-3">6.3</a>）。</p>
+      <figure>
+        <div class="diagram" role="img" aria-label="メモリーの2種類の模式図。常に読み込まれるファイルと、必要なときに検索されるもの">
+          <svg viewBox="0 0 520 140">
+            <rect x="10" y="8" width="500" height="52" rx="10" style="fill:var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/>
+            <text x="28" y="36" font-size="14" font-weight="700" style="fill:var(--ink)">常に読み込まれるファイル</text>
+            <rect x="10" y="78" width="500" height="52" rx="10" style="fill:var(--bg)" stroke="var(--line-strong)" stroke-width="1.5"/>
+            <text x="28" y="110" font-size="14" font-weight="700" style="fill:var(--ink)">必要なときに検索されるもの</text>
+          </svg>
+        </div>
+        <figcaption><b>図8</b> メモリーの2種類（模式図）。上の層は毎回、下の層は必要なときだけ読みます。</figcaption>
+      </figure>
+      <p>常に読み込まれるファイルは使い続けるほど大きくなり、チャットを新しくしても小さくならないため、定期的な点検が必要です（<a href="#ch6-3">6.3</a>）。</p>
 
       <h3 id="ch6-2"><span class="no">6.2</span>内容の確認と修正</h3>
       <p>メモリーファイルの内容は、Museに指示すれば表示できます。古くなった内容の修正や削除も指示できます。</p>
