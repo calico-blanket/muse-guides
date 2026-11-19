@@ -1,7 +1,7 @@
 # Muse ガイド集
 
 Muse（Meta の AI アシスタント）の使い方をまとめた、個人制作のガイド集です。各フォルダに単体の HTML ページが入っています。
-
+https://calico-blanket.github.io/muse-guides/manual/
 ## 内容
 
 - **manual/** ―「Muse Manual」
