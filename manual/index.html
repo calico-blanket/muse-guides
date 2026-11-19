@@ -90,6 +90,22 @@
   .habits li:last-child{margin-bottom:0}
   .habits li b{display:block}
 
+  /* chapter cards */
+  .cards{max-width:46em; margin:1.75rem 0 0}
+  .cards h2{font-size:1.25rem; margin:0 0 .25rem}
+  .cards .lead{font-size:.875rem; color:var(--muted); margin:0 0 .75rem}
+  .cards ul{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fill,minmax(13.5rem,1fr)); gap:.65rem}
+  .cards a{display:block; height:100%; min-height:2.75rem; border:1.5px solid var(--line-strong); border-radius:10px; background:var(--bg); padding:.7rem .85rem; text-decoration:none; color:var(--ink)}
+  .cards a:hover{border-color:var(--accent); background:var(--accent-soft)}
+  .cards a:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+  .cards .cno{display:block; font-size:.75rem; font-weight:700; color:var(--accent)}
+  .cards .ct{display:block; font-weight:800; line-height:1.4; margin:.1rem 0 .2rem}
+  .cards .cs{display:block; font-size:.8125rem; color:var(--muted); line-height:1.5}
+  .totop{position:fixed; right:1rem; bottom:1rem; z-index:30; display:inline-flex; align-items:center; gap:.3rem; min-height:2.75rem; padding:.55rem .95rem; border-radius:999px; background:var(--accent); color:var(--on-accent); font-size:.875rem; font-weight:700; text-decoration:none; box-shadow:0 2px 8px rgba(0,0,0,.2); visibility:hidden; opacity:0; transition:opacity .2s}
+  .totop.show{visibility:visible; opacity:1}
+  main{padding-bottom:4.5rem}
+  .totop:focus-visible{outline:3px solid var(--ink); outline-offset:2px}
+  @media (prefers-reduced-motion: reduce){ .totop{transition:none} }
   /* ---------- figures ---------- */
   figure{margin:1.25rem 0; border:1px solid var(--line); background:var(--fig-bg); padding:1.1rem; max-width:46em}
   figcaption{font-size:.875rem; color:var(--muted); margin-top:.9rem; border-top:1px solid var(--line); padding-top:.6rem}
@@ -211,7 +227,7 @@
 
   /* ---------- print ---------- */
   @media print{
-    .skip,.toc,.nowbar,.copyrow{display:none !important}
+    .skip,.toc,.nowbar,.copyrow,.cards,.totop{display:none !important}
     .layout{display:block}
     main{padding:0}
     body{font-size:10.5pt}
@@ -315,6 +331,23 @@
         <li><b>月に1回、メモリーを点検する</b>記録が増えると、古い情報や矛盾する記述がたまります。新しいチャットにしても返信がずれるときも、点検します。→ <a href="#ch6-3">6.3</a></li>
       </ol>
     </section>
+
+
+    <!-- ================= 章の一覧 ================= -->
+    <nav class="cards" aria-labelledby="chapters">
+      <h2 id="chapters">章の一覧</h2>
+      <p class="lead">読みたい章を選んでください。どこからでも、右下の「章の一覧へ」で戻れます。</p>
+      <ul>
+          <li><a href="#ch1"><span class="cno">第1章</span><span class="ct">はじめに</span><span class="cs">Museとは何か、何ができるか</span></a></li>
+          <li><a href="#ch2"><span class="cno">第2章</span><span class="ct">指示のしかたと確認</span><span class="cs">プロンプトの書き方、確認が入る操作</span></a></li>
+          <li><a href="#ch3"><span class="cno">第3章</span><span class="ct">画面と設定</span><span class="cs">画面各部の名前、設定の項目</span></a></li>
+          <li><a href="#ch4"><span class="cno">第4章</span><span class="ct">メインチャットとサイドチャットの使い分け</span><span class="cs">チャットの分け方、アーカイブ</span></a></li>
+          <li><a href="#ch5"><span class="cno">第5章</span><span class="ct">応答の質を保つには</span><span class="cs">長いチャットで起きること、トークン、引き継ぎ文</span></a></li>
+          <li><a href="#ch6"><span class="cno">第6章</span><span class="ct">メモリーの仕組みと手入れ</span><span class="cs">メモリーファイル、定期点検</span></a></li>
+          <li><a href="#ch7"><span class="cno">第7章</span><span class="ct">作ったものを人に見せる</span><span class="cs">共有リンク、名前の付け方</span></a></li>
+          <li><a href="#app"><span class="cno">付録</span><span class="ct">困ったとき・プロンプト・用語</span><span class="cs">困ったときの対処、プロンプトの一覧、用語集</span></a></li>
+      </ul>
+    </nav>
 
     <!-- ================= 第1章 ================= -->
     <section class="chapter" aria-labelledby="ch1">
@@ -1005,6 +1038,7 @@ MEMORY.md 3,988字・39行／AGENTS.md 1,568字・25行／SOUL.md 795字・13行
       <p>参考：メモリーの定期点検のプロンプトは、てばさきさん（@tebasaki3D）が公開した「Museの健康診断プロンプト」をもとに、呼び名を一部変えて使っています（<a href="https://x.com/tebasaki3D/status/2121862417382879474">元の投稿</a>）。メモリーの整理は、テツメモさん（@tetumemo）の投稿を参考にしました（<a href="https://x.com/tetumemo/status/2121381349856870787">元の投稿</a>）。</p>
     </footer>
   </main>
+<a href="#chapters" class="totop" id="toTop">↑ 章の一覧へ</a>
 </div>
 
 <script>
@@ -1082,6 +1116,16 @@ MEMORY.md 3,988字・39行／AGENTS.md 1,568字・25行／SOUL.md 795字・13行
     if(!ticking){ ticking = true; requestAnimationFrame(update); }
   }, {passive:true});
   update();
+
+  // ---- "back to chapter list" button ----
+  var toTop = document.getElementById('toTop');
+  var cardsNav = document.querySelector('.cards');
+  function syncTop(){
+    var past = cardsNav.getBoundingClientRect().bottom < 0;
+    toTop.classList.toggle('show', past);
+  }
+  window.addEventListener('scroll', syncTop, {passive:true});
+  syncTop();
 })();
 </script>
 </body>
