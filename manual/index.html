@@ -311,6 +311,35 @@
 .a61{left:6%;bottom:9%}
 @media print{.ms-screen *{visibility:visible!important}}
 
+
+/* ===== v4 explainer unit (manual-motion): 5.1 ===== */
+.xstage{max-width:680px;margin:16px auto 4px}
+.xs-screen{position:relative;border:1.5px solid var(--line);border-radius:14px;overflow:hidden;aspect-ratio:16/10.2;background:linear-gradient(180deg,#eafaf1 0%,#fdfdf8 74%,#e7dcc8 74.2%,#e7dcc8 100%);box-shadow:0 4px 12px rgba(60,50,20,.08)}
+.xs-tag{position:absolute;top:8px;left:8px;z-index:8;background:var(--accent);color:#fff;font-weight:800;font-size:11px;border-radius:999px;padding:2px 10px}
+.xactor{position:absolute;width:15%;aspect-ratio:260/450;background-size:cover;background-position:center;border-radius:10px;box-shadow:0 4px 10px rgba(60,50,20,.22);z-index:5}
+.xchat{position:absolute;left:4%;top:11%;width:33%;height:58%;background:#fff;border:2px solid var(--line);border-radius:12px;box-shadow:0 5px 12px rgba(60,50,20,.12);padding:3%}
+.xbub{border-radius:9px;padding:.32em .65em;font-size:clamp(8.5px,1.7vw,11.5px);font-weight:600;margin-bottom:4.5%;max-width:88%}
+.xbub.u{background:var(--accent);color:#fff;margin-left:auto}
+.xbub.m{background:#eef3f0;color:var(--ink)}
+.xstack{position:absolute;left:44%;bottom:19%;width:21%;height:44%}
+.xpaper{position:absolute;left:0;width:100%;height:26%;background:#fff;border:2px solid #b9cdc0;border-radius:6px;box-shadow:0 2px 5px rgba(60,50,20,.12)}
+.xinst{position:absolute;left:-4%;width:108%;height:26%;background:#fdf6e0;border:2.5px solid #c8a24a;border-radius:6px;font-weight:800;color:#7a5c14;font-size:clamp(8.5px,1.7vw,11.5px);display:flex;align-items:center;justify-content:center;z-index:3}
+.xlab{position:absolute;font-weight:800;color:var(--accent-d);font-size:clamp(9.5px,1.9vw,13px);white-space:nowrap}
+.xmem{position:absolute;background:#f4faf7;border:2px solid var(--accent);border-radius:8px;padding:.2em .6em;font-weight:700;color:var(--ink);font-size:clamp(8.5px,1.7vw,11.5px)}
+.xmeter{position:absolute;right:5%;top:9%;width:27%;height:5.5%;background:#fff;border:2px solid var(--line);border-radius:999px;overflow:hidden}
+.xmeter i{display:block;height:100%;width:12%;background:linear-gradient(90deg,#e0a83c,#d05545)}
+.xdoc{position:absolute;background:#fff;border:2.5px solid #8aa79a;border-radius:8px;font-weight:800;color:var(--ink);font-size:clamp(8.5px,1.7vw,11.5px);padding:.35em .7em;box-shadow:0 4px 9px rgba(60,50,20,.15)}
+.xslope{position:absolute;right:4%;top:24%;width:29%}
+.xsigns{position:absolute;right:4%;top:22%;width:31%;background:#fff;border:2.5px solid var(--accent);border-radius:12px;box-shadow:0 5px 12px rgba(60,50,20,.13);padding:3%;z-index:6}
+.xsigns h5{margin:0 0 .4em;font-size:clamp(9.5px,1.9vw,13px);color:var(--accent-d)}
+.xsign{font-size:clamp(8.5px,1.7vw,11.5px);font-weight:600;color:var(--ink);padding:.28em 0;border-top:1px solid var(--line)}
+.xsign b{color:#d05545}
+.xroom2{position:absolute;right:4%;bottom:17%;width:24%;height:44%;background:#fff;border:2.5px solid var(--accent);border-radius:12px;box-shadow:0 5px 12px rgba(60,50,20,.12)}
+.xroom2 span{position:absolute;top:-1.1em;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:clamp(9px,1.8vw,12.5px);font-weight:800;color:var(--accent-d);background:#eafaf1;padding:0 .5em}
+.xspark{position:absolute;color:#e5a83c;font-weight:900;font-size:clamp(13px,2.6vw,20px);z-index:6}
+.xtelop{position:absolute;left:0;right:0;bottom:0;z-index:9;background:rgba(18,38,28,.9);color:#fff;font-weight:700;font-size:clamp(11.5px,2.3vw,15.5px);line-height:1.5;padding:.55em 1em;min-height:2.9em;display:flex;align-items:center}
+@media print{.xs-screen *{visibility:visible!important}}
+
 </style>
 </head>
 <body>
@@ -804,46 +833,52 @@
 
 
       <h3 id="ch5-1"><span class="no">5.1</span>長いチャットで起きること</h3>
-<div class="mstage" id="ms-s51" data-ms="s51"><div class="ms-screen">
-  <span class="ms-tag">5.1</span>
-  <span class="mglabel">質</span>
-  <div class="mgauge g51"><i></i></div>
-  <div class="mroom r51"><span>長い会話</span><div class="mbub m b1">…</div><div class="mbub u b2">…</div><div class="mbub m b3">…</div><div class="mbub u b4">…</div></div>
-  <div class="mroom r51b"><span>新しい会話</span></div>
-  <div class="mactor a51"></div>
+<div class="xstage" id="xs-s51" data-xs="s51x"><div class="xs-screen">
+  <span class="xs-tag">5.1</span>
+  <div class="xchat">
+    <div class="xbub u b1">旅行の計画を立てて</div>
+    <div class="xbub m b2">いいですね、考えます</div>
+    <div class="xbub u b3">日程も決めて</div>
+    <div class="xbub m b4">分かりました</div>
+    <div class="xbub u b5">予算も入れて</div>
+    <div class="xbub m b6">…</div>
+  </div>
+  <span class="xlab xctx" style="left:43%;top:24%">コンテキスト</span>
+  <div class="xstack">
+      <div class="xpaper pp1" style="bottom:8%"></div>
+      <div class="xpaper pp2" style="bottom:16%"></div>
+      <div class="xpaper pp3" style="bottom:24%"></div>
+      <div class="xinst" style="bottom:24%">大事な指示</div>
+      <div class="xpaper pp4" style="bottom:32%"></div>
+      <div class="xpaper pp5" style="bottom:40%"></div>
+      <div class="xpaper pp6" style="bottom:48%"></div>
+      <div class="xpaper pp7" style="bottom:56%"></div>
+      <div class="xpaper pp8" style="bottom:64%"></div>
+  </div>
+  <span class="xmem" style="left:42%;bottom:12%">メモリーファイル</span>
+  <span class="xlab" style="right:23%;top:3.5%">トークン</span>
+  <div class="xmeter"><i></i></div>
+  <div class="xdoc" style="right:9%;top:19%">長い資料</div>
+  <svg class="xslope" viewBox="0 0 200 90" aria-hidden="true">
+    <line x1="8" y1="6" x2="8" y2="80" stroke="#b9cdc0" stroke-width="2"/>
+    <line x1="8" y1="80" x2="194" y2="80" stroke="#b9cdc0" stroke-width="2"/>
+    <path class="xline" d="M10,14 C 70,22 130,48 192,72" fill="none" stroke="#d05545" stroke-width="4" stroke-linecap="round" pathLength="100" style="stroke-dasharray:100;stroke-dashoffset:100"/>
+    <text x="12" y="12" font-size="12" font-weight="800" fill="#14532d">応答の質</text>
+  </svg>
+  <div class="xsigns">
+    <h5>移りどきのサイン</h5>
+    <div class="xsign g1"><b>✓</b> 前と同じ返事が返ってくる</div>
+    <div class="xsign g2"><b>✓</b> 間違いが増えてきた</div>
+    <div class="xsign g3"><b>✓</b> 指示や条件が守られない</div>
+  </div>
+  <div class="xroom2"><span>新しい会話</span></div>
+  <div class="mactor xactor" style="left:5%;bottom:15%"></div>
+  <div class="xspark sp1" style="right:20%;top:34%">✦</div>
+  <div class="xspark sp2" style="right:8%;top:52%">✦</div>
+  <div class="xtelop">1つのチャットが長くなると、応答の質が下がり、トークンの消費も増えます</div>
 </div></div>
 
-      <p>1つのチャットが長くなると、応答の質が下がり、トークン（AIの利用量を表す単位。<a href="#ch5-2">5.2</a>）の消費も増えます。理由は、Museが返信を作る仕組みにあります。</p>
-      <p>AIが返信を作るときに参照する情報全体を「コンテキスト」と呼びます。Museのコンテキストには、そのチャットのこれまでの記録と、メモリーファイル（<a href="#ch6-1">6.1</a>）が含まれます。Museは返信のたびに、このコンテキストを最初から読み直します。</p>
-      <p>そのため、チャットが長くなると、次の2つが同時に起きます。</p>
-      <ul>
-        <li><strong>トークンの消費が増える</strong>：コンテキストが長くなるため、1回の返信ごとの消費が増えます。</li>
-        <li><strong>応答の質が下がる</strong>：コンテキストの中で重要な指示が埋もれ、返信の精度が少しずつ落ちていきます。</li>
-      </ul>
-      <p>何回のやりとりで下がるという目安はありません。次のような状態になったら、新しいチャットに移る時期です。</p>
-      <ul>
-        <li>前と同じことを返信してくる</li>
-        <li>間違いが多くなってきた</li>
-        <li>前に伝えた指示や条件が守られない</li>
-      </ul>
-      <p>故障ではなく仕組みどおりの動きで、新しいチャットに移れば元に戻ります。新しいチャットに移っても同じことが起きるときは、メモリーが原因かもしれません（<a href="#ch6-3">6.3</a>）。</p>
-      <figure>
-        <div class="diagram" role="img" aria-label="チャットが長くなるにつれてトークンの消費は増え、応答の質は緩やかに下がる模式図">
-          <svg viewBox="0 0 520 220">
-            <path d="M60 20 V185 H500" fill="none" stroke="var(--line-strong)" stroke-width="2"/>
-            <path d="M60 165 C 200 150, 340 105, 490 45" fill="none" stroke="#b07a2e" stroke-width="3.5" stroke-linecap="round"/>
-            <path d="M60 55 C 200 70, 340 105, 490 150" fill="none" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round"/>
-            <text x="330" y="42" font-size="14" font-weight="700" fill="#b07a2e">トークンの消費</text>
-            <text x="330" y="172" font-size="14" font-weight="700" style="fill:var(--accent)">応答の質</text>
-            <text x="60" y="210" font-size="12" style="fill:var(--muted)">短いチャット</text>
-            <text x="500" y="210" font-size="12" text-anchor="end" style="fill:var(--muted)">長いチャット</text>
-          </svg>
-        </div>
-        <figcaption><b>図6</b> 長いチャットの変化（模式図）。質は崖ではなく、緩やかに下がります。</figcaption>
-      </figure>
-      <p>なお、長い資料を渡したり、長い返信を求めたりした場合も、消費は多くなります。</p>
-
-            <h3 id="ch5-2"><span class="no">5.2</span>トークンとは</h3>
+<h3 id="ch5-2"><span class="no">5.2</span>トークンとは</h3>
       <p>トークンは、AIが文章を処理するときの最小単位です。AIの利用量はトークン数で計算されます。</p>
       <p>1回の返信ごとに、読み直したコンテキスト全体と返信の両方が数えられます。そのため、長いチャットを続けると、利用枠が早く減ります。</p>
       <p>パソコン版では、Museの返信の下に、その返信で使ったトークンの量が表示されます。</p>
@@ -1469,6 +1504,64 @@ MEMORY.md 3,988字・39行／AGENTS.md 1,568字・25行／SOUL.md 795字・13行
     if(reduced){ tl.progress(1); return; }
     if(io) io.observe(st); else tl.play();
   });
+})();
+</script>
+
+
+<script>
+/* ===== v4 explainer engine (manual-motion): 5.1 ===== */
+(function(){
+  if(!window.gsap) return;
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var st = document.querySelector('[data-xs="s51x"]'); if(!st) return;
+  function Q(s){ return st.querySelector(s); }
+  function QA(s){ return Array.prototype.slice.call(st.querySelectorAll(s)); }
+  var tel = Q(".xtelop");
+  function setTel(t){ tel.textContent = t; }
+  var tl = gsap.timeline({repeat: reduced ? 0 : -1, repeatDelay: 3});
+  /* S1 intro */
+  tl.call(setTel,["1つのチャットが長くなると、応答の質が下がり、トークンの消費も増えます"],0)
+    .fromTo(QA(".xchat .b1, .xchat .b2"),{opacity:0,y:8},{opacity:1,y:0,duration:.45,stagger:.7},0.4)
+    .fromTo(Q(".xactor"),{opacity:0,x:-24},{opacity:1,x:0,duration:.5},0.4)
+  /* S2 context */
+    .call(setTel,["返信に使う情報全体が『コンテキスト』。Museは返信のたびに、これを最初から読み直します"],6)
+    .fromTo(Q(".xctx"),{opacity:0},{opacity:1,duration:.4},6.2)
+    .fromTo(QA(".xstack .pp1, .xstack .pp2, .xstack .pp3"),{opacity:0,y:12},{opacity:1,y:0,duration:.4,stagger:.35},6.4)
+    .fromTo(Q(".xmem"),{opacity:0,scale:.7},{opacity:1,scale:1,duration:.4,ease:"back.out(2)"},7.6)
+    .to(Q(".xstack"),{y:-4,duration:.3,yoyo:true,repeat:3,ease:"sine.inOut"},8.4)
+    .to(Q(".xmeter i"),{width:"34%",duration:1.2,ease:"power1.inOut"},8.4)
+  /* S3 tokens */
+    .call(setTel,["コンテキストが長くなるほど、1回の返信ごとのトークン消費が増えます。長い資料を渡したときも同じです"],14)
+    .fromTo(QA(".xchat .b3, .xchat .b4, .xchat .b5, .xchat .b6"),{opacity:0,y:8},{opacity:1,y:0,duration:.4,stagger:.55},14.3)
+    .to(Q(".xmeter i"),{width:"72%",duration:2.2,ease:"power1.inOut"},14.5)
+    .fromTo(Q(".xdoc"),{opacity:0,y:-16},{opacity:1,y:0,duration:.5,ease:"back.out(1.8)"},18.6)
+    .to(Q(".xmeter i"),{width:"92%",duration:.7,ease:"power2.out"},19.2)
+  /* S4 quality */
+    .call(setTel,["大事な指示が記録に埋もれて、応答の質は少しずつ下がります。崖ではなく、緩やかな坂です"],22)
+    .fromTo(Q(".xinst"),{opacity:0,scale:.7},{opacity:1,scale:1,duration:.4,ease:"back.out(2)"},22.3)
+    .fromTo(QA(".xstack .pp4, .xstack .pp5, .xstack .pp6, .xstack .pp7, .xstack .pp8"),{opacity:0,y:12},{opacity:1,y:0,duration:.4,stagger:.5},23.2)
+    .to(Q(".xline"),{strokeDashoffset:0,duration:2.6,ease:"power1.inOut"},23.4)
+  /* S5 signs */
+    .call(setTel,["回数の目安はありません。こんな様子が見えたら、新しいチャットへ移る時期です"],30)
+    .fromTo(Q(".xsigns"),{opacity:0,x:26},{opacity:1,x:0,duration:.5},30.3)
+    .fromTo(QA(".xsign"),{opacity:.25},{opacity:1,duration:.4,stagger:.9},31.0)
+    .to(Q(".xactor"),{rotate:5,duration:.18,yoyo:true,repeat:5,ease:"sine.inOut"},31.4)
+  /* S6 move */
+    .call(setTel,["故障ではなく仕組みどおりの動きです。新しいチャットでは元に戻ります"],38)
+    .to(Q(".xsigns"),{opacity:0,x:26,duration:.45},38.2)
+    .fromTo(Q(".xroom2"),{opacity:0},{opacity:1,duration:.5},38.6)
+    .to(Q(".xactor"),{left:"72%",duration:1.6,ease:"power1.inOut"},39.2)
+    .to(QA(".xstack .pp4, .xstack .pp5, .xstack .pp6, .xstack .pp7, .xstack .pp8"),{opacity:0,duration:.5},40.2)
+    .to(Q(".xmeter i"),{width:"14%",duration:.9,ease:"power2.out"},40.4)
+    .to(Q(".xline"),{strokeDashoffset:100,duration:.9,ease:"power2.out"},40.4)
+    .fromTo(QA(".xspark"),{scale:0,opacity:0},{scale:1,opacity:1,duration:.4,stagger:.25,ease:"back.out(2.4)"},41.2)
+    .call(setTel,["新しいチャットでも起きるときは、メモリーが原因かもしれません（6.3）"],44)
+    .to({},{duration:3.2});
+  tl.pause(0); st._tl = tl;
+  if(reduced){ tl.progress(1); setTel("故障ではなく仕組みどおりの動きです。新しいチャットでは元に戻ります"); return; }
+  if("IntersectionObserver" in window){
+    new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting) tl.play(); else tl.pause(); }); },{threshold:.3}).observe(st);
+  } else tl.play();
 })();
 </script>
 
