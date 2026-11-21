@@ -111,14 +111,8 @@
     .cards ul{gap:.45rem}
     .cards a{padding:.55rem .8rem}
   }
-  /* ---------- kappie edition ---------- */
-  .doc-head .edition{display:inline-block; font-size:.8125rem; font-weight:700; color:var(--accent); border:1.5px solid var(--accent); border-radius:999px; padding:.15rem .8rem; margin:0 0 .7rem; background:var(--accent-soft)}
-  .kappie-head{display:flex; align-items:center; gap:1.1rem; flex-wrap:wrap}
-  .kappie-head h1{margin-bottom:.6rem}
-  .mascot{flex:none; line-height:0}
   .diagram{max-width:34rem; margin:0 auto}
   .diagram svg{display:block; width:100%; height:auto}
-  @media (max-width:600px){ .mascot svg{width:76px; height:auto} }
 
   /* ---------- figures ---------- */
   figure{margin:1.25rem 0; border:1px solid var(--line); background:var(--fig-bg); padding:1.1rem; max-width:46em}
@@ -250,30 +244,34 @@
     figure,table,.copybox,.warn{break-inside:avoid}
     a{color:inherit}
   }
+
+  /* ---------- motion (manual-motion branch) ---------- */
+  .readbar{position:fixed; top:0; left:0; height:3px; width:0; background:var(--accent); z-index:60; opacity:.85}
+  html.motion .rv{opacity:0; transform:translateY(14px); transition:opacity .7s ease, transform .7s ease}
+  html.motion .rv.in{opacity:1; transform:none}
+  html.motion .doc-head h1{animation:mfade .9s ease both}
+  html.motion .doc-head .lead{animation:mfade .9s .15s ease both}
+  @keyframes mfade{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+  .fbadge.pulse{animation:bpulse .9s ease}
+  @keyframes bpulse{0%{box-shadow:0 0 0 0 rgba(20,104,86,.45)} 100%{box-shadow:0 0 0 12px rgba(20,104,86,0)}}
+  @media (prefers-reduced-motion: reduce){
+    html.motion .rv{opacity:1; transform:none; transition:none}
+    html.motion .doc-head h1, html.motion .doc-head .lead{animation:none}
+    .fbadge.pulse{animation:none}
+  }
+  @media print{
+    .readbar{display:none}
+    html.motion .rv{opacity:1; transform:none}
+  }
 </style>
 </head>
 <body>
 <a class="skip" href="#main">本文へ移動</a>
+<div class="readbar" id="readBar" aria-hidden="true"></div>
 
 <header class="doc-head">
   <p class="kicker">MUSE 取扱説明書</p>
-  <div class="kappie-head">
-    <div class="mascot" aria-hidden="true">
-      <svg width="104" height="86" viewBox="0 0 120 96" role="img" aria-label="ミントグリーンのセーターを着たカピバラ">
-        <path d="M22 96 V64 Q22 46 44 46 H76 Q98 46 98 64 V96 Z" fill="#57b894" stroke="#146856" stroke-width="2.5"/>
-        <path d="M22 78 H98" stroke="#146856" stroke-width="2.5"/>
-        <rect x="48" y="44" width="24" height="9" rx="4" fill="#dff3ea" stroke="#146856" stroke-width="2"/>
-        <circle cx="33" cy="17" r="8" fill="#8a5a33" stroke="#6f4525" stroke-width="2"/>
-        <ellipse cx="60" cy="33" rx="35" ry="26" fill="#a9743f" stroke="#6f4525" stroke-width="2.5"/>
-        <ellipse cx="74" cy="41" rx="21" ry="13" fill="#c99a63"/>
-        <ellipse cx="89" cy="37" rx="4.5" ry="3.2" fill="#54341a"/>
-        <path d="M78 48 Q85 51 92 48" fill="none" stroke="#54341a" stroke-width="2" stroke-linecap="round"/>
-        <circle cx="51" cy="29" r="3.6" fill="#2b1c0e"/>
-        <circle cx="38" cy="40" r="4" fill="#c98a5e" opacity=".65"/>
-      </svg>
-    </div>
-    <h1>Muse Manual</h1>
-  </div>
+  <h1>Muse Manual</h1>
   <p class="lead">AIエージェント「Muse」をはじめて使う人のための取扱説明書です。まず下の「3つの習慣」を読み、必要な章を参照してください。</p>
 </header>
 
@@ -1196,6 +1194,127 @@ MEMORY.md 3,988字・39行／AGENTS.md 1,568字・25行／SOUL.md 795字・13行
   }
   window.addEventListener('scroll', syncTop, {passive:true});
   syncTop();
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  // Reading progress bar (user-driven, always on)
+  var bar = document.getElementById('readBar');
+  var ticking = false;
+  function prog(){
+    ticking = false;
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? Math.min(100, window.scrollY / max * 100) : 0) + '%';
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ ticking = true; requestAnimationFrame(prog); }
+  }, {passive:true});
+  prog();
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced) return;
+  document.documentElement.classList.add('motion');
+
+  // ---- Scroll reveal (vanilla, progressive enhancement) ----
+  var targets = document.querySelectorAll('main h2, main h3, main figure, .cards li, .habits li');
+  targets.forEach(function(el){ el.classList.add('rv'); });
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold: 0.1});
+  targets.forEach(function(el){ io.observe(el); });
+
+  // ---- Phone-mock badges: gentle sequential pulse while visible ----
+  document.querySelectorAll('figure').forEach(function(fig){
+    var badges = fig.querySelectorAll('.fbadge');
+    if(badges.length < 3) return;
+    var idx = 0, timer = null;
+    function step(){
+      badges.forEach(function(b){ b.classList.remove('pulse'); });
+      badges[idx % badges.length].classList.add('pulse');
+      idx++;
+    }
+    var io2 = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting && !timer){ step(); timer = setInterval(step, 1100); }
+        if(!e.isIntersecting && timer){ clearInterval(timer); timer = null; badges.forEach(function(b){ b.classList.remove('pulse'); }); }
+      });
+    }, {threshold: 0.3});
+    io2.observe(fig);
+  });
+
+  // ---- Diagram animations with GSAP (enhancement; static if unavailable) ----
+  if(typeof window.gsap === 'undefined' || typeof window.ScrollTrigger === 'undefined') return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  function diagramByLabel(part){
+    var all = document.querySelectorAll('.diagram');
+    for(var i = 0; i < all.length; i++){
+      if((all[i].getAttribute('aria-label') || '').indexOf(part) >= 0) return all[i];
+    }
+    return null;
+  }
+  function drawPaths(svg, paths){
+    paths.forEach(function(p){
+      var len = p.getTotalLength();
+      p.style.strokeDasharray = len;
+      p.style.strokeDashoffset = len;
+    });
+    gsap.to(paths, {
+      strokeDashoffset: 0, duration: 1.6, ease: 'power2.out', stagger: 0.25,
+      scrollTrigger: {trigger: svg, start: 'top 82%', once: true}
+    });
+  }
+
+  // Fig. branch diagram (4.1): connectors draw, side chats fade in one by one
+  var branch = diagramByLabel('枝分かれ');
+  if(branch){
+    var bsvg = branch.querySelector('svg');
+    var connectors = bsvg.querySelectorAll('path');
+    drawPaths(bsvg, Array.prototype.slice.call(connectors));
+    var boxes = bsvg.querySelectorAll('g rect, g text');
+    gsap.from(boxes, {
+      opacity: 0, x: 16, duration: 0.6, ease: 'power2.out', stagger: 0.12,
+      scrollTrigger: {trigger: bsvg, start: 'top 82%', once: true}
+    });
+  }
+
+  // Fig. slope diagram (5.1): the two curves draw themselves
+  var slope = diagramByLabel('緩やかに下がる');
+  if(slope){
+    var ssvg = slope.querySelector('svg');
+    var curves = ssvg.querySelectorAll('path');
+    drawPaths(ssvg, [curves[1], curves[2]]);
+  }
+
+  // Fig. memory layers (6.1): layers slide in
+  var mem = diagramByLabel('メモリーの2種類');
+  if(mem){
+    var msvg = mem.querySelector('svg');
+    gsap.from(msvg.querySelectorAll('rect, text'), {
+      opacity: 0, y: 10, duration: 0.7, ease: 'power2.out', stagger: 0.18,
+      scrollTrigger: {trigger: msvg, start: 'top 82%', once: true}
+    });
+  }
+
+  // Token wallets (5.3): bars fill to their marked width
+  var bars = document.querySelectorAll('.wallet .bar i');
+  if(bars.length){
+    bars.forEach(function(b){ b.dataset.w = b.style.width; b.style.width = '0%'; });
+    ScrollTrigger.create({
+      trigger: '.wallets', start: 'top 82%', once: true,
+      onEnter: function(){
+        bars.forEach(function(b, i){
+          gsap.to(b, {width: b.dataset.w, duration: 1.1, delay: i * 0.15, ease: 'power2.out'});
+        });
+      }
+    });
+  }
 })();
 </script>
 </body>
